@@ -3,3 +3,7 @@ venv
 staticfiles
 .env
 env
+/db.sqlite3
+/original_images
+/.idea
+/images
