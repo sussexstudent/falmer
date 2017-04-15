@@ -1,0 +1,10 @@
+django==1.10
+wagtail
+slacker
+whitenoise
+graphene-django
+django-cors-headers
+dj-database-url
+psycopg2
+whitenoise
+gunicorn
