@@ -1,5 +1,5 @@
 from .base import *
-
+import raven
 
 # Allow all host headers
 ALLOWED_HOSTS = ['falmer.sussexstudent.com']
@@ -14,6 +14,10 @@ CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
 # SECURE_HSTS_SECONDS = 3600 - not yet
 X_FRAME_OPTIONS = 'DENY'
+
+INSTALLED_APPS += (
+    'raven.contrib.django.raven_compat',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -33,3 +37,8 @@ TEMPLATES = [
         },
     },
 ]
+
+RAVEN_CONFIG = {
+    'dsn': os.environ.get('SENTRY_DSN'),
+    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+}
