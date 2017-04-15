@@ -1,5 +1,4 @@
 from .base import *
-import raven
 
 # Allow all host headers
 ALLOWED_HOSTS = ['falmer.sussexstudent.com']
@@ -40,5 +39,5 @@ TEMPLATES = [
 
 RAVEN_CONFIG = {
     'dsn': os.environ.get('SENTRY_DSN'),
-    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+    'release': os.getenv('HEROKU_SLUG_COMMIT', 'unknown'),
 }
