@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from .models import MagicLinkToken
@@ -13,5 +13,11 @@ def magic_link_login(request, token):
     magic.used = True
     magic.save()
     login(request, magic.user)
+
+    return redirect('/')
+
+
+def logout_view(request):
+    logout(request)
 
     return redirect('/')
