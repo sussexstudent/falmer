@@ -20,12 +20,14 @@ from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtailcore import urls as wagtail_urls
 from graphene_django.views import GraphQLView
+from wagtail.wagtailimages.views.serve import ServeView
 
 from apps.auth import urls as auth_urls
 from apps.slack import urls as slack_urls
 from apps.launcher import urls as launcher_urls
 
 urlpatterns = [
+    url(r'^images/([^/]*)/(\d*)/([^/]*)/[^/]*$', ServeView.as_view(action='redirect'), name='wagtailimages_serve'),
     url(r'^admin/', admin.site.urls),
     url(r'^cms/', include(wagtailadmin_urls)),
     url(r'^pages/', include(wagtail_urls)),
