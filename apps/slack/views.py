@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from apps.auth.utils import create_magic_link_for_user
 from apps.auth.models import FalmerUser
+from apps.slack.models import SlackUser
 from .utils import verify_slack_hook, get_slacker_instance
 
 
@@ -16,16 +17,35 @@ def open_falmer(request):
     slack_user_email = slack_profile['email']
 
     try:
-        user = FalmerUser.objects.get(identifier=slack_user_email, authority='IS')
-    except FalmerUser.DoesNotExist:
+        slack_account = SlackUser.objects.get(slack_user_id=slack_user_id)
+        user = slack_account.user
+
+        if slack_account.first_name != slack_profile.get('first_name', ''):
+            slack_account.first_name = slack_profile.get('first_name', '')
+            slack_account.save()
+
+        if slack_account.last_name != slack_profile.get('last_name', ''):
+            slack_account.last_name = slack_profile.get('last_name', '')
+            slack_account.save()
+
+    except SlackUser.DoesNotExist:
         slack.chat.post_message(
             '#falmer', '<@{new_slack_id}> opened Falmer for the first time!'.format(new_slack_id=slack_user_id)
         )
 
-        user = FalmerUser.objects.create(
-            name='{} {}'.format(slack_profile['first_name'], slack_profile['last_name']),
-            identifier=slack_user_email,
-            authority='IS',
+        try:
+            user = FalmerUser.objects.get(identifier=slack_user_email)
+        except FalmerUser.DoesNotExist:
+            user = FalmerUser.objects.create(
+                identifier=slack_user_email,
+                authority='IS',
+            )
+
+        SlackUser.objects.create(
+            user=user,
+            slack_user_id=slack_user_id,
+            first_name=slack_profile.get('first_name', ''),
+            last_name=slack_profile.get('last_name', '')
         )
 
     link = create_magic_link_for_user(user, '')

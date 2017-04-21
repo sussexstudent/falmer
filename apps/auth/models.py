@@ -43,10 +43,13 @@ class FalmerUser(AbstractBaseUser, PermissionsMixin):
     objects = FalmerUserManager()
 
     def get_full_name(self):
-        return self.name
+        if self.slack_account and self.slack_account.has_name():
+            return '{} {}'.format(self.slack_account.first_name, self.slack_account.last_name)
+
+        return self.identifier
 
     def get_short_name(self):
-        return self.name
+        return self.get_full_name()
 
 
 class MagicLinkToken(models.Model):

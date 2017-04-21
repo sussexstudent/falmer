@@ -2,9 +2,8 @@
 {% block page_title %}Falmer{% endblock %}
 
 {% block content %}
-
-<h1>Hello there!</h1>
-<h2>{{user.identifier}}</h2>
+<h1>Falmer</h1>
+<h2 class="Heading--big Heading--highlight">Hello there, {{user.get_full_name}}!</h2>
 
 <p>Here is what you can do:</p>
 
