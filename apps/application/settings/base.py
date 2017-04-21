@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 ]
 
 GRAPHENE = {
-    'SCHEMA': 'schema.schema.schema'
+    'SCHEMA': 'apps.schema.schema.schema'
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

@@ -41,3 +41,5 @@ RAVEN_CONFIG = {
     'dsn': os.environ.get('SENTRY_DSN'),
     'release': os.getenv('HEROKU_SLUG_COMMIT', 'unknown'),
 }
+
+PUBLIC_HOST = 'https://falmer.sussexstudent.com'
