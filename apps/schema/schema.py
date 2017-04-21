@@ -4,7 +4,7 @@ from wagtail.wagtailimages.models import Image, Filter
 from taggit.managers import TaggableManager
 import graphene
 from graphene_django.converter import convert_django_field
-from content.models import StaffPage, StaffMember, StaffDepartment, StaffSection
+from apps.content.models import StaffPage, StaffMember, StaffDepartment, StaffSection
 
 
 @convert_django_field.register(StreamField)
