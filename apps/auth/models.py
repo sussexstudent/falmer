@@ -36,8 +36,8 @@ class FalmerUser(AbstractBaseUser, PermissionsMixin):
     authority = models.CharField(max_length=4, choices=AUTHORITY_CHOICES)
     email = models.EmailField()
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
-    name = models.CharField(max_length=128)
+    is_active = models.BooleanField(default=True)
+    name = models.CharField(max_length=128, default='', blank=True)
     USERNAME_FIELD = 'identifier'
 
     objects = FalmerUserManager()

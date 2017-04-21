@@ -12,7 +12,6 @@ def magic_link_login(request, token):
 
     magic.used = True
     magic.save()
-
     login(request, magic.user)
 
-    return redirect('/cms')
+    return redirect('/')
