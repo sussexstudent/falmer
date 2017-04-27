@@ -1,5 +1,5 @@
 django==1.10
-wagtail
+wagtail==1.9.1
 slacker
 whitenoise
 graphene-django
@@ -9,3 +9,5 @@ psycopg2
 whitenoise
 gunicorn
 raven
+django-storages
+djangorestframework-camel-case
