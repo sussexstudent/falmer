@@ -27,3 +27,4 @@ TEMPLATES = [
 ]
 
 PUBLIC_HOST = 'http://localhost:5000'
+IMAGE_SERVE_METHOD = 'serve'

@@ -51,3 +51,4 @@ RAVEN_CONFIG = {
 }
 
 PUBLIC_HOST = 'https://falmer.sussexstudent.com'
+IMAGE_SERVE_METHOD = 'redirect'

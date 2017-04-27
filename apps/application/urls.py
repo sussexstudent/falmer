@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
@@ -22,12 +23,14 @@ from wagtail.wagtailcore import urls as wagtail_urls
 from graphene_django.views import GraphQLView
 from wagtail.wagtailimages.views.serve import ServeView
 
+from .api import api_router
 from apps.auth import urls as auth_urls
 from apps.slack import urls as slack_urls
 from apps.launcher import urls as launcher_urls
 
 urlpatterns = [
-    url(r'^images/([^/]*)/(\d*)/([^/]*)/[^/]*$', ServeView.as_view(action='redirect'), name='wagtailimages_serve'),
+    url(r'^images/([^/]*)/(\d*)/([^/]*)/[^/]*$', ServeView.as_view(action=settings.IMAGE_SERVE_METHOD), name='wagtailimages_serve'),
+    url(r'^content-api/v2/', api_router.urls),
     url(r'^admin/', admin.site.urls),
     url(r'^cms/', include(wagtailadmin_urls)),
     url(r'^pages/', include(wagtail_urls)),

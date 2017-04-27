@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'wagtail.wagtailsearch',
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
+    'wagtail.api.v2',
 
     'apps.auth.apps.AuthConfig',
     'apps.slack',
