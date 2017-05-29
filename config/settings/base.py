@@ -311,6 +311,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 WAGTAILIMAGES_IMAGE_MODEL = 'matte.MatteImage'
 WAGTAIL_SITE_NAME = 'Falmer'
 IMAGE_SERVE_METHOD = env('IMAGE_SERVE_METHOD', default='redirect')
+PUBLIC_HOST = env('PUBLIC_HOST', default='http://localhost:8000')
 
 SLACK_API_KEY = env('SLACK_API_KEY', default=None)
 SLACK_VERIFICATION_TOKEN = env('SLACK_VERIFICATION_TOKEN', default=None)
