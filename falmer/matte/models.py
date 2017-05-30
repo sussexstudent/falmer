@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -10,6 +13,11 @@ class MatteImage(AbstractImage):
     admin_form_fields = Image.admin_form_fields + (
         # nothing yet
     )
+
+    def get_upload_to(self, filename):
+        folder_name = 'original_images'
+
+        return os.path.join(folder_name, str(uuid.uuid4()).replace('-', ''))
 
 
 class MatteRendition(AbstractRendition):
