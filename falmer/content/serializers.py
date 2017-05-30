@@ -31,7 +31,7 @@ class WagtailImageSerializer(serializers.ModelSerializer):
 
 
     def get_resource(self, image):
-        return image.file.path
+        return image.file.name
 
 
 class SnippetSerializer(serializers.ModelSerializer):
