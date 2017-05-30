@@ -82,6 +82,9 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 
+    'wagtail.wagtailcore.middleware.SiteMiddleware',
+    'wagtail.wagtailredirects.middleware.RedirectMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -96,6 +99,7 @@ MIDDLEWARE = [
 MIGRATION_MODULES = {
     'sites': 'falmer.contrib.sites.migrations'
 }
+SITE_ID = 1
 
 # DEBUG
 # ------------------------------------------------------------------------------
