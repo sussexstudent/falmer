@@ -25,6 +25,8 @@ SECRET_KEY = env('DJANGO_SECRET_KEY', default='JoSFa+zip%}rS?L3K~:,Y6jP$}~qBXFBS
 # Mail settings
 # ------------------------------------------------------------------------------
 
+ALLOWED_HOSTS = ('.ngrok.io', 'localhost', )
+
 EMAIL_PORT = 1025
 
 EMAIL_HOST = 'localhost'
@@ -78,3 +80,29 @@ CELERY_ALWAYS_EAGER = True
 
 # Your local stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
+
+LOGGING = {
+    'disable_existing_loggers': False,
+    'version': 1,
+    'handlers': {
+        'console': {
+            # logging handler that outputs log messages to terminal
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG', # message level to be written to console
+        },
+    },
+    'loggers': {
+        '': {
+            # this sets root level logger to log debug and higher level
+            # logs to console. All other loggers inherit settings from
+            # root level logger.
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False, # this tells logger to send logging message
+            # to its parent (will send if set to True)
+        },
+        'django.db': {
+            'level': 'DEBUG',
+        },
+    },
+}
