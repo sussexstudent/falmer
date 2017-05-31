@@ -12,6 +12,7 @@ from falmer.content.blocks import HeroImageBlock, ImageBlock
 
 class GridItem(blocks.StructBlock):
     title = blocks.CharBlock(required=True)
+    link = blocks.URLBlock()
     image = ImageBlock()
 
     class Meta:
