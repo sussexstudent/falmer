@@ -46,7 +46,7 @@ celery==4.0.2
 
 slacker==0.9.50
 graphene-django==1.3
-django-cors-headers
+django-cors-headers==2.1.0
 djangorestframework-camel-case
 wagtail==1.10.1
 beautifulsoup4
