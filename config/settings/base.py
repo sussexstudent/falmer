@@ -72,6 +72,7 @@ LOCAL_APPS = [
     'falmer.launcher.apps.LauncherConfig',
     'falmer.matte.apps.MatteConfig',
     'falmer.schema.apps.SchemaConfig',
+    'falmer.events.apps.EventsConfig',
     'falmer.slack.apps.SlackConfig',
 ]
 

@@ -15,6 +15,7 @@ from falmer.schema.api import api_router
 from falmer.auth import urls as auth_urls
 from falmer.slack import urls as slack_urls
 from falmer.launcher import urls as launcher_urls
+from falmer.events import urls as events_urls
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
@@ -31,6 +32,7 @@ urlpatterns = [
 
     url(r'^auth/', include(auth_urls)),
     url(r'^slack/', include(slack_urls)),
+    url(r'^events/', include(events_urls)),
 
     url(r'^', include(launcher_urls)),
 
