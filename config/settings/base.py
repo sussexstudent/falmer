@@ -74,6 +74,7 @@ LOCAL_APPS = [
     'falmer.schema.apps.SchemaConfig',
     'falmer.events.apps.EventsConfig',
     'falmer.slack.apps.SlackConfig',
+    'falmer.search.apps.SearchConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
