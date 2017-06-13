@@ -51,3 +51,4 @@ djangorestframework-camel-case
 wagtail==1.10.1
 beautifulsoup4
 requests
+fuzzywuzzy[speedup]
