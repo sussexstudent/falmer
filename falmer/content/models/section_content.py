@@ -1,10 +1,13 @@
 from django.db import models
+from wagtail.api import APIField
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, TabbedInterface, StreamFieldPanel, ObjectList
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from falmer.content.blocks import ContactBlock, SectionBlock
+from falmer.content.serializers import WagtailImageSerializer
 from falmer.matte.models import MatteImage
 
 
@@ -14,6 +17,7 @@ class SectionContentPage(Page):
     ])
 
     content_panels = Page.content_panels + [
+        ImageChooserPanel('heading_image'),
         StreamFieldPanel('body'),
     ]
 
@@ -37,4 +41,9 @@ class SectionContentPage(Page):
         ObjectList(Page.settings_panels, heading='Settings', classname="settings"),
     ])
 
-    api_fields = ('body', 'sidebar_body', 'contents_in_sidebar', 'heading_image')
+    api_fields = (
+        'body',
+        'sidebar_body',
+        'contents_in_sidebar',
+        APIField('heading_image', serializer=WagtailImageSerializer()),
+    )
