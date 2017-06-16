@@ -5,6 +5,7 @@ from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, TabbedInterface, StreamFieldPanel, ObjectList
 
 from falmer.content.blocks import ContactBlock, SectionBlock
+from falmer.matte.models import MatteImage
 
 
 class SectionContentPage(Page):
@@ -17,6 +18,7 @@ class SectionContentPage(Page):
     ]
 
     contents_in_sidebar = models.BooleanField(default=True)
+    heading_image = models.ForeignKey(MatteImage, null=True, blank=False, on_delete=models.SET_NULL)
 
     sidebar_body = StreamField([
         ('paragraph', blocks.RichTextBlock()),
@@ -34,3 +36,5 @@ class SectionContentPage(Page):
         ObjectList(Page.promote_panels, heading='Promote'),
         ObjectList(Page.settings_panels, heading='Settings', classname="settings"),
     ])
+
+    api_fields = ('body', 'sidebar_body', 'contents_in_sidebar', 'heading_image')
