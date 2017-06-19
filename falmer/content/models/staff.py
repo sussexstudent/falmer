@@ -2,6 +2,7 @@ from django.db import models
 from wagtail.wagtailimages import get_image_model_string
 from modelcluster.fields import ParentalKey
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailsearch import index
 from wagtail.wagtailsnippets.blocks import SnippetChooserBlock
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailcore import blocks
@@ -10,9 +11,8 @@ from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
 
 
-
 @register_snippet
-class StaffMemberSnippet(models.Model):
+class StaffMemberSnippet(index.Indexed, models.Model):
     photo = models.ForeignKey(
         get_image_model_string(),
         null=True,
@@ -36,6 +36,11 @@ class StaffMemberSnippet(models.Model):
         FieldPanel('mobile_phone_number'),
         ImageChooserPanel('photo'),
         FieldPanel('job_description'),
+    ]
+
+    search_fields = [
+        index.SearchField('name', partial_match=True),
+        index.SearchField('job_title', partial_match=True),
     ]
 
     def __str__(self):
