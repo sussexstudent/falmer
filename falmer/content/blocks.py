@@ -28,6 +28,21 @@ class SectionBlock(blocks.StructBlock):
         icon = 'user'
 
 
+class PledgeBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True)
+    body = blocks.RichTextBlock(required=True)
+    image = ImageBlock()
+    status = blocks.ChoiceBlock(choices=[
+        ('in_progress', 'In Progress'),
+        ('done', 'Done'),
+        ('blank', 'Blank'),
+        ]
+    )
+
+    class Meta:
+        icon = 'text'
+
+
 class HeroImageBlock(blocks.StructBlock):
     heading = blocks.CharBlock(required=False, help_text='Leave empty to use the page title')
     image = ImageBlock()
