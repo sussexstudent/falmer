@@ -71,6 +71,7 @@ LOCAL_APPS = [
     'falmer.content.apps.ContentConfig',
     'falmer.launcher.apps.LauncherConfig',
     'falmer.matte.apps.MatteConfig',
+    'falmer.newsletters.apps.NewslettersConfig',
     'falmer.schema.apps.SchemaConfig',
     'falmer.events.apps.EventsConfig',
     'falmer.slack.apps.SlackConfig',
@@ -308,3 +309,6 @@ PUBLIC_HOST = env('PUBLIC_HOST', default='http://localhost:8000')
 
 SLACK_API_KEY = env('SLACK_API_KEY', default=None)
 SLACK_VERIFICATION_TOKEN = env('SLACK_VERIFICATION_TOKEN', default=None)
+
+MAILCHIMP_API_USERNAME = env('MAILCHIMP_API_USERNAME', default=None)
+MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY', default=None)
