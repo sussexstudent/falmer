@@ -7,6 +7,12 @@ Falmer houses experimental service API's to explore what can be achieved with mo
 
 An main rule of the services that Falmer provides while still existing as an experiment is the idea that if required services can be wound down with minimal refactoring.
 
+# In production
+- **Search API proxy** *parsing the CMS results; next up: result curation such as pinning and filtering*
+
+# Upcoming
+- **Events Platform** Syncing MSL events, enhancing them for additional features such as named venues for infomation such as accessibility
+
 
 ## Ideas & Areas for exploration
 
@@ -15,5 +21,4 @@ An main rule of the services that Falmer provides while still existing as an exp
 - **Forms and process** for students accessing services; *think creating a society*
 - **Housing auxiliary information** where current systems are inflexible; *think committee members tagging their own societies*
 - **Image management**; *think tagging, collections, usage information, image server integration*
-- **Search API migration**; *currently the search API is a lambda handler parsing the CMS results - this would allow result curation such as pinning and filtering*
 - **Slack automation**; *auth via, report issues, log usage*
