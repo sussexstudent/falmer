@@ -7,10 +7,10 @@ Falmer houses experimental service API's to explore what can be achieved with mo
 
 An main rule of the services that Falmer provides while still existing as an experiment is the idea that if required services can be wound down with minimal refactoring.
 
-# In production
+## Live
 - **Search API proxy** *parsing the CMS results; next up: result curation such as pinning and filtering*
 
-# Upcoming
+## Upcoming
 - **Events Platform** Syncing MSL events, enhancing them for additional features such as named venues for infomation such as accessibility
 
 
