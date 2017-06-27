@@ -38,10 +38,8 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Useful template tags:
-    # 'django.contrib.humanize',
-
     'django.contrib.admin',
+    'django.contrib.gis',
 ]
 THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
@@ -134,7 +132,7 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres:///falmer'),
+    'default': env.db('DATABASE_URL', default='postgis:///falmer'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 

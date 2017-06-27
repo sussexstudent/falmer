@@ -1,4 +1,4 @@
-FROM postgres:9.6
+FROM mdillon/postgis:9.6
 
 # add backup scripts
 ADD backup.sh /usr/local/bin/backup
