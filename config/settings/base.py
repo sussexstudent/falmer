@@ -43,6 +43,7 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
+    'corsheaders',
 
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
@@ -57,7 +58,6 @@ THIRD_PARTY_APPS = [
     'wagtail.wagtailcore',
     'wagtail.api.v2',
     'graphene_django',
-    'corsheaders',
 
     'modelcluster',
     'taggit',
@@ -290,9 +290,6 @@ else:
 
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = r'^admin/'
-
-# Your common stuff: Below this line define 3rd party library settings
-# ------------------------------------------------------------------------------
 
 GRAPHENE = {
     'SCHEMA': 'falmer.schema.schema.schema'

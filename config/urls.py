@@ -20,10 +20,8 @@ from falmer.search import urls as search_urls
 from falmer.newsletters import urls as newsletters_urls
 
 urlpatterns = [
-    # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
 
-    # User management
     url(r'^images/([^/]*)/(\d*)/([^/]*)/[^/]*$', ServeView.as_view(action=settings.IMAGE_SERVE_METHOD), name='wagtailimages_serve'),
     url(r'^content-api/v2/', api_router.urls),
     url(r'^admin/', admin.site.urls),
@@ -39,9 +37,6 @@ urlpatterns = [
     url(r'^newsletters/', include(newsletters_urls)),
 
     url(r'^', include(launcher_urls)),
-
-    # Your stuff: custom urls includes go here
-
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
