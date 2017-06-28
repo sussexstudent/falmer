@@ -8,7 +8,7 @@ def get_msl_events_from_api(month_multiplier=1):
     # at the moment, msl only allows 3 month max event range
     from_date = arrow.utcnow()
     if month_multiplier > 1:
-        from_date = from_date.replace(months=+(3 * (month_multiplier - 1)))
+        from_date = from_date.shift(months=3 * (month_multiplier - 1))
 
     req = requests.get('https://www.sussexstudent.com/svc/feeds/events/0?subtree=true&from={from_date}&imagesize=event'.format(
         from_date=from_date.format('YYYY-MM-DD')
@@ -17,11 +17,11 @@ def get_msl_events_from_api(month_multiplier=1):
     if req.status_code == 200:
         return req.json()
 
-    return False
+    return []
 
 
 def sync_events_from_msl():
-    msl_events_requests = [get_msl_events_from_api(m) for m in range(0, 4)]
+    msl_events_requests = [get_msl_events_from_api(m) for m in range(0, 5)]
 
     msl_events = [y for x in msl_events_requests for y in x]
     msl_events_map = {item['Id']:item for item in msl_events}
