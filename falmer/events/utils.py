@@ -1,108 +1,35 @@
-from datetime import datetime
-import re
-
+import arrow
 import requests
-import bs4
-
-time_regex = re.compile(r"(([0-9]+):)?([0-9]+)(am|pm)|(midnight)")
-date_regex = re.compile(r"([0-9]+)(?:rd|st|nd|th) (january|febuary|march|april|may|june|july|august|september|october|november|december)", flags=re.IGNORECASE)
-
-MONTHS = {
-    'january': 1,
-    'february': 2,
-    'march': 3,
-    'april': 4,
-    'may': 5,
-    'june': 6,
-    'july': 7,
-    'august': 8,
-    'september': 9,
-    'october': 10,
-    'november': 11,
-    'december': 12,
-}
+from .models import MSLEvent
 
 
-def create_date(date, time):
-    time = list(time[0])
-    now = datetime.now()
-    if time is None:
-        return datetime(now.year, date['month'], date['day'])
+def get_msl_events_from_api(month_multiplier=1):
 
-    time_first = int(time[1]) if time[1] != '' else False
-    time_second = int(time[2]) if time[2] != '' else False
-    time_hour = time_first if time_first is not False else time_second
-    time_minuets = 0 if time_first is False else time_second
+    # at the moment, msl only allows 3 month max event range
+    from_date = arrow.utcnow()
+    if month_multiplier > 1:
+        from_date = from_date.replace(months=+(3 * (month_multiplier - 1)))
 
-    if time[4] == 'midnight':
-        time[2] = '0'
-        time[3] = 'am'
+    req = requests.get('https://www.sussexstudent.com/svc/feeds/events/0?subtree=true&from={from_date}&imagesize=event'.format(
+        from_date=from_date.format('YYYY-MM-DD')
+    ))
 
-    additional = 12 if (time[3] == 'pm' and time_hour < 12) else 0
+    if req.status_code == 200:
+        return req.json()
 
-    return datetime(
-        now.year,
-        date['month'],
-        date['day'],
-        time_hour + additional,
-        time_minuets
-    )
+    return False
 
 
-def parse_date(date_string):
-    time_match = [re.findall(time_regex, part) for part in date_string.split('-')]
-    date_match = re.findall(date_regex, date_string)
-    print(date_string)
+def sync_events_from_msl():
+    msl_events_requests = [get_msl_events_from_api(m) for m in range(0, 4)]
 
-    date_data = []
+    msl_events = [y for x in msl_events_requests for y in x]
+    msl_event_ids = [item['Id'] for item in msl_events]
+    event_matches = {event.msl_event_id: event for event in MSLEvent.objects.filter(msl_event_id__in=msl_event_ids)}
 
-    for parsed_date in date_match:
-        date_data.append({
-            'month': MONTHS[parsed_date[1].lower()],
-            'day': int(parsed_date[0]),
-        })
-
-    is_multi = len(date_data) > 1
-
-    print(date_string)
-    print(date_data)
-
-    return {
-        'start_date': create_date(date_data[0], time_match[0]),
-        'end_date': create_date(
-            date_data[1] if is_multi else date_data[0],
-            time_match[1]
-        ),
-        'is_over_multiple_days': is_multi,
-    }
-
-
-def serialize_event(event):
-    time = event.find(class_='msl_event_time').text
-    org_name = event.find(class_='msl_event_organisation')
-    dates = parse_date(time)
-
-    return {
-        'title': event.find(class_='msl_event_name').text,
-        'organisationId': int(event['data-msl-organisation-id']),
-        'organisationName': org_name.text if org_name else None,
-        'link': event.find('a')['href'],
-        'location': event.find(class_='msl_event_location').text,
-        'time': time,
-        'description': event.find(class_='msl_event_description').text,
-
-        'startDate': dates['start_date'].isoformat(),
-        'endDate': dates['end_date'].isoformat(),
-        'isOverMultipleDays': dates['is_over_multiple_days'],
-    }
-
-
-def parse_events():
-    # get page
-    req = requests.get('https://www.sussexstudent.com/events/')
-
-    document = bs4.BeautifulSoup(req.text)
-
-    events = document.find_all(class_='event_item')
-
-    return [serialize_event(event) for event in events]
+    # todo: ensure no dupes
+    for msl_event in msl_events:
+        if str(msl_event['Id']) in event_matches:
+            event_matches[str(msl_event['Id'])].update_from_msl(msl_event)
+        else:
+            MSLEvent.create_from_msl(msl_event)

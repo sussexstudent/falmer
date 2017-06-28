@@ -53,3 +53,4 @@ beautifulsoup4
 requests
 fuzzywuzzy[speedup]
 mailchimp3==2.0.13
+arrow

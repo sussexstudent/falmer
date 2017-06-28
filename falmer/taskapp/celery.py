@@ -36,7 +36,12 @@ class CeleryConfig(AppConfig):
             raven_register_logger_signal(raven_client)
             raven_register_signal(raven_client)
 
-
+app.conf.beat_schedule = {
+    'events.sync_events': {
+        'task': 'falmer.events.tasks.sync_events',
+        'schedule': 60.0 * 2.0,
+    },
+}
 
 
 @app.task(bind=True)
