@@ -24,12 +24,12 @@ def sync_events_from_msl():
     msl_events_requests = [get_msl_events_from_api(m) for m in range(0, 4)]
 
     msl_events = [y for x in msl_events_requests for y in x]
-    msl_event_ids = [item['Id'] for item in msl_events]
+    msl_events_map = {item['Id']:item for item in msl_events}
+    msl_event_ids = set(msl_events_map)
     event_matches = {event.msl_event_id: event for event in MSLEvent.objects.filter(msl_event_id__in=msl_event_ids)}
 
-    # todo: ensure no dupes
-    for msl_event in msl_events:
-        if str(msl_event['Id']) in event_matches:
-            event_matches[str(msl_event['Id'])].update_from_msl(msl_event)
+    for msl_event_id in msl_event_ids:
+        if str(msl_event_id) in event_matches:
+            event_matches[str(msl_event_id)].update_from_msl(msl_events_map[msl_event_id])
         else:
-            MSLEvent.create_from_msl(msl_event)
+            MSLEvent.create_from_msl(msl_events_map[msl_event_id])
