@@ -50,7 +50,7 @@ django-cors-headers==2.1.0
 djangorestframework-camel-case==0.2.0
 wagtail==1.10.1
 beautifulsoup4
-requests
+requests==2.18.1
 fuzzywuzzy[speedup]
 mailchimp3==2.0.13
 arrow==0.10.0
