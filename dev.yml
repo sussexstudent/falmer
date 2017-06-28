@@ -21,7 +21,8 @@ services:
       dockerfile: ./compose/django/Dockerfile-dev
     command: /start-dev.sh
     depends_on:
-      - postgres
+     - redis
+     - postgres
     environment:
       - POSTGRES_USER=falmer
       - USE_DOCKER=yes
@@ -31,6 +32,7 @@ services:
     ports:
       - "8000:8000"
 
-
+  redis:
+    image: redis:3.0
 
 
