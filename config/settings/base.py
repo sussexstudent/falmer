@@ -39,7 +39,7 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 
     'django.contrib.admin',
-    'django.contrib.gis',
+#    'django.contrib.gis',
 ]
 THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
