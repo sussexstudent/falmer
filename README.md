@@ -11,7 +11,7 @@ An main rule of the services that Falmer provides while still existing as an exp
 - **Search API proxy** *parsing the CMS results; next up: result curation such as pinning and filtering*
 
 ## Upcoming
-- **Events Platform** Syncing MSL events, enhancing them for additional features such as named venues for infomation such as accessibility
+- **Enhanced Events** Syncing MSL-managed events, enhancing them with additional features such as named venues (think: accessibility, directions) and proper categorisation and filtering.
 
 
 ## Ideas & Areas for exploration
