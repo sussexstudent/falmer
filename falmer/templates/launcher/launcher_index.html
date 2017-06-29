@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block page_title %}Falmer{% endblock %}
+
+{% block content %}
+  <div style="margin-bottom: 1rem">
+<h1>Falmer</h1>
+<h2 class="Heading--big Heading--highlight">Hello there, {{user.get_full_name}}!</h2>
+  </div>
+  <div class="ContentCard">
+  <p>Here is what you can do:</p>
+
+  <ul>
+      <li>
+        CMS
+          {% if perms.wagtailadmin.access_admin %}
+            <a class="Button" href="/cms">Open</a>
+          {% else %}
+            <a class="Button" href="/request-access/cms">Request access</a>
+          {% endif %}
+      </li>
+      <li>
+        Admin
+          {% if user.is_staff %}
+            <a class="Button" href="/admin">Open</a>
+          {% else %}
+            <a class="Button" href="/request-access/admin">Request access</a>
+          {% endif %}
+      </li>
+  </ul>
+</div>
+<div>
+    <a class="Button" href="{% url 'auth-logout' %}">Log out</a>
+    </div>
+{% endblock %}

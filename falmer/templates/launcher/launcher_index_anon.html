@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .EmailField {
+    display: block;
+    width: 100%;
+    font-size: 1.4rem;
+    padding: 0.6rem;
+    box-sizing: border-box;
+  }
+</style>
+<h1>Falmer</h1>
+<h2>Log in with your staff email address</h2>
+  <form action="{% url 'auth-request' %}" method="post">
+    {% csrf_token %}
+    <label for="email">Email address</label>
+    <input
+      name="email"
+      class="EmailField"
+      type="email"
+      placeholder="website@sussexstudent.com"
+      id="email"
+    />
+  </form>
+
+  <h2>Have Slack open?</h2>
+  <p>You can also log in with the <code>/falmer-open</code> command.</p>
+{% endblock %}

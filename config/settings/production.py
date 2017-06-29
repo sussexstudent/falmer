@@ -102,17 +102,16 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # EMAIL
 # ------------------------------------------------------------------------------
 DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
-                         default='falmer <noreply@falmer.sussexstudent.com>')
+                         default='sussexstudent.com <website@sussexstudent.com>')
 EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[falmer]')
 SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
-# Anymail with Mailgun: TODO: setup email sending - although perhaps use ses instead
-# INSTALLED_APPS += ['anymail', ]
-# ANYMAIL = {
-#     'MAILGUN_API_KEY': env('DJANGO_MAILGUN_API_KEY'),
-#     'MAILGUN_SENDER_DOMAIN': env('MAILGUN_SENDER_DOMAIN')
-# }
-# EMAIL_BACKEND = 'anymail.backends.mailgun.MailgunBackend'
+INSTALLED_APPS += ['anymail', ]
+ANYMAIL = {
+    'POSTMARK_SERVER_TOKEN': env('POSTMARK_SERVER_TOKEN')
+}
+
+EMAIL_BACKEND = "anymail.backends.postmark.EmailBackend"
 
 # TEMPLATE CONFIGURATION
 # ------------------------------------------------------------------------------

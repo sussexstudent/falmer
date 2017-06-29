@@ -1,24 +1,19 @@
-{% load staticfiles i18n %}<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}falmer{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<head>
+  <meta charset="utf-8">
+  <title>{% block page_title %} {% endblock %} | Falmer</title>
+  <link href="https://du9l8eemj97rm.cloudfront.net/union.9dfcc2457606ec7e09d519984f6934b8.productionFonts.css" rel="stylesheet" />
+  <link href="https://du9l8eemj97rm.cloudfront.net/union.00ab475e2033adb1091698c35ff3064a.main.css" rel="stylesheet" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  </head>
-
-  <body>
-
-    <div class="container">
-
-      {% block content %}
-        <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
-
-    </div> <!-- /container -->
-  </body>
+</head>
+<body class="Body">
+<div class="Site" style="padding-top: 1.5rem">
+  <div class="Container">
+    {% block content %} {% endblock %}
+  </div>
+</div>
+</body>
 </html>
-
