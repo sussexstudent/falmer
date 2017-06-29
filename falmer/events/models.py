@@ -3,6 +3,19 @@ from django.db import models
 
 from falmer.matte.models import MatteImage
 
+class Venue(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class AutoLocationDisplayToVenue(models.Model):
+    venue = models.ForeignKey(Venue, null=False)
+    location = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.location
 
 class Event(models.Model):
     title = models.CharField(max_length=255)
@@ -10,6 +23,9 @@ class Event(models.Model):
     end_time = models.DateTimeField()
     featured_image = models.ForeignKey(MatteImage, null=True, blank=False, on_delete=models.SET_NULL)
     social_facebook = models.URLField(blank=True, default='')
+    location_display = models.CharField(max_length=255, default='')
+    venue = models.ForeignKey(Venue, blank=True, null=True)
+    short_description = models.TextField(default='')
 
 
 class MSLEvent(models.Model):
@@ -44,6 +60,8 @@ class MSLEvent(models.Model):
             title=title,
             start_time=start_time,
             end_time=end_time,
+            location_display=api_content['Location'],
+            short_description=api_content['Description']
        )
 
         event.save()
@@ -70,6 +88,7 @@ class MSLEvent(models.Model):
 
     def update_from_msl(self, api_content):
         title = api_content['Title']
+        location = api_content['Location']
         start_time = arrow.get(api_content['StartDate']).datetime
         end_time = arrow.get(api_content['EndDate']).datetime
         # TODO: implement change checking before saving/setting
@@ -78,6 +97,15 @@ class MSLEvent(models.Model):
             self.event.title = title
             self.event.start_time = start_time
             self.event.end_time = end_time
+            self.event.location_display = location
+            self.event.short_description = api_content['Description']
+
+            try:
+                venue_map = AutoLocationDisplayToVenue.objects.get(location=location)
+                self.event.venue = venue_map.venue
+            except AutoLocationDisplayToVenue.DoesNotExist:
+                self.event.venue = None
+
             self.event.save()
 
         self.title = title
@@ -93,9 +121,3 @@ class MSLEvent(models.Model):
         self.body_html = api_content['Body']
         self.description = api_content['Description']
         self.save()
-
-
-
-# class Venue(models.Model):
-#     name = models.CharField(max_length=255)
-#
