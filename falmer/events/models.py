@@ -1,10 +1,12 @@
 import arrow
 from django.db import models
 
-from falmer.matte.models import MatteImage
+from falmer.matte.models import MatteImage, RemoteImage
+
 
 class Venue(models.Model):
     name = models.CharField(max_length=255)
+    website_link = models.CharField(max_length=255, default='')
 
     def __str__(self):
         return self.name
@@ -17,13 +19,16 @@ class AutoLocationDisplayToVenue(models.Model):
     def __str__(self):
         return self.location
 
+
 class Event(models.Model):
     title = models.CharField(max_length=255)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     featured_image = models.ForeignKey(MatteImage, null=True, blank=False, on_delete=models.SET_NULL)
     social_facebook = models.URLField(blank=True, default='')
+    kicker = models.CharField(max_length=255, default='')
     location_display = models.CharField(max_length=255, default='')
+
     venue = models.ForeignKey(Venue, blank=True, null=True)
     short_description = models.TextField(default='')
 
@@ -61,8 +66,14 @@ class MSLEvent(models.Model):
             start_time=start_time,
             end_time=end_time,
             location_display=api_content['Location'],
-            short_description=api_content['Description']
-       )
+            short_description=api_content['Description'],
+            kicker=api_content['Organisation'],
+        )
+
+        local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
+
+        if local_remote_image is not None:
+            event.featured_image = local_remote_image
 
         event.save()
 
@@ -99,6 +110,12 @@ class MSLEvent(models.Model):
             self.event.end_time = end_time
             self.event.location_display = location
             self.event.short_description = api_content['Description']
+            self.event.kicker = api_content['Organisation']
+
+            local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
+
+            if local_remote_image is not None:
+                self.event.featured_image = local_remote_image
 
             try:
                 venue_map = AutoLocationDisplayToVenue.objects.get(location=location)
