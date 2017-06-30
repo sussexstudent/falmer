@@ -50,6 +50,9 @@ class RemoteImage(models.Model):
     image_url = models.URLField(unique=True)
     matte_image = models.ForeignKey(MatteImage, null=True)
 
+    def __str__(self):
+        return self.image_url
+
     @staticmethod
     def try_image(url):
         if url is None or url == '':
