@@ -68,3 +68,7 @@ staticfiles/
 .cache/
 
 /env
+/.python-version
+/.ve
+/celerybeat-schedule
+/django
