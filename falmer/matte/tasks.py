@@ -1,19 +1,16 @@
 import logging
-import os
 import tempfile
 
 import requests
-from io import BytesIO
-from celery import Celery
+from celery import shared_task
 from django.core import files
 
 from .utils import create_image_from_bytes
 
 logger = logging.getLogger(__name__)
 
-app = Celery()
 
-@app.task
+@shared_task
 def save_image_from_remote(remote_image_pk):
     from .models import RemoteImage
     try:

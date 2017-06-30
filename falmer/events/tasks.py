@@ -1,9 +1,7 @@
-from celery import Celery
+from celery import shared_task
 from .utils import sync_events_from_msl
 
 
-app = Celery()
-
-@app.task
+@shared_task
 def sync_events():
     sync_events_from_msl()
