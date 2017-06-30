@@ -1,10 +1,11 @@
 from graphene_django import DjangoObjectType
 from wagtail.wagtailcore.fields import StreamField
-from wagtail.wagtailimages.models import Image, Filter
+from wagtail.wagtailimages.models import Filter
 from taggit.managers import TaggableManager
 import graphene
 from graphene_django.converter import convert_django_field
-from falmer.content.models import StaffPage, StaffMember, StaffDepartment, StaffSection
+from falmer.events import models as event_models
+from falmer.matte.models import MatteImage
 
 
 @convert_django_field.register(StreamField)
@@ -17,56 +18,35 @@ def convert_taggable_manager(field, registry=None):
     return "hello there"
 
 
-class WagtailImage(DjangoObjectType):
-    url = graphene.String(width=graphene.Int())
+class Image(DjangoObjectType):
+    resource = graphene.String()
 
-    def resolve_url(self, args, context, info):
-        filter = Filter()
-        filter.spec = 'width-{}'.format(args.get('width'))
-        return self.get_rendition(filter).url
+    def resolve_resource(self, args, context, info):
+        return self.file.name
 
     class Meta:
-        model = Image
+        model = MatteImage
 
 
-class StaffType(DjangoObjectType):
-    class Meta:
-        model = StaffMember
-
-
-class StaffSectionType(DjangoObjectType):
-    class Meta:
-        model = StaffSection
-
-
-class StaffDepartmentType(DjangoObjectType):
-    sections = graphene.List(StaffSectionType)
-
-    def resolve_sections(self, args, content, info):
-        return self.get_children().live().type(StaffSection).specific()
+class Venue(DjangoObjectType):
 
     class Meta:
-        model = StaffDepartment
+        model = event_models.Venue
 
 
-class StaffPageType(DjangoObjectType):
-    departments = graphene.List(StaffDepartmentType)
-
-    def resolve_departments(self, args, content, info):
-        r = self.get_children().live().type(StaffDepartment).specific()
-        return r
+class Event(DjangoObjectType):
+    venue = graphene.Field(Venue)
+    featured_image = graphene.Field(Image)
 
     class Meta:
-        model = StaffPage
-
+        model = event_models.Event
 
 
 class Query(graphene.ObjectType):
-    staff = graphene.Field(StaffPageType)
+    all_events = graphene.List(Event)
 
-    def resolve_staff(self, args, context, info):
-        # hacky - TODO: investigate better way of having 'singleton' pages, via slug perhaps?
-        return StaffPage.objects.all()[0];
+    def resolve_all_events(self, args, context, info):
+        return event_models.Event.objects.all()
 
 
 schema = graphene.Schema(query=Query)
