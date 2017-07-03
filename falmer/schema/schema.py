@@ -66,7 +66,7 @@ class StudentGroup(DjangoObjectType):
 
 class ClientUser(DjangoObjectType):
     name = graphene.String()
-    has_CMS_access = graphene.Boolean()
+    has_cms_access = graphene.Boolean()
 
     class Meta:
         model = auth_models.FalmerUser
