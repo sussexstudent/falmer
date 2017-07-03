@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, parser_classes, authentication_classes, \
     permission_classes
 from rest_framework.parsers import BaseParser
+from rest_framework.permissions import AllowAny
 from rest_framework.settings import api_settings
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
@@ -33,7 +34,7 @@ class DRFAuthenticatedGraphQLView(GraphQLView):
     @classmethod
     def as_view(cls, *args, **kwargs):
         view = super(GraphQLView, cls).as_view(*args, **kwargs)
-        # view = permission_classes((IsAuthenticated,))(view)
+        view = permission_classes((AllowAny, ))(view)
         view = authentication_classes(api_settings.DEFAULT_AUTHENTICATION_CLASSES)(view)
         view = api_view(['GET', 'POST'])(view)
         return view
