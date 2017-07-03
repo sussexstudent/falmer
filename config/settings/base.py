@@ -76,6 +76,7 @@ LOCAL_APPS = [
     'falmer.slack.apps.SlackConfig',
     'falmer.search.apps.SearchConfig',
     'falmer.frontend.apps.FrontendConfig',
+    'falmer.studentgroups.apps.StudentGroupsConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

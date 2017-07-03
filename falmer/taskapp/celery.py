@@ -40,6 +40,10 @@ app.conf.beat_schedule = {
         'task': 'falmer.events.tasks.sync_events',
         'schedule': 60.0 * 2.0,
     },
+    'studentgroups.sync_groups': {
+        'task': 'falmer.studentgroups.tasks.sync_groups',
+        'schedule': 60.0 * 60.0,
+    },
 }
 
 

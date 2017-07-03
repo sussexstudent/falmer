@@ -5,6 +5,7 @@ from taggit.managers import TaggableManager
 import graphene
 from graphene_django.converter import convert_django_field
 from falmer.auth import models as auth_models
+from falmer.studentgroups import models as student_groups_models
 from falmer.events import models as event_models
 from falmer.matte.models import MatteImage
 
@@ -43,6 +44,26 @@ class Event(DjangoObjectType):
         model = event_models.Event
 
 
+class MSLStudentGroup(DjangoObjectType):
+    msl_image = graphene.Field(Image)
+
+    class Meta:
+        model = student_groups_models.MSLStudentGroup
+
+
+class StudentGroup(DjangoObjectType):
+    msl_group = graphene.Field(MSLStudentGroup)
+
+    class Meta:
+        model = student_groups_models.StudentGroup
+
+    def resolve_msl_group(self, args, context, info):
+        try:
+            return self.msl_group
+        except student_groups_models.MSLStudentGroup.DoesNotExist:
+            return None
+
+
 class ClientUser(DjangoObjectType):
     name = graphene.String()
     has_CMS_access = graphene.Boolean()
@@ -54,8 +75,9 @@ class ClientUser(DjangoObjectType):
         return self.get_full_name()
 
     # this is a quick hack until we work on permissions etc
-    def resolve_has_CMS_access(self, args, context, info):
+    def resolve_has_cms_access(self, args, context, info):
         return self.has_perm('wagtailadmin.access_admin')
+
 
 class SearchResult(graphene.Interface):
     pass
@@ -65,9 +87,15 @@ class Query(graphene.ObjectType):
     all_events = graphene.List(Event)
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
+    all_groups = graphene.List(StudentGroup)
 
     def resolve_all_events(self, args, context, info):
-        return event_models.Event.objects.all()
+        return event_models.Event.objects.all()\
+            .select_related('featured_image')
+
+    def resolve_all_groups(self, args, context, info):
+        return student_groups_models.StudentGroup.objects.all()\
+            .select_related('msl_group', 'msl_group__msl_image')
 
     def resolve_viewer(self, args, context, info):
         if context.user.is_authenticated:
