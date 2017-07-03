@@ -25,6 +25,7 @@ from falmer.search import urls as search_urls
 from falmer.newsletters import urls as newsletters_urls
 from falmer.frontend import urls as frontend_urls
 
+
 class DRFAuthenticatedGraphQLView(GraphQLView):
     def parse_body(self, request):
         if isinstance(request, rest_framework.request.Request):

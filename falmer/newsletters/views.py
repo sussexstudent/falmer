@@ -6,6 +6,7 @@ from django.http import Http404, HttpResponse
 from mailchimp3 import MailChimp
 from django.utils import timezone
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils.crypto import get_random_string
@@ -39,6 +40,8 @@ def get_ip(request):
     return ip
 
 class ListMembersAPIView(APIView):
+    permission_classes = (AllowAny, )
+
     def post(self, request, list_slug):
         try:
             list = MailChimpList.objects.get(slug=list_slug, enabled=True)
@@ -59,7 +62,7 @@ class ListMembersAPIView(APIView):
                 raise MailchimpError(json.get('errors') or json.get('detail') or json)
             else:
                 return HttpResponse(status=500)
-        print(mc_response)
+
         continuation_token = get_random_string(16)
         NewsletterResumeToken.objects.create(
             list=list,
