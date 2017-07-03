@@ -45,7 +45,7 @@ class Event(DjangoObjectType):
 
 
 class MSLStudentGroup(DjangoObjectType):
-    msl_image = graphene.Field(Image)
+    logo = graphene.Field(Image)
 
     class Meta:
         model = student_groups_models.MSLStudentGroup
@@ -96,7 +96,7 @@ class Query(graphene.ObjectType):
     def resolve_all_groups(self, args, context, info):
         return student_groups_models.StudentGroup.objects.all()\
             .order_by('name')\
-            .select_related('msl_group', 'msl_group__msl_image')
+            .select_related('msl_group', 'msl_group__logo')
 
     def resolve_viewer(self, args, context, info):
         if context.user.is_authenticated:

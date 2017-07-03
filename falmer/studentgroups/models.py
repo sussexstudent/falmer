@@ -28,10 +28,11 @@ def get_group_image_url(url):
 class MSLStudentGroup(models.Model):
     group = models.OneToOneField(StudentGroup, related_name='msl_group')
 
-    msl_description = models.TextField(default='')
+    description = models.TextField(default='')
     msl_group_id = models.IntegerField(unique=True)
-    msl_image = models.ForeignKey(MatteImage, null=True)
-    msl_image_url = models.URLField(default='')
+    logo = models.ForeignKey(MatteImage, null=True)
+    link = models.URLField()
+    logo_url = models.CharField(max_length=255, default='')
     category = models.ForeignKey(MSLStudentGroupCategory)
     last_sync = models.DateTimeField(auto_now=True)
 
@@ -50,15 +51,16 @@ class MSLStudentGroup(models.Model):
         msl_group = MSLStudentGroup(
             group=group,
             msl_group_id=content['id'],
-            msl_description=content['description'],
-            msl_image_url=image or '',
+            link=content['link'],
+            description=content['description'],
+            logo_url=image or '',
             category=category,
         )
 
         local_remote_image = RemoteImage.try_image(image)
 
         if local_remote_image is not None:
-            msl_group.msl_image = local_remote_image
+            msl_group.logo = local_remote_image
 
         msl_group.save()
 
@@ -68,16 +70,17 @@ class MSLStudentGroup(models.Model):
         image = get_group_image_url(content['logo_url'])
 
         self.msl_group_id = content['id']
-        self.msl_description = content['description']
-        self.msl_image_url = image or ''
+        self.description = content['description']
+        self.link = content['link']
+        self.logo_url = image or ''
         category, created_category = MSLStudentGroupCategory.objects.get_or_create(name=content['category'])
         self.category = category
 
         local_remote_image = RemoteImage.try_image(image)
 
         if local_remote_image is not None:
-            self.msl_image = local_remote_image
+            self.logo = local_remote_image
         else:
-            self.msl_image = None
+            self.logo = None
 
         self.save()
