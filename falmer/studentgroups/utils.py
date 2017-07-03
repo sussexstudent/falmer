@@ -26,7 +26,7 @@ def parse_group(el):
     previous = el.find_previous_sibling('li')
     if previous is not None and 'class' in previous.attrs and 'msl-gl-logo' in previous.attrs['class']:
         img = el.find_previous_sibling('li').find('img')
-        data['logo_url'] = 'https://sussexstudent.com{}'.format(img.attrs['src'].replace('..', '').split('?')[0])
+        data['logo_url'] = 'https://www.sussexstudent.com{}'.format(img.attrs['src'].replace('..', '').split('?')[0])
 
     return data
 
