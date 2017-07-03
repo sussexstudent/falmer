@@ -31,8 +31,8 @@ class MSLStudentGroup(models.Model):
     description = models.TextField(default='')
     msl_group_id = models.IntegerField(unique=True)
     logo = models.ForeignKey(MatteImage, null=True)
-    link = models.URLField()
-    logo_url = models.CharField(max_length=255, default='')
+    link = models.CharField(max_length=255)
+    logo_url = models.URLField(default='')
     category = models.ForeignKey(MSLStudentGroupCategory)
     last_sync = models.DateTimeField(auto_now=True)
 
