@@ -44,6 +44,8 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
     'corsheaders',
+    'rest_framework',
+    'rest_framework.authtoken',
 
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
@@ -58,7 +60,6 @@ THIRD_PARTY_APPS = [
     'wagtail.wagtailcore',
     'wagtail.api.v2',
     'graphene_django',
-
     'modelcluster',
     'taggit',
 ]
@@ -74,6 +75,7 @@ LOCAL_APPS = [
     'falmer.events.apps.EventsConfig',
     'falmer.slack.apps.SlackConfig',
     'falmer.search.apps.SearchConfig',
+    'falmer.frontend.apps.FrontendConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -313,3 +315,17 @@ SLACK_VERIFICATION_TOKEN = env('SLACK_VERIFICATION_TOKEN', default=None)
 
 MAILCHIMP_API_USERNAME = env('MAILCHIMP_API_USERNAME', default=None)
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY', default=None)
+JWT_AUTH = {
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}

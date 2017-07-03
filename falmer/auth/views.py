@@ -4,7 +4,11 @@ from django.contrib.auth import login, logout
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from rest_framework.decorators import permission_classes, api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.settings import api_settings
 
+from falmer.auth.serializers import MeSerializer
 from falmer.auth.utils import create_magic_link_for_user
 from .models import MagicLinkToken, FalmerUser
 
@@ -66,9 +70,27 @@ def email_link_request(request):
     return render(request, 'auth/link_request.html', {'form': form})
 
 
-
-
 def logout_view(request):
     logout(request)
 
     return redirect('/')
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def generate_jwt(request):
+    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+    payload = jwt_payload_handler(request.user)
+    token = jwt_encode_handler(payload)
+
+    return JsonResponse({
+        'token': token,
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def me(request):
+    return JsonResponse(MeSerializer(request.user).data)

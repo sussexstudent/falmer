@@ -1,10 +1,14 @@
+import rest_framework
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, parser_classes, authentication_classes, \
+    permission_classes
+from rest_framework.parsers import BaseParser
+from rest_framework.settings import api_settings
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtailcore import urls as wagtail_urls
@@ -18,6 +22,21 @@ from falmer.launcher import urls as launcher_urls
 from falmer.events import urls as events_urls
 from falmer.search import urls as search_urls
 from falmer.newsletters import urls as newsletters_urls
+from falmer.frontend import urls as frontend_urls
+
+class DRFAuthenticatedGraphQLView(GraphQLView):
+    def parse_body(self, request):
+        if isinstance(request, rest_framework.request.Request):
+            return request.data
+        return super(GraphQLView, self).parse_body(request)
+
+    @classmethod
+    def as_view(cls, *args, **kwargs):
+        view = super(GraphQLView, cls).as_view(*args, **kwargs)
+        # view = permission_classes((IsAuthenticated,))(view)
+        view = authentication_classes(api_settings.DEFAULT_AUTHENTICATION_CLASSES)(view)
+        view = api_view(['GET', 'POST'])(view)
+        return view
 
 urlpatterns = [
     url(settings.ADMIN_URL, admin.site.urls),
@@ -28,7 +47,7 @@ urlpatterns = [
     url(r'^cms/', include(wagtailadmin_urls)),
     url(r'^pages/', include(wagtail_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
-    url(r'^graphql', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    url(r'^graphql', csrf_exempt(DRFAuthenticatedGraphQLView.as_view(graphiql=True))),
 
     url(r'^auth/', include(auth_urls)),
     url(r'^slack/', include(slack_urls)),
@@ -37,7 +56,7 @@ urlpatterns = [
     url(r'^newsletters/', include(newsletters_urls)),
 
     url(r'^', include(launcher_urls)),
-
+    url(r'^', include(frontend_urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
