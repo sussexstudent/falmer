@@ -95,6 +95,7 @@ class Query(graphene.ObjectType):
 
     def resolve_all_groups(self, args, context, info):
         return student_groups_models.StudentGroup.objects.all()\
+            .order_by('name')\
             .select_related('msl_group', 'msl_group__msl_image')
 
     def resolve_viewer(self, args, context, info):
