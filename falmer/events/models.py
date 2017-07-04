@@ -25,6 +25,7 @@ class Event(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     featured_image = models.ForeignKey(MatteImage, null=True, blank=False, on_delete=models.SET_NULL)
+    url = models.URLField(blank=True, default='')
     social_facebook = models.URLField(blank=True, default='')
     kicker = models.CharField(max_length=255, default='')
     location_display = models.CharField(max_length=255, default='')
@@ -68,6 +69,7 @@ class MSLEvent(models.Model):
             location_display=api_content['Location'],
             short_description=api_content['Description'],
             kicker=api_content['Organisation'],
+            url=api_content['Url'],
         )
 
         local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
@@ -111,6 +113,7 @@ class MSLEvent(models.Model):
             self.event.location_display = location
             self.event.short_description = api_content['Description']
             self.event.kicker = api_content['Organisation']
+            self.event.url = api_content['Url']
 
             local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
 
