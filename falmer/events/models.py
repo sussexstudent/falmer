@@ -1,4 +1,5 @@
 import arrow
+from dateutil import tz
 from django.db import models
 
 from falmer.matte.models import MatteImage, RemoteImage
@@ -60,8 +61,8 @@ class MSLEvent(models.Model):
     @staticmethod
     def create_from_msl(api_content):
         title = api_content['Title']
-        start_time = arrow.get(api_content['StartDate']).datetime
-        end_time = arrow.get(api_content['EndDate']).datetime
+        start_time = arrow.get(api_content['StartDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
+        end_time = arrow.get(api_content['EndDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
         event = Event(
             title=title,
             start_time=start_time,
@@ -102,8 +103,8 @@ class MSLEvent(models.Model):
     def update_from_msl(self, api_content):
         title = api_content['Title']
         location = api_content['Location']
-        start_time = arrow.get(api_content['StartDate']).datetime
-        end_time = arrow.get(api_content['EndDate']).datetime
+        start_time = arrow.get(api_content['StartDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
+        end_time = arrow.get(api_content['EndDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
         # TODO: implement change checking before saving/setting
 
         if not self.disable_sync:
