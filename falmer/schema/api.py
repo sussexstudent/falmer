@@ -1,4 +1,5 @@
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer
+from rest_framework.permissions import AllowAny
 from wagtail.api.v2.endpoints import PagesAPIEndpoint as WagtailPagesAPIEndpoint
 from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.wagtailimages.api.v2.endpoints import ImagesAPIEndpoint
@@ -19,6 +20,7 @@ class BasePagesAPIEndpoint(WagtailPagesAPIEndpoint):
 
     base_serializer_class = PageSerializer
     renderer_classes = [CamelCaseJSONRenderer]
+    permission_classes = [AllowAny, ]
 
     body_fields = WagtailPagesAPIEndpoint.body_fields + [
     #    'guide',
