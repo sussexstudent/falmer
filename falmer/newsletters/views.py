@@ -27,6 +27,7 @@ def get_mailchimp_client():
 class MailchimpError(Exception):
     pass
 
+
 def get_ip(request):
     """Returns the IP of the request, accounting for the possibility of being
     behind a proxy.
@@ -38,6 +39,7 @@ def get_ip(request):
     else:
         ip = request.META.get("REMOTE_ADDR", "")
     return ip
+
 
 class ListMembersAPIView(APIView):
     permission_classes = (AllowAny, )
@@ -59,6 +61,11 @@ class ListMembersAPIView(APIView):
         except requests.HTTPError as e:
             if e.response.status_code == 400:
                 json = e.response.json()
+
+                if json.get('title') == 'Member Exists':
+                    # this is definitely the correct usage of this
+                    return Response({'complete': True, }, status=status.HTTP_200_OK)
+
                 raise MailchimpError(json.get('errors') or json.get('detail') or json)
             else:
                 return HttpResponse(status=500)
