@@ -28,6 +28,16 @@ class SectionBlock(blocks.StructBlock):
         icon = 'user'
 
 
+class FigureBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True)
+    subtitle = blocks.CharBlock(required=True)
+    image = ImageBlock()
+    link = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'user'
+
+
 class PledgeBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=True)
     body = blocks.RichTextBlock(required=True)
