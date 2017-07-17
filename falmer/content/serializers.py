@@ -19,16 +19,11 @@ def generate_image_url(image, filter_spec):
 
 
 class WagtailImageSerializer(serializers.ModelSerializer):
-    wagtail_image = serializers.SerializerMethodField()
     resource = serializers.SerializerMethodField()
 
     class Meta:
         model = MatteImage
-        fields = ('id', 'wagtail_image', 'resource')
-
-    def get_wagtail_image(self, image):
-        return generate_image_url(image, 'fill-400x400')
-
+        fields = ('id', 'resource')
 
     def get_resource(self, image):
         return image.file.name
