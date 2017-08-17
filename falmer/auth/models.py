@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.conf import settings
 from django.utils.crypto import get_random_string
 
+from falmer.slack.models import SlackUser
+
 AUTHORITY_INTERNAL_STAFF = 'IS'
 
 AUTHORITY_CHOICES = (
@@ -43,8 +45,11 @@ class FalmerUser(AbstractBaseUser, PermissionsMixin):
     objects = FalmerUserManager()
 
     def get_full_name(self):
-        if self.slack_account and self.slack_account.has_name():
-            return '{} {}'.format(self.slack_account.first_name, self.slack_account.last_name)
+        try:
+            if self.slack_account and self.slack_account.has_name():
+                return '{} {}'.format(self.slack_account.first_name, self.slack_account.last_name)
+        except SlackUser.DoesNotExist:
+            return self.identifier
 
         return self.identifier
 

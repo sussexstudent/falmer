@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = [
     'wagtail.wagtailimages',
     'wagtail.wagtailsearch',
     'wagtail.wagtailadmin',
+    'wagtail.contrib.modeladmin',
     'wagtail.wagtailcore',
     'wagtail.api.v2',
     'graphene_django',
@@ -305,7 +306,10 @@ GRAPHENE = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
-
+# CORS_ORIGIN_WHITELIST = [
+#     'sussexstudent.com',
+#     'localhost:3002',
+# ]
 WAGTAILIMAGES_IMAGE_MODEL = 'matte.MatteImage'
 WAGTAIL_SITE_NAME = 'Falmer'
 IMAGE_SERVE_METHOD = env('IMAGE_SERVE_METHOD', default='redirect')
@@ -316,6 +320,8 @@ SLACK_VERIFICATION_TOKEN = env('SLACK_VERIFICATION_TOKEN', default=None)
 
 MAILCHIMP_API_USERNAME = env('MAILCHIMP_API_USERNAME', default=None)
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY', default=None)
+FRONTEND_DEPLOY_SECRET = env('FRONTEND_DEPLOY_SECRET', default=None)
+
 JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }

@@ -1,8 +1,43 @@
 import arrow
 from dateutil import tz
 from django.db import models
+from django_extensions.db.fields import AutoSlugField
+from wagtail.wagtailadmin.edit_handlers import MultiFieldPanel, FieldRowPanel, FieldPanel, \
+    ObjectList
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from falmer.matte.models import MatteImage, RemoteImage
+
+
+class Bundle(models.Model):
+    name = models.CharField(max_length=72)
+
+    def __str__(self):
+        return self.name
+
+
+class BrandingPeriod(models.Model):
+    name = models.CharField(max_length=72)
+    website_link = models.URLField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=72)
+    slug = AutoSlugField(populate_from='name')
+
+    def __str__(self):
+        return self.name
+
+
+class Type(models.Model):
+    name = models.CharField(max_length=72)
+    slug = AutoSlugField(populate_from='name')
+
+    def __str__(self):
+        return self.name
 
 
 class Venue(models.Model):
@@ -22,18 +57,104 @@ class AutoLocationDisplayToVenue(models.Model):
 
 
 class Event(models.Model):
+    FREE = 'FREE'
+    PAID = 'PAID'
+    NA = 'NA'
+    COST_CHOICES = (
+        (FREE, 'Free'),
+        (PAID, 'Paid'),
+        (NA, 'n/a'),
+    )
+
+    SOFT_DRINKS_ALCOHOL = 'AV'
+    NO_ALCOHOL = 'NO'
+    NOT_ALCOHOL_FOCUSED = 'NF'
+
+    ALCOHOL_CHOICES = (
+        (SOFT_DRINKS_ALCOHOL, 'Soft drinks & alcohol available'),
+        (NO_ALCOHOL, 'No alcohol'),
+        (NOT_ALCOHOL_FOCUSED, 'Not alcohol focused'),
+    )
+
+    LIMITED_AVAILABILITY = 'LA'
+    SOLD_OUT = 'SO'
+    TICKET_LEVEL_CHOICES = (
+        (NA, 'Not applicable'),
+        (LIMITED_AVAILABILITY, 'Limited availability'),
+        (SOLD_OUT, 'Sold out'),
+    )
+
     title = models.CharField(max_length=255)
+    slug = AutoSlugField(populate_from='title', unique=False)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    featured_image = models.ForeignKey(MatteImage, null=True, blank=False, on_delete=models.SET_NULL)
+
+    featured_image = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
     url = models.URLField(blank=True, default='')
     social_facebook = models.URLField(blank=True, default='')
-    kicker = models.CharField(max_length=255, default='')
-    location_display = models.CharField(max_length=255, default='')
+    kicker = models.CharField(max_length=255, default='', blank=True)
+    location_display = models.CharField(max_length=255, default='', blank=True)
+    embargo_until = models.DateTimeField(null=True)
 
     venue = models.ForeignKey(Venue, blank=True, null=True)
     short_description = models.TextField(default='')
+    body = models.TextField(default='')
 
+    is_over_18_only = models.BooleanField(default=False)
+    ticket_level = models.CharField(max_length=2, choices=TICKET_LEVEL_CHOICES, default=NA)
+    cost = models.CharField(max_length=10, choices=COST_CHOICES, default=NA)
+    alcohol = models.CharField(max_length=2, choices=ALCOHOL_CHOICES, default=NOT_ALCOHOL_FOCUSED)
+
+    suitable_kids_families = models.BooleanField(default=False)
+    just_for_pgs = models.BooleanField(default=False)
+
+    bundle = models.ForeignKey(Bundle, null=True, blank=True)
+    brand = models.ForeignKey(BrandingPeriod, null=True, blank=True)
+    category = models.ForeignKey(Category, null=True, blank=True)
+    type = models.ForeignKey(Type, null=True, blank=True)
+
+    custom_panels = [
+        MultiFieldPanel([
+            FieldPanel('title', classname='title'),
+            FieldRowPanel([
+                FieldPanel('start_time'),
+                FieldPanel('end_time'),
+            ]),
+            FieldPanel('embargo_until'),
+            ImageChooserPanel('featured_image')
+        ], heading='The basics'),
+        MultiFieldPanel([
+            FieldPanel('kicker'),
+            FieldPanel('short_description'),
+            FieldPanel('body'),
+            FieldPanel('location_display'),
+            FieldPanel('venue'),
+        ], heading='More details'),
+        MultiFieldPanel([
+            FieldPanel('social_facebook'),
+            FieldPanel('url'),
+        ], heading='Social'),
+        MultiFieldPanel([
+            FieldPanel('is_over_18_only'),
+            FieldPanel('ticket_level'),
+            FieldPanel('cost'),
+            FieldPanel('alcohol'),
+            FieldPanel('suitable_kids_families'),
+            FieldPanel('just_for_pgs'),
+        ], heading='About the event itself'),
+        MultiFieldPanel([
+            FieldPanel('bundle'),
+            FieldPanel('brand'),
+            FieldPanel('category'),
+            FieldPanel('type'),
+        ], heading='Organisation'),
+    ]
+
+    edit_handler = ObjectList(custom_panels)
+
+
+    def __str__(self):
+        return self.title
 
 class MSLEvent(models.Model):
     event = models.OneToOneField(
