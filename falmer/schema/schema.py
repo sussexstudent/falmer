@@ -86,12 +86,16 @@ class SearchResult(graphene.Interface):
 
 
 class Query(graphene.ObjectType):
-    all_events = graphene.List(Event)
+    all_events = graphene.List(Event, ignore_embargo=graphene.Boolean())
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
     all_groups = graphene.List(StudentGroup)
 
     def resolve_all_events(self, args, context, info):
+        if args.get('ignore_embargo'):
+            return event_models.Event.objects.all()\
+                .select_related('featured_image')
+
         return event_models.Event.objects.filter(Q(embargo_until__lt=datetime.now()) | Q(embargo_until=None))\
             .select_related('featured_image')
 
