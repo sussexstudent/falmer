@@ -136,7 +136,7 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgis:///falmer'),
+    'default': env.db('DATABASE_URL', default='postgres:///falmer'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
