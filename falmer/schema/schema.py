@@ -1,3 +1,5 @@
+from datetime import datetime
+from django.db.models import Q
 from graphene_django import DjangoObjectType
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailimages.models import Filter
@@ -90,7 +92,7 @@ class Query(graphene.ObjectType):
     all_groups = graphene.List(StudentGroup)
 
     def resolve_all_events(self, args, context, info):
-        return event_models.Event.objects.all()\
+        return event_models.Event.objects.filter(Q(embargo_until__lt=datetime.now()) | Q(embargo_until=None))\
             .select_related('featured_image')
 
     def resolve_all_groups(self, args, context, info):
