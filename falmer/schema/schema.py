@@ -38,9 +38,37 @@ class Venue(DjangoObjectType):
         model = event_models.Venue
 
 
+class Category(DjangoObjectType):
+
+    class Meta:
+        model = event_models.Category
+
+
+class Type(DjangoObjectType):
+
+    class Meta:
+        model = event_models.Type
+
+
+class BrandingPeriod(DjangoObjectType):
+
+    class Meta:
+        model = event_models.BrandingPeriod
+
+
+class Bundle(DjangoObjectType):
+
+    class Meta:
+        model = event_models.Bundle
+
+
 class Event(DjangoObjectType):
     venue = graphene.Field(Venue)
     featured_image = graphene.Field(Image)
+    category = graphene.Field(Category)
+    type = graphene.Field(Type)
+    brand = graphene.Field(BrandingPeriod)
+    bundle = graphene.Field(Bundle)
 
     class Meta:
         model = event_models.Event
