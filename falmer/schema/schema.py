@@ -115,6 +115,7 @@ class SearchResult(graphene.Interface):
 
 class Query(graphene.ObjectType):
     all_events = graphene.List(Event, ignore_embargo=graphene.Boolean())
+    event = graphene.Field(Event, eventId=graphene.Int())
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
     all_groups = graphene.List(StudentGroup)
@@ -126,6 +127,9 @@ class Query(graphene.ObjectType):
 
         return event_models.Event.objects.filter(Q(embargo_until__lt=datetime.now()) | Q(embargo_until=None))\
             .select_related('featured_image')
+
+    def resolve_event(self, args, context, info):
+        return event_models.Event.objects.select_related('featured_image', 'bundle', 'brand').get(pk=args.get('eventId'))
 
     def resolve_all_groups(self, args, context, info):
         return student_groups_models.StudentGroup.objects.all()\
