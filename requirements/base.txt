@@ -52,7 +52,7 @@ djangorestframework-camel-case==0.2.0
 wagtail==1.12
 beautifulsoup4
 requests==2.18.1
-fuzzywuzzy[speedup]
+fuzzywuzzy[speedup]==0.15.1
 mailchimp3==2.0.14
 arrow==0.10.0
 djangorestframework-jwt==1.11.0
