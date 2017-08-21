@@ -128,7 +128,7 @@ class Event(models.Model):
     alcohol = models.CharField(max_length=2, choices=ALCOHOL_CHOICES, default=NOT_ALCOHOL_FOCUSED)
 
     ticket_type = models.CharField(max_length=2, choices=TICKET_TYPE_CHOICES, default=NA)
-    ticket_data = models.TextField(default='')
+    ticket_data = models.TextField(default='', blank=True)
 
     suitable_kids_families = models.BooleanField(default=False)
     just_for_pgs = models.BooleanField(default=False)
