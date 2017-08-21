@@ -4,6 +4,7 @@ from django.db import models
 from django_extensions.db.fields import AutoSlugField
 from wagtail.wagtailadmin.edit_handlers import MultiFieldPanel, FieldRowPanel, FieldPanel, \
     ObjectList
+from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from falmer.matte.models import MatteImage, RemoteImage
@@ -43,6 +44,21 @@ class Type(models.Model):
 class Venue(models.Model):
     name = models.CharField(max_length=255)
     website_link = models.CharField(max_length=255, default='')
+    short_description = models.TextField(default='')
+    featured_image = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
+
+
+    custom_panels = [
+        MultiFieldPanel([
+            FieldPanel('name', classname='title'),
+            FieldPanel('website_link'),
+            FieldPanel('short_description'),
+            ImageChooserPanel('featured_image')
+        ], heading='The basics'),
+    ]
+
+    edit_handler = ObjectList(custom_panels)
+
 
     def __str__(self):
         return self.name
@@ -64,6 +80,12 @@ class Event(models.Model):
         (FREE, 'Free'),
         (PAID, 'Paid'),
         (NA, 'n/a'),
+    )
+
+    NATIVE = 'NT'
+    TICKET_TYPE_CHOICES = (
+        (NA, 'n/a'),
+        (NATIVE, 'Native'),
     )
 
     SOFT_DRINKS_ALCOHOL = 'AV'
@@ -98,12 +120,15 @@ class Event(models.Model):
 
     venue = models.ForeignKey(Venue, blank=True, null=True)
     short_description = models.TextField(default='')
-    body = models.TextField(default='')
+    body = RichTextField(default='')
 
     is_over_18_only = models.BooleanField(default=False)
     ticket_level = models.CharField(max_length=2, choices=TICKET_LEVEL_CHOICES, default=NA)
     cost = models.CharField(max_length=10, choices=COST_CHOICES, default=NA)
     alcohol = models.CharField(max_length=2, choices=ALCOHOL_CHOICES, default=NOT_ALCOHOL_FOCUSED)
+
+    ticket_type = models.CharField(max_length=2, choices=TICKET_TYPE_CHOICES, default=NA)
+    ticket_data = models.TextField(default='')
 
     suitable_kids_families = models.BooleanField(default=False)
     just_for_pgs = models.BooleanField(default=False)
@@ -142,6 +167,10 @@ class Event(models.Model):
             FieldPanel('suitable_kids_families'),
             FieldPanel('just_for_pgs'),
         ], heading='About the event itself'),
+        MultiFieldPanel([
+            FieldPanel('ticket_type'),
+            FieldPanel('ticket_data'),
+        ], heading='Ticketing'),
         MultiFieldPanel([
             FieldPanel('bundle'),
             FieldPanel('brand'),
