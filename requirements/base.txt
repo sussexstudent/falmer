@@ -51,7 +51,7 @@ django-cors-headers==2.1.0
 djangorestframework-camel-case==0.2.0
 wagtail==1.12
 beautifulsoup4
-requests==2.18.1
+requests==2.18.4
 fuzzywuzzy[speedup]
 mailchimp3==2.0.14
 arrow==0.10.0
