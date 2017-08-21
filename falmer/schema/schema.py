@@ -114,7 +114,7 @@ class SearchResult(graphene.Interface):
 
 
 class Query(graphene.ObjectType):
-    all_events = graphene.List(Event, ignore_embargo=graphene.Boolean())
+    all_events = graphene.List(Event, ignore_embargo=graphene.Boolean(), brand_id=graphene.Int())
     event = graphene.Field(Event, eventId=graphene.Int())
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
@@ -122,11 +122,16 @@ class Query(graphene.ObjectType):
 
     def resolve_all_events(self, args, context, info):
         if args.get('ignore_embargo'):
-            return event_models.Event.objects.all()\
+            qs = event_models.Event.objects.all()\
+                .select_related('featured_image')
+        else:
+            qs = event_models.Event.objects.filter(Q(embargo_until__lt=datetime.now()) | Q(embargo_until=None))\
                 .select_related('featured_image')
 
-        return event_models.Event.objects.filter(Q(embargo_until__lt=datetime.now()) | Q(embargo_until=None))\
-            .select_related('featured_image')
+        if args.get('brand_id'):
+            qs = qs.filter(brand__pk=args.get('brand_id'))
+
+        return qs
 
     def resolve_event(self, args, context, info):
         return event_models.Event.objects.select_related('featured_image', 'bundle', 'brand').get(pk=args.get('eventId'))
