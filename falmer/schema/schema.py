@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db.models import Q
 from graphene_django import DjangoObjectType
 from wagtail.wagtailcore.fields import StreamField
+from wagtail.wagtailcore.rich_text import expand_db_html
 from wagtail.wagtailimages.models import Filter
 from taggit.managers import TaggableManager
 import graphene
@@ -69,10 +70,13 @@ class Event(DjangoObjectType):
     type = graphene.Field(Type)
     brand = graphene.Field(BrandingPeriod)
     bundle = graphene.Field(Bundle)
+    body_html = graphene.String()
 
     class Meta:
         model = event_models.Event
 
+    def resolve_body_html(self, args, context, info):
+        return expand_db_html(self.body)
 
 class MSLStudentGroup(DjangoObjectType):
     logo = graphene.Field(Image)
