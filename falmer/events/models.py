@@ -106,7 +106,7 @@ class Event(models.Model):
         (SOLD_OUT, 'Sold out'),
     )
 
-    title = models.CharField(max_length=255)
+    title = models.TextField()
     slug = AutoSlugField(populate_from='title', unique=False)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -198,7 +198,7 @@ class MSLEvent(models.Model):
     has_tickets = models.BooleanField()
     org_id = models.CharField(max_length=30)
     org_name = models.CharField(max_length=255)
-    title = models.CharField(max_length=255)
+    title = models.TextField()
     image_url = models.URLField()
     url = models.URLField()
     location = models.CharField(max_length=255)
