@@ -53,6 +53,6 @@ wagtail==1.12.1
 beautifulsoup4==4.6.0
 requests==2.18.4
 fuzzywuzzy[speedup]
-mailchimp3==2.0.15
+mailchimp3==2.0.17
 arrow==0.10.0
 djangorestframework-jwt==1.11.0
