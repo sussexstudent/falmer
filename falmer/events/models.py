@@ -1,6 +1,6 @@
 import arrow
 from dateutil import tz
-from django.db import models
+from django.db import models, transaction
 from django_extensions.db.fields import AutoSlugField
 from wagtail.wagtailadmin.edit_handlers import MultiFieldPanel, FieldRowPanel, FieldPanel, \
     ObjectList
@@ -199,8 +199,8 @@ class MSLEvent(models.Model):
     org_id = models.CharField(max_length=30)
     org_name = models.CharField(max_length=255)
     title = models.TextField()
-    image_url = models.URLField()
-    url = models.URLField()
+    image_url = models.URLField(max_length=2000)
+    url = models.URLField(max_length=2000)
     location = models.CharField(max_length=255)
     msl_event_id = models.CharField(max_length=255)
     body_html = models.TextField()
@@ -210,45 +210,45 @@ class MSLEvent(models.Model):
 
     @staticmethod
     def create_from_msl(api_content):
-        title = api_content['Title']
-        start_time = arrow.get(api_content['StartDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
-        end_time = arrow.get(api_content['EndDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
-        event = Event(
-            title=title,
-            start_time=start_time,
-            end_time=end_time,
-            location_display=api_content['Location'],
-            short_description=api_content['Description'],
-            kicker=api_content['Organisation'],
-            url=api_content['Url'],
-        )
+        with transaction.atomic():
+            title = api_content['Title']
+            start_time = arrow.get(api_content['StartDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
+            end_time = arrow.get(api_content['EndDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
+            event = Event(
+                title=title,
+                start_time=start_time,
+                end_time=end_time,
+                location_display=api_content['Location'],
+                short_description=api_content['Description'],
+                kicker=api_content['Organisation'],
+                url=api_content['Url'],
+            )
 
-        local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
+            local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
 
-        if local_remote_image is not None:
-            event.featured_image = local_remote_image
+            if local_remote_image is not None:
+                event.featured_image = local_remote_image
 
-        event.save()
+            event.save()
 
-        msl_event = MSLEvent(
-            event=event,
-            title=title,
-            start_time=start_time,
-            end_time=end_time,
-            msl_event_id=api_content['Id'],
-            has_tickets=api_content['HasTickets'],
-            org_id=api_content['OrganisationId'],
-            org_name=api_content['Organisation'],
-            image_url=api_content['ImageUrl'],
-            url=api_content['Url'],
-            location=api_content['Location'],
-            body_html=api_content['Body'],
-            description=api_content['Description'],
-        )
+            msl_event = MSLEvent(
+                event=event,
+                title=title,
+                start_time=start_time,
+                end_time=end_time,
+                msl_event_id=api_content['Id'],
+                has_tickets=api_content['HasTickets'],
+                org_id=api_content['OrganisationId'],
+                org_name=api_content['Organisation'],
+                image_url=api_content['ImageUrl'],
+                url=api_content['Url'],
+                location=api_content['Location'],
+                body_html=api_content['Body'],
+                description=api_content['Description'],
+            )
 
-        msl_event.save()
-
-        return msl_event
+            msl_event.save()
+            return msl_event
 
     def update_from_msl(self, api_content):
         title = api_content['Title']
