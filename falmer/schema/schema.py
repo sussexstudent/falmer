@@ -87,7 +87,6 @@ class Event(DjangoObjectType):
     class Meta:
         model = event_models.Event
         interfaces = (graphene.relay.Node, )
-        filter_fields = ['start_time', 'end_time', 'venue', 'category', 'brand', 'bundle']
 
     def resolve_body_html(self, args, context, info):
         return expand_db_html(self.body)
