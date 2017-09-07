@@ -1,9 +1,6 @@
-from datetime import datetime
-from django.db.models import Q
-from graphene_django import DjangoObjectType
+from graphene_django import DjangoObjectType, DjangoConnectionField as _DjangoConnectionField
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.rich_text import expand_db_html
-from wagtail.wagtailimages.models import Filter
 from taggit.managers import TaggableManager
 import graphene
 from graphene_django.converter import convert_django_field
@@ -12,6 +9,20 @@ from falmer.studentgroups import models as student_groups_models
 from falmer.events import models as event_models
 from falmer.matte.models import MatteImage
 
+
+class DjangoConnectionField(_DjangoConnectionField):
+
+    """
+    Temporary fix for select_related issue
+    """
+
+    @classmethod
+    def merge_querysets(cls, default_queryset, queryset):
+        """
+        This discarded all select_related and prefetch_related:
+        # return default_queryset & queryset
+        """
+        return queryset
 
 @convert_django_field.register(StreamField)
 def convert_stream_field(field, registry=None):
@@ -71,12 +82,19 @@ class Event(DjangoObjectType):
     brand = graphene.Field(BrandingPeriod)
     bundle = graphene.Field(Bundle)
     body_html = graphene.String()
+    event_id = graphene.Int()
 
     class Meta:
         model = event_models.Event
+        interfaces = (graphene.relay.Node, )
+        filter_fields = ['start_time', 'end_time', 'venue', 'category', 'brand', 'bundle']
 
     def resolve_body_html(self, args, context, info):
         return expand_db_html(self.body)
+
+    def resolve_event_id(self, args, context, info):
+        return self.pk
+
 
 class MSLStudentGroup(DjangoObjectType):
     logo = graphene.Field(Image)
@@ -117,23 +135,36 @@ class SearchResult(graphene.Interface):
     pass
 
 
+
+class EventFilter(graphene.InputObjectType):
+    brand_id = graphene.Int()
+    from_time = graphene.String()
+    to_time = graphene.String()
+
+
 class Query(graphene.ObjectType):
-    all_events = graphene.List(Event, ignore_embargo=graphene.Boolean(), brand_id=graphene.Int())
+    all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
     event = graphene.Field(Event, eventId=graphene.Int())
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
     all_groups = graphene.List(StudentGroup)
 
     def resolve_all_events(self, args, context, info):
-        if args.get('ignore_embargo'):
-            qs = event_models.Event.objects.all()\
-                .select_related('featured_image')
-        else:
-            qs = event_models.Event.objects.filter(Q(embargo_until__lt=datetime.now()) | Q(embargo_until=None))\
-                .select_related('featured_image')
+        qs = event_models.Event.objects.select_related('featured_image', 'venue').order_by('start_time')
 
-        if args.get('brand_id'):
-            qs = qs.filter(brand__pk=args.get('brand_id'))
+        qfilter = args.get('filter')
+
+        if qfilter is None:
+            return qs
+
+        if 'from_date' in qfilter:
+            qs = qs.filter(end_time__gte=qfilter['from_time'])
+
+        if 'to_time' in qfilter:
+            qs = qs.filter(start_time__lte=qfilter['to_time'])
+
+        if 'brand_id' in qfilter:
+            qs = qs.filter(brand=qfilter['brand_id'])
 
         return qs
 
