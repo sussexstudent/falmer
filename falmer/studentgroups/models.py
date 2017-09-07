@@ -5,6 +5,10 @@ from falmer.matte.models import MatteImage, RemoteImage
 class StudentGroup(models.Model):
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_prospective = models.BooleanField(default=False)
+    description = models.TextField(default='')
+    logo = models.ForeignKey(MatteImage, null=True)
+    link = models.CharField(default='', max_length=255)
 
     def __str__(self):
         return self.name
@@ -32,7 +36,7 @@ class MSLStudentGroup(models.Model):
     msl_group_id = models.IntegerField(unique=True)
     logo = models.ForeignKey(MatteImage, null=True)
     link = models.CharField(max_length=255)
-    logo_url = models.URLField(default='')
+    logo_url = models.TextField(default='')
     category = models.ForeignKey(MSLStudentGroupCategory)
     last_sync = models.DateTimeField(auto_now=True)
 
@@ -71,7 +75,9 @@ class MSLStudentGroup(models.Model):
 
         self.msl_group_id = content['id']
         self.description = content['description']
+        self.group.description = content['description']
         self.link = content['link']
+        self.group.link = content['link']
         self.logo_url = image or ''
         category, created_category = MSLStudentGroupCategory.objects.get_or_create(name=content['category'])
         self.category = category
@@ -80,7 +86,12 @@ class MSLStudentGroup(models.Model):
 
         if local_remote_image is not None:
             self.logo = local_remote_image
+            self.group.logo = local_remote_image
         else:
             self.logo = None
+            self.group.logo = None
+
+        self.group.save()
+
 
         self.save()
