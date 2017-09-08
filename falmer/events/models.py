@@ -184,7 +184,7 @@ class Event(models.Model):
 
     def get_linked_meta(self):
         return LinkedMetadata(
-            title=self.title,
+            title='{} | What\'s on'.format(self.title),
             description=self.short_description,
             path='/whats-on/{}-{}'.format(self.slug, self.pk),
             image_resource=self.featured_image
