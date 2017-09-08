@@ -1,0 +1,30 @@
+{% with meta=object.get_linked_meta %}
+<!doctype html>
+<html>
+  <head>
+    <title>{{meta.title}} | Sussex Students' Union</title>
+    <meta name="twitter:site" content="@ussu" />
+
+    <meta property="og:title" content="{{ meta.title }}" />
+    <meta name="twitter:title" content="{{ meta.title }}" />
+
+    <meta name="description" content="{{ meta.description }}" />
+    <meta property="og:description" content="{{ meta.description }}" />
+    <meta name="twitter:description" content="{{ meta.description }}" />
+
+    {% if meta.image_resource %}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:image" content="https://su.imgix.net/{{ meta.image_resource.file.path }}?h=1200&w=2400&fit=crop&crop=focal&auto=format" />
+      <meta property="og:image" content="https://su.imgix.net/{{ meta.image_resource.file.path }}?h=1260&w=2400&fit=crop&crop=focal&auto=format" />
+    {% else %}
+      <meta name="twitter:card" content="summary" />
+    {% endif %}
+
+  </head>
+  <body>
+    <script type="text/javascript">
+      window.location = "https://www.sussexstudent.com{{ meta.path }}";
+    </script>
+  </body>
+</html>
+{% endwith %}

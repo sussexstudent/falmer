@@ -24,6 +24,7 @@ from falmer.events import urls as events_urls
 from falmer.search import urls as search_urls
 from falmer.newsletters import urls as newsletters_urls
 from falmer.frontend import urls as frontend_urls
+from falmer.links import urls as links_urls
 
 
 class DRFAuthenticatedGraphQLView(GraphQLView):
@@ -56,6 +57,7 @@ urlpatterns = [
     url(r'^events/', include(events_urls)),
     url(r'^search/', include(search_urls)),
     url(r'^newsletters/', include(newsletters_urls)),
+    url(r'^o/', include(links_urls)),
 
     url(r'^', include(launcher_urls)),
     url(r'^', include(frontend_urls))

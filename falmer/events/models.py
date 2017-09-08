@@ -7,6 +7,7 @@ from wagtail.wagtailadmin.edit_handlers import MultiFieldPanel, FieldRowPanel, F
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
+from falmer.links.utils import LinkedMetadata
 from falmer.matte.models import MatteImage, RemoteImage
 
 
@@ -181,6 +182,13 @@ class Event(models.Model):
 
     edit_handler = ObjectList(custom_panels)
 
+    def get_linked_meta(self):
+        return LinkedMetadata(
+            title=self.title,
+            description=self.short_description,
+            path='/whats-on/{}-{}'.format(self.slug, self.pk),
+            image_resource=self.featured_image
+        )
 
     def __str__(self):
         return self.title
