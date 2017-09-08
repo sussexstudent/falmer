@@ -54,7 +54,6 @@ urlpatterns = [
 
     url(r'^auth/', include(auth_urls)),
     url(r'^slack/', include(slack_urls)),
-    url(r'^events/', include(events_urls)),
     url(r'^search/', include(search_urls)),
     url(r'^newsletters/', include(newsletters_urls)),
     url(r'^o/', include(links_urls)),
