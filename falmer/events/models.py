@@ -193,6 +193,7 @@ class Event(models.Model):
     def __str__(self):
         return self.title
 
+
 class MSLEvent(models.Model):
     event = models.OneToOneField(
         Event,
@@ -222,6 +223,12 @@ class MSLEvent(models.Model):
             title = api_content['Title']
             start_time = arrow.get(api_content['StartDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
             end_time = arrow.get(api_content['EndDate']).replace(tzinfo=tz.gettz('Europe/London')).datetime
+
+            event_url = api_content['Url']
+
+            if not api_content['HasTickets'] and event_url.startswith('https://www.sussexstudent.com/ents/event'):
+                event_url = ''
+
             event = Event(
                 title=title,
                 start_time=start_time,
@@ -229,7 +236,7 @@ class MSLEvent(models.Model):
                 location_display=api_content['Location'],
                 short_description=api_content['Description'],
                 kicker=api_content['Organisation'],
-                url=api_content['Url'],
+                url=event_url,
             )
 
             local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
@@ -266,13 +273,18 @@ class MSLEvent(models.Model):
         # TODO: implement change checking before saving/setting
 
         if not self.disable_sync:
+            event_url = api_content['Url']
+
+            if not api_content['HasTickets'] and event_url.startswith('https://www.sussexstudent.com/ents/event'):
+                event_url = ''
+
             self.event.title = title
             self.event.start_time = start_time
             self.event.end_time = end_time
             self.event.location_display = location
             self.event.short_description = api_content['Description']
             self.event.kicker = api_content['Organisation']
-            self.event.url = api_content['Url']
+            self.event.url = event_url
 
             local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
 
