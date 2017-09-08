@@ -6,9 +6,9 @@ class StudentGroup(models.Model):
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     is_prospective = models.BooleanField(default=False)
-    description = models.TextField(default='')
-    logo = models.ForeignKey(MatteImage, null=True)
-    link = models.CharField(default='', max_length=255)
+    description = models.TextField(default='', blank=True)
+    logo = models.ForeignKey(MatteImage, null=True, blank=True)
+    link = models.CharField(default='', max_length=255, blank=True)
 
     def __str__(self):
         return self.name

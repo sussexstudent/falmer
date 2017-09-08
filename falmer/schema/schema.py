@@ -104,15 +104,21 @@ class MSLStudentGroup(DjangoObjectType):
 
 class StudentGroup(DjangoObjectType):
     msl_group = graphene.Field(MSLStudentGroup)
+    group_id = graphene.Int()
 
     class Meta:
         model = student_groups_models.StudentGroup
+        interfaces = (graphene.relay.Node, )
 
     def resolve_msl_group(self, args, context, info):
         try:
             return self.msl_group
         except student_groups_models.MSLStudentGroup.DoesNotExist:
             return None
+
+    def resolve_group_id(self, args, context, info):
+        return self.pk
+
 
 
 class ClientUser(DjangoObjectType):
@@ -130,9 +136,18 @@ class ClientUser(DjangoObjectType):
         return self.has_perm('wagtailadmin.access_admin')
 
 
-class SearchResult(graphene.Interface):
+class PageResult(graphene.ObjectType):
     pass
 
+
+class SearchResult(graphene.Union):
+    class Meta:
+        types = (Event, StudentGroup)
+
+
+class SearchResultConnection(graphene.Connection):
+    class Meta:
+        node = SearchResult
 
 
 class EventFilter(graphene.InputObjectType):
@@ -144,9 +159,11 @@ class EventFilter(graphene.InputObjectType):
 class Query(graphene.ObjectType):
     all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
     event = graphene.Field(Event, eventId=graphene.Int())
+    all_groups = DjangoConnectionField(StudentGroup, groupId=graphene.Int())
+    group = graphene.Field(StudentGroup)
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
-    all_groups = graphene.List(StudentGroup)
+    search = graphene.ConnectionField(SearchResultConnection, query=graphene.String())
 
     def resolve_all_events(self, args, context, info):
         qs = event_models.Event.objects.select_related('featured_image', 'venue').order_by('start_time')
@@ -167,13 +184,26 @@ class Query(graphene.ObjectType):
 
         return qs
 
+    def resolve_search(self, args, context, info):
+        return [
+            event_models.Event.objects.first(),
+            student_groups_models.StudentGroup.objects.first(),
+            student_groups_models.StudentGroup.objects.last(),
+            event_models.Event.objects.last(),
+        ]
+
     def resolve_event(self, args, context, info):
         return event_models.Event.objects.select_related('featured_image', 'bundle', 'brand').get(pk=args.get('eventId'))
 
     def resolve_all_groups(self, args, context, info):
-        return student_groups_models.StudentGroup.objects.all()\
+        qs = student_groups_models.StudentGroup.objects\
             .order_by('name')\
-            .select_related('msl_group', 'msl_group__logo')
+            .select_related('msl_group', 'logo')
+
+        return qs
+
+    def resolve_group(self, args, context, info):
+        return student_groups_models.StudentGroup.objects.select_related('logo').get(pk=args.get('groupId'))
 
     def resolve_viewer(self, args, context, info):
         if context.user.is_authenticated:
