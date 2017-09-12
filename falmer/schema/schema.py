@@ -36,17 +36,17 @@ def convert_taggable_manager(field, registry=None):
 
 class Image(DjangoObjectType):
     resource = graphene.String()
+    media_id = graphene.Int()
 
     def resolve_resource(self, args, context, info):
         return self.file.name
 
+    def resolve_media_id(self, args, context, info):
+        return self.pk
+
     class Meta:
         model = MatteImage
-
-
-class ImageConnection(graphene.Connection):
-    class Meta:
-        node = Image
+        interfaces = (graphene.relay.Node, )
 
 
 class Venue(DjangoObjectType):
@@ -170,11 +170,12 @@ class EventFilter(graphene.InputObjectType):
 
 class Query(graphene.ObjectType):
     all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
-    event = graphene.Field(Event, eventId=graphene.Int())
+    event = graphene.Field(Event, event_id=graphene.Int())
     all_groups = DjangoConnectionField(StudentGroup)
     group = graphene.Field(StudentGroup, groupId=graphene.Int())
 
-    all_images = DjangoConnectionField(ImageConnection)
+    all_images = DjangoConnectionField(Image)
+    image = graphene.Field(Image, media_id=graphene.Int())
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
     search = graphene.ConnectionField(SearchResultConnection, query=graphene.String())
@@ -207,7 +208,7 @@ class Query(graphene.ObjectType):
         ]
 
     def resolve_event(self, args, context, info):
-        return event_models.Event.objects.select_related('featured_image', 'bundle', 'brand').get(pk=args.get('eventId'))
+        return event_models.Event.objects.select_related('featured_image', 'bundle', 'brand').get(pk=args.get('event_id'))
 
     def resolve_all_groups(self, args, context, info):
         qs = student_groups_models.StudentGroup.objects\
@@ -218,8 +219,15 @@ class Query(graphene.ObjectType):
 
     def resolve_all_images(self, args, context, info):
         if not context.user.has_perm('can_list_all'):
-            raise PermissionError('=not authorised to list images')
+            raise PermissionError('not authorised to list images')
         qs = MatteImage.objects.all()
+
+        return qs
+
+    def resolve_image(self, args, context, info):
+        if not context.user.has_perm('can_view'):
+            raise PermissionError('not authorised to view images')
+        qs = MatteImage.objects.get(pk=args.get('media_id'))
 
         return qs
 
