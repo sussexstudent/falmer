@@ -83,6 +83,8 @@ class Event(DjangoObjectType):
     bundle = graphene.Field(Bundle)
     body_html = graphene.String()
     event_id = graphene.Int()
+    children = graphene.List(lambda: Event)
+    parent = graphene.Field(lambda: Event)
 
     class Meta:
         model = event_models.Event
@@ -94,6 +96,11 @@ class Event(DjangoObjectType):
     def resolve_event_id(self, args, context, info):
         return self.pk
 
+    def resolve_children(self, args, context, info):
+        return self.children.all()
+
+    def resolve_parent(self, args, context, info):
+        return self.parent
 
 class MSLStudentGroup(DjangoObjectType):
     logo = graphene.Field(Image)
@@ -159,14 +166,14 @@ class EventFilter(graphene.InputObjectType):
 class Query(graphene.ObjectType):
     all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
     event = graphene.Field(Event, eventId=graphene.Int())
-    all_groups = DjangoConnectionField(StudentGroup, groupId=graphene.Int())
-    group = graphene.Field(StudentGroup)
+    all_groups = DjangoConnectionField(StudentGroup)
+    group = graphene.Field(StudentGroup, groupId=graphene.Int())
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
     search = graphene.ConnectionField(SearchResultConnection, query=graphene.String())
 
     def resolve_all_events(self, args, context, info):
-        qs = event_models.Event.objects.select_related('featured_image', 'venue').order_by('start_time')
+        qs = event_models.Event.objects.select_related('featured_image', 'venue').prefetch_related('children').order_by('start_time')
 
         qfilter = args.get('filter')
 
