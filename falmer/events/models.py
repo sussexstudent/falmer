@@ -107,6 +107,8 @@ class Event(models.Model):
         (SOLD_OUT, 'Sold out'),
     )
 
+    parent = models.ForeignKey('self', default=None, null=True, blank=True, related_name='children')
+
     title = models.TextField()
     slug = AutoSlugField(populate_from='title', unique=False)
     start_time = models.DateTimeField()
@@ -177,6 +179,7 @@ class Event(models.Model):
             FieldPanel('brand'),
             FieldPanel('category'),
             FieldPanel('type'),
+            FieldPanel('parent')
         ], heading='Organisation'),
     ]
 
