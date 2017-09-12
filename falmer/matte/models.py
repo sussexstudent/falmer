@@ -14,6 +14,11 @@ class MatteImage(AbstractImage):
         # nothing yet
     )
 
+    class Meta:
+        permissions = (
+            ('can_list_all', 'Can list all images'),
+        )
+
     def get_upload_to(self, filename):
         folder_name = 'original_images'
 

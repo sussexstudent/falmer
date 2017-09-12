@@ -44,6 +44,11 @@ class Image(DjangoObjectType):
         model = MatteImage
 
 
+class ImageConnection(graphene.Connection):
+    class Meta:
+        node = Image
+
+
 class Venue(DjangoObjectType):
 
     class Meta:
@@ -168,6 +173,8 @@ class Query(graphene.ObjectType):
     event = graphene.Field(Event, eventId=graphene.Int())
     all_groups = DjangoConnectionField(StudentGroup)
     group = graphene.Field(StudentGroup, groupId=graphene.Int())
+
+    all_images = DjangoConnectionField(ImageConnection)
     # search = graphene.List(SearchResult)
     viewer = graphene.Field(ClientUser)
     search = graphene.ConnectionField(SearchResultConnection, query=graphene.String())
@@ -206,6 +213,13 @@ class Query(graphene.ObjectType):
         qs = student_groups_models.StudentGroup.objects\
             .order_by('name')\
             .select_related('msl_group', 'logo')
+
+        return qs
+
+    def resolve_all_images(self, args, context, info):
+        if not context.user.has_perm('can_list_all'):
+            raise PermissionError('=not authorised to list images')
+        qs = MatteImage.objects.all()
 
         return qs
 
