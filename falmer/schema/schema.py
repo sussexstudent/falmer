@@ -48,6 +48,20 @@ class Image(DjangoObjectType):
         model = MatteImage
         interfaces = (graphene.relay.Node, )
 
+    @classmethod
+    def get_connection(cls):
+        class CountableConnection(graphene.relay.Connection):
+            total_count = graphene.Int()
+
+            class Meta:
+                name = '{}Connection'.format(cls._meta.name)
+                node = cls
+
+            @staticmethod
+            def resolve_total_count(root, args, context, info):
+                return root.length
+
+        return CountableConnection
 
 class Venue(DjangoObjectType):
 
@@ -107,6 +121,21 @@ class Event(DjangoObjectType):
     def resolve_parent(self, args, context, info):
         return self.parent
 
+    @classmethod
+    def get_connection(cls):
+        class CountableConnection(graphene.relay.Connection):
+            total_count = graphene.Int()
+
+            class Meta:
+                name = '{}Connection'.format(cls._meta.name)
+                node = cls
+
+            @staticmethod
+            def resolve_total_count(root, args, context, info):
+                return root.length
+
+        return CountableConnection
+
 class MSLStudentGroup(DjangoObjectType):
     logo = graphene.Field(Image)
 
@@ -131,6 +160,20 @@ class StudentGroup(DjangoObjectType):
     def resolve_group_id(self, args, context, info):
         return self.pk
 
+    @classmethod
+    def get_connection(cls):
+        class CountableConnection(graphene.relay.Connection):
+            total_count = graphene.Int()
+
+            class Meta:
+                name = '{}Connection'.format(cls._meta.name)
+                node = cls
+
+            @staticmethod
+            def resolve_total_count(root, args, context, info):
+                return root.length
+
+        return CountableConnection
 
 
 class ClientUser(DjangoObjectType):
