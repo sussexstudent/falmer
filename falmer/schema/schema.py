@@ -8,6 +8,7 @@ from falmer.auth import models as auth_models
 from falmer.studentgroups import models as student_groups_models
 from falmer.events import models as event_models
 from falmer.matte.models import MatteImage
+from falmer.matte import models as matte_models
 
 
 class DjangoConnectionField(_DjangoConnectionField):
@@ -34,15 +35,31 @@ def convert_taggable_manager(field, registry=None):
     return "hello there"
 
 
+class ImageLabel(DjangoObjectType):
+    name = graphene.String()
+
+    def resolve_name(self, args, context, info):
+        return self.label.name
+
+    class Meta:
+        model = matte_models.ImageLabelThrough
+        interfaces = (graphene.relay.Node, )
+
+
 class Image(DjangoObjectType):
     resource = graphene.String()
     media_id = graphene.Int()
+    labels = DjangoConnectionField(ImageLabel)
 
     def resolve_resource(self, args, context, info):
         return self.file.name
 
     def resolve_media_id(self, args, context, info):
         return self.pk
+
+    def resolve_labels(self, args, context, info):
+        return matte_models.ImageLabelThrough.objects.select_related('label')\
+            .filter(image=self).order_by('-confidence')
 
     class Meta:
         model = MatteImage
