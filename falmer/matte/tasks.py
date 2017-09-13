@@ -41,3 +41,12 @@ def save_image_from_remote(remote_image_pk):
     except RemoteImage.DoesNotExist:
         logger.error('Tried to load a remote image model that did not exist', exc_info=True)
 
+
+
+@shared_task
+def perform_external_image_analysis(image_pk):
+    from .models import MatteImage
+    image = MatteImage.objects.get(pk=image_pk)
+    image.get_and_save_label_data()
+
+
