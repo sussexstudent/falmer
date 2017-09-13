@@ -50,7 +50,13 @@ class MatteImage(AbstractImage):
         )
 
         if response['ResponseMetadata']['HTTPStatusCode'] != 200:
-            print('rek did not succeeded')
+            try:
+                self.external_metadata
+            except ImageExternalMetadata.DoesNotExist:
+                self.external_metadata = ImageExternalMetadata()
+
+            self.external_metadata.last_label_request_status = 'FAILED'
+            self.external_metadata.save()
         else:
             self.labels.clear()
             labels = response['Labels']
