@@ -119,11 +119,11 @@ class Event(models.Model):
     social_facebook = models.URLField(blank=True, default='')
     kicker = models.CharField(max_length=255, default='', blank=True)
     location_display = models.CharField(max_length=255, default='', blank=True)
-    embargo_until = models.DateTimeField(null=True)
+    embargo_until = models.DateTimeField(null=True, blank=True)
 
     venue = models.ForeignKey(Venue, blank=True, null=True)
     short_description = models.TextField(default='')
-    body = RichTextField(default='')
+    body = RichTextField(default='', blank=True)
 
     is_over_18_only = models.BooleanField(default=False)
     ticket_level = models.CharField(max_length=2, choices=TICKET_LEVEL_CHOICES, default=NA)
@@ -192,6 +192,25 @@ class Event(models.Model):
             path='/whats-on/{}-{}'.format(self.slug, self.pk),
             image_resource=self.featured_image
         )
+
+    def move_under(self, parent, user):
+        if not user.has_perm('events.can_change_event'):
+            return False
+
+        if parent.pk == self.pk:
+            return False
+
+        if parent.is_top_level() and not self.has_child_events():
+            self.parent = parent
+            return True
+        else:
+            return False
+
+    def is_top_level(self):
+        return self.parent is None
+
+    def has_child_events(self):
+        return self.children.count() > 0
 
     def __str__(self):
         return self.title

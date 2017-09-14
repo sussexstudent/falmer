@@ -241,12 +241,13 @@ class Query(graphene.ObjectType):
     search = graphene.ConnectionField(SearchResultConnection, query=graphene.String())
 
     def resolve_all_events(self, args, context, info):
-        qs = event_models.Event.objects.select_related('featured_image', 'venue').prefetch_related('children').order_by('start_time')
+        qs = event_models.Event.objects.select_related('featured_image', 'venue')\
+            .prefetch_related('children').order_by('start_time')
 
         qfilter = args.get('filter')
 
         if qfilter is None:
-            return qs
+            return qs.filter(parent=None)
 
         if 'from_date' in qfilter:
             qs = qs.filter(end_time__gte=qfilter['from_time'])
@@ -278,14 +279,14 @@ class Query(graphene.ObjectType):
         return qs
 
     def resolve_all_images(self, args, context, info):
-        if not context.user.has_perm('can_list_all'):
+        if not context.user.has_perm('matte.can_list_all_matte_image'):
             raise PermissionError('not authorised to list images')
         qs = MatteImage.objects.all()
 
         return qs
 
     def resolve_image(self, args, context, info):
-        if not context.user.has_perm('can_view'):
+        if not context.user.has_perm('matte.can_view_matte_image'):
             raise PermissionError('not authorised to view images')
         qs = MatteImage.objects.get(pk=args.get('media_id'))
 
@@ -299,4 +300,34 @@ class Query(graphene.ObjectType):
             return context.user
         return None
 
-schema = graphene.Schema(query=Query)
+
+class MoveEvent(graphene.Mutation):
+    class Input:
+        event_id = graphene.Int()
+        destination_event_id = graphene.Int()
+
+    ok = graphene.Boolean()
+    event = graphene.Field(Event)
+
+    def mutate(self, args, context, info):
+        event_id = args.get('event_id')
+        destination_event_id = args.get('destination_event_id')
+
+        try:
+            event = event_models.Event.objects.get(pk=event_id)
+            dest_event = event_models.Event.objects.get(pk=destination_event_id)
+
+            success = event.move_under(dest_event, user=context.user)
+
+            event.save()
+
+        except event_models.Event.DoesNotExist:
+            return MoveEvent(ok=False)
+
+        return MoveEvent(ok=success, event=event)
+
+
+class Mutations(graphene.ObjectType):
+    move_event = MoveEvent.Field()
+
+schema = graphene.Schema(query=Query, mutation=Mutations)
