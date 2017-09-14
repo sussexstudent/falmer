@@ -249,6 +249,12 @@ class Query(graphene.ObjectType):
         if qfilter is None:
             return qs.filter(parent=None)
 
+        if 'include_children' in qfilter:
+            pass
+        else:
+            qs = qs.filter(parent=None)
+
+
         if 'from_date' in qfilter:
             qs = qs.filter(end_time__gte=qfilter['from_time'])
 
