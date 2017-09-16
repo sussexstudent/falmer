@@ -254,8 +254,7 @@ class Query(graphene.ObjectType):
         else:
             qs = qs.filter(parent=None)
 
-
-        if 'from_date' in qfilter:
+        if 'from_time' in qfilter:
             qs = qs.filter(end_time__gte=qfilter['from_time'])
 
         if 'to_time' in qfilter:
