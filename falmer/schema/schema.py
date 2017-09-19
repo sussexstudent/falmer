@@ -242,7 +242,7 @@ class Query(graphene.ObjectType):
 
     def resolve_all_events(self, args, context, info):
         qs = event_models.Event.objects.select_related('featured_image', 'venue')\
-            .prefetch_related('children').order_by('start_time')
+            .prefetch_related('children').order_by('start_time', 'end_time')
 
         qfilter = args.get('filter')
 
