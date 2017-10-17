@@ -25,7 +25,7 @@ class StaffMemberSnippet(index.Indexed, models.Model):
     email = models.EmailField(max_length=255, null=True, blank=True)
     office_phone_number = models.CharField(max_length=255, null=True, blank=True)
     mobile_phone_number = models.CharField(max_length=255, null=True, blank=True)
-    job_description = RichTextField()
+    job_description = RichTextField(default='', blank=True)
     office_location = models.CharField(max_length=255, null=True, blank=True)
 
     panels = [
