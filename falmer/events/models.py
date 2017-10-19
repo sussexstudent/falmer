@@ -308,7 +308,7 @@ class MSLEvent(models.Model):
             self.event.short_description = api_content['Description']
             self.event.kicker = api_content['Organisation']
             self.event.url = event_url
-            self.event.body = api_content['Body'],
+            self.event.body = api_content['Body']
 
             local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
 
