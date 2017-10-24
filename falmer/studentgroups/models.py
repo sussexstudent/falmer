@@ -13,6 +13,18 @@ class StudentGroup(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def get_by_msl_id(cls, msl_group_id):
+        try:
+            msl_group = MSLStudentGroup.objects.get(msl_group_id=msl_group_id)
+        except MSLStudentGroup.DoesNotExist:
+            return None
+
+        if msl_group is not None:
+            return msl_group.group
+
+        return None
+
 
 class MSLStudentGroupCategory(models.Model):
     name = models.CharField(max_length=255)

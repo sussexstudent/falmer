@@ -24,7 +24,7 @@ def sync_events_from_msl():
     msl_events_requests = [get_msl_events_from_api(m) for m in range(0, 5)]
 
     msl_events = [y for x in msl_events_requests for y in x]
-    msl_events_map = {item['Id']:item for item in msl_events}
+    msl_events_map = {item['Id']: item for item in msl_events}
     msl_event_ids = set(msl_events_map)
     event_matches = {event.msl_event_id: event for event in MSLEvent.objects.filter(msl_event_id__in=msl_event_ids)}
 

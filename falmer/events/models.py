@@ -9,6 +9,7 @@ from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from falmer.links.utils import LinkedMetadata
 from falmer.matte.models import MatteImage, RemoteImage
+from falmer.studentgroups.models import StudentGroup
 
 
 class Bundle(models.Model):
@@ -124,6 +125,7 @@ class Event(models.Model):
     venue = models.ForeignKey(Venue, blank=True, null=True)
     short_description = models.TextField(default='')
     body = RichTextField(default='', blank=True)
+    student_group = models.ForeignKey(StudentGroup, null=True, blank=True, default=None)
 
     is_over_18_only = models.BooleanField(default=False)
     ticket_level = models.CharField(max_length=2, choices=TICKET_LEVEL_CHOICES, default=NA)
@@ -260,6 +262,7 @@ class MSLEvent(models.Model):
                 kicker=api_content['Organisation'],
                 url=event_url,
                 body=api_content['Body'],
+                student_group=StudentGroup.get_by_msl_id(api_content['OrganisationId']),
             )
 
             local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
@@ -309,6 +312,7 @@ class MSLEvent(models.Model):
             self.event.kicker = api_content['Organisation']
             self.event.url = event_url
             self.event.body = api_content['Body']
+            self.event.student_group = StudentGroup.get_by_msl_id(api_content['OrganisationId'])
 
             local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
 
