@@ -1,3 +1,5 @@
+import random
+
 import arrow
 from dateutil import tz
 from django.db import models, transaction
@@ -12,6 +14,10 @@ from falmer.matte.models import MatteImage, RemoteImage
 from falmer.studentgroups.models import StudentGroup
 
 
+def random_number_as_string():
+    return str(random.randint(1000, 99999))
+
+
 class Bundle(models.Model):
     name = models.CharField(max_length=72)
 
@@ -22,6 +28,7 @@ class Bundle(models.Model):
 class BrandingPeriod(models.Model):
     name = models.CharField(max_length=72)
     website_link = models.URLField(blank=True)
+    slug = models.SlugField(default=random_number_as_string)
 
     def __str__(self):
         return self.name
