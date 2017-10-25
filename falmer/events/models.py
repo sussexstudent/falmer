@@ -20,6 +20,7 @@ def random_number_as_string():
 
 class Bundle(models.Model):
     name = models.CharField(max_length=72)
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
@@ -28,7 +29,7 @@ class Bundle(models.Model):
 class BrandingPeriod(models.Model):
     name = models.CharField(max_length=72)
     website_link = models.URLField(blank=True)
-    slug = models.SlugField(default=random_number_as_string)
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.name
