@@ -227,7 +227,7 @@ class SearchResultConnection(graphene.Connection):
 
 
 class EventFilter(graphene.InputObjectType):
-    brand_id = graphene.Int()
+    brand_slug = graphene.String()
     from_time = graphene.String()
     to_time = graphene.String()
 
@@ -264,8 +264,8 @@ class Query(graphene.ObjectType):
         if 'to_time' in qfilter:
             qs = qs.filter(start_time__lte=qfilter['to_time'])
 
-        if 'brand_id' in qfilter:
-            qs = qs.filter(brand=qfilter['brand_id'])
+        if 'brand_slug' in qfilter:
+            qs = qs.filter(brand__slug=qfilter['brand_slug'])
 
         return qs
 
