@@ -117,6 +117,7 @@ class Event(DjangoObjectType):
     type = graphene.Field(Type)
     brand = graphene.Field(BrandingPeriod)
     bundle = graphene.Field(Bundle)
+    student_group = graphene.Field(lambda: StudentGroup)
     body_html = graphene.String()
     event_id = graphene.Int()
     children = graphene.List(lambda: Event)
@@ -131,6 +132,9 @@ class Event(DjangoObjectType):
 
     def resolve_event_id(self, args, context, info):
         return self.pk
+
+    def resolve_student_group(self, args, context, info):
+        return self.student_group
 
     def resolve_children(self, args, context, info):
         return self.children.all()
@@ -274,7 +278,12 @@ class Query(graphene.ObjectType):
         ]
 
     def resolve_event(self, args, context, info):
-        return event_models.Event.objects.select_related('featured_image', 'bundle', 'brand').get(pk=args.get('event_id'))
+        return event_models.Event.objects.select_related(
+            'featured_image',
+            'bundle',
+            'brand',
+            'student_group'
+        ).get(pk=args.get('event_id'))
 
     def resolve_all_groups(self, args, context, info):
         qs = student_groups_models.StudentGroup.objects\
