@@ -1,5 +1,5 @@
 from wagtail.contrib.modeladmin.options import (
-    ModelAdmin, modeladmin_register)
+    ModelAdmin, modeladmin_register, ModelAdminGroup)
 from .models import Event, Venue
 
 
@@ -13,8 +13,6 @@ class EventAdmin(ModelAdmin):
     list_filter = ('embargo_until', )
     search_fields = ('title',)
 
-# Now you just need to register your customised ModelAdmin class with Wagtail
-modeladmin_register(EventAdmin)
 
 class VenueAdmin(ModelAdmin):
     model = Venue
@@ -25,5 +23,11 @@ class VenueAdmin(ModelAdmin):
     list_display = ('name', )
     search_fields = ('title',)
 
-# Now you just need to register your customised ModelAdmin class with Wagtail
-modeladmin_register(VenueAdmin)
+
+class EventsGroupAdmin(ModelAdminGroup):
+    menu_label = 'Events'
+    menu_icon = 'folder-open-inverse'  # change as required
+    menu_order = 200  # will put in 3rd place (000 being 1st, 100 2nd)
+    items = (EventAdmin, VenueAdmin)
+
+modeladmin_register(EventsGroupAdmin)

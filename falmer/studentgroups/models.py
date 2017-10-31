@@ -1,4 +1,6 @@
 from django.db import models
+from django_extensions.db.fields import AutoSlugField
+
 from falmer.matte.models import MatteImage, RemoteImage
 
 
@@ -105,5 +107,40 @@ class MSLStudentGroup(models.Model):
 
         self.group.save()
 
-
         self.save()
+
+
+class AwardAuthority(models.Model):
+    name = models.CharField(max_length=128)
+    slug = AutoSlugField(unique=True, populate_from='name')
+
+    def __str__(self):
+        return self.name
+
+
+class Award(models.Model):
+    authority = models.ForeignKey(AwardAuthority, blank=False, null=False)
+
+    name = models.CharField(max_length=128)
+    description = models.TextField(default='', blank=True)
+    slug = AutoSlugField(unique=True, populate_from='name')
+
+    def __str__(self):
+        return self.name
+
+
+class GroupAwarded(models.Model):
+    group = models.ForeignKey(StudentGroup, blank=False, null=False)
+    award = models.ForeignKey(Award, blank=False, null=False)
+
+    year = models.IntegerField(blank=False, null=False)
+
+    class Meta:
+        unique_together = (('group', 'award', 'year'), )
+
+    def __str__(self):
+        return '{group} awarded {award}, in {year}'.format(
+            group=self.group.name,
+            award=self.award.name,
+            year=self.year
+        )
