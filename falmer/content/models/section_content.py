@@ -27,7 +27,7 @@ class SectionContentPage(Page):
     sidebar_body = StreamField([
         ('paragraph', blocks.RichTextBlock()),
         ('contact', ContactBlock()),
-    ])
+    ], blank=True)
 
     sidebar_content_panels = [
         FieldPanel('contents_in_sidebar'),
