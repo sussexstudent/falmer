@@ -35,15 +35,30 @@ def convert_taggable_manager(field, registry=None):
     return "hello there"
 
 
+def create_connection(_node):
+    class TotalCountConnection(graphene.relay.Connection):
+        class Meta:
+            name = '{}Connection'.format(_node._meta.name)
+            node = _node
+
+        total_count = graphene.Int()
+
+        @staticmethod
+        def resolve_total_count(root, info):
+            return root.length
+
+    return TotalCountConnection
+
+
 class ImageLabel(DjangoObjectType):
     name = graphene.String()
 
-    def resolve_name(self, args, context, info):
+    def resolve_name(self, info):
         return self.label.name
 
     class Meta:
         model = matte_models.ImageLabelThrough
-        interfaces = (graphene.relay.Node, )
+        interfaces = (graphene.Node, )
 
 
 class Image(DjangoObjectType):
@@ -51,39 +66,33 @@ class Image(DjangoObjectType):
     media_id = graphene.Int()
     labels = DjangoConnectionField(ImageLabel)
 
-    def resolve_resource(self, args, context, info):
+    def resolve_resource(self, info):
         return self.file.name
 
-    def resolve_media_id(self, args, context, info):
+    def resolve_media_id(self, info):
         return self.pk
 
-    def resolve_labels(self, args, context, info):
+    def resolve_labels(self, info):
         return matte_models.ImageLabelThrough.objects.select_related('label')\
             .filter(image=self).order_by('-confidence')
 
     class Meta:
         model = MatteImage
-        interfaces = (graphene.relay.Node, )
+        interfaces = (graphene.Node, )
 
-    @classmethod
-    def get_connection(cls):
-        class CountableConnection(graphene.relay.Connection):
-            total_count = graphene.Int()
 
-            class Meta:
-                name = '{}Connection'.format(cls._meta.name)
-                node = cls
+Image.Connection = create_connection(Image)
 
-            @staticmethod
-            def resolve_total_count(root, args, context, info):
-                return root.length
-
-        return CountableConnection
 
 class Venue(DjangoObjectType):
+    venue_id = graphene.Int()
 
     class Meta:
         model = event_models.Venue
+        interfaces = (graphene.Node, )
+
+    def resolve_venue_id(self, info):
+        return self.pk
 
 
 class Category(DjangoObjectType):
@@ -125,37 +134,26 @@ class Event(DjangoObjectType):
 
     class Meta:
         model = event_models.Event
-        interfaces = (graphene.relay.Node, )
+        interfaces = (graphene.Node, )
 
-    def resolve_body_html(self, args, context, info):
+    def resolve_body_html(self, info):
         return expand_db_html(self.body)
 
-    def resolve_event_id(self, args, context, info):
+    def resolve_event_id(self, info):
         return self.pk
 
-    def resolve_student_group(self, args, context, info):
+    def resolve_student_group(self, info):
         return self.student_group
 
-    def resolve_children(self, args, context, info):
+    def resolve_children(self, info):
         return self.children.all()
 
-    def resolve_parent(self, args, context, info):
+    def resolve_parent(self, info):
         return self.parent
 
-    @classmethod
-    def get_connection(cls):
-        class CountableConnection(graphene.relay.Connection):
-            total_count = graphene.Int()
 
-            class Meta:
-                name = '{}Connection'.format(cls._meta.name)
-                node = cls
+Event.Connection = create_connection(Event)
 
-            @staticmethod
-            def resolve_total_count(root, args, context, info):
-                return root.length
-
-        return CountableConnection
 
 class MSLStudentGroup(DjangoObjectType):
     logo = graphene.Field(Image)
@@ -170,31 +168,19 @@ class StudentGroup(DjangoObjectType):
 
     class Meta:
         model = student_groups_models.StudentGroup
-        interfaces = (graphene.relay.Node, )
+        interfaces = (graphene.Node, )
 
-    def resolve_msl_group(self, args, context, info):
+    def resolve_msl_group(self, info):
         try:
             return self.msl_group
         except student_groups_models.MSLStudentGroup.DoesNotExist:
             return None
 
-    def resolve_group_id(self, args, context, info):
+    def resolve_group_id(self, info):
         return self.pk
 
-    @classmethod
-    def get_connection(cls):
-        class CountableConnection(graphene.relay.Connection):
-            total_count = graphene.Int()
 
-            class Meta:
-                name = '{}Connection'.format(cls._meta.name)
-                node = cls
-
-            @staticmethod
-            def resolve_total_count(root, args, context, info):
-                return root.length
-
-        return CountableConnection
+StudentGroup.Connection = create_connection(StudentGroup)
 
 
 class ClientUser(DjangoObjectType):
@@ -204,11 +190,11 @@ class ClientUser(DjangoObjectType):
     class Meta:
         model = auth_models.FalmerUser
 
-    def resolve_name(self, args, context, info):
+    def resolve_name(self, info):
         return self.get_full_name()
 
     # this is a quick hack until we work on permissions etc
-    def resolve_has_cms_access(self, args, context, info):
+    def resolve_has_cms_access(self, info):
         return self.has_perm('wagtailadmin.access_admin')
 
 
@@ -234,6 +220,7 @@ class EventFilter(graphene.InputObjectType):
 
 class Query(graphene.ObjectType):
     all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
+    all_venues = DjangoConnectionField(Venue)
     event = graphene.Field(Event, event_id=graphene.Int())
     all_groups = DjangoConnectionField(StudentGroup)
     group = graphene.Field(StudentGroup, groupId=graphene.Int())
@@ -244,11 +231,9 @@ class Query(graphene.ObjectType):
     viewer = graphene.Field(ClientUser)
     search = graphene.ConnectionField(SearchResultConnection, query=graphene.String())
 
-    def resolve_all_events(self, args, context, info):
+    def resolve_all_events(self, info, qfilter):
         qs = event_models.Event.objects.select_related('featured_image', 'venue')\
             .prefetch_related('children').order_by('start_time', 'end_time')
-
-        qfilter = args.get('filter')
 
         if qfilter is None:
             return qs.filter(parent=None)
@@ -269,7 +254,10 @@ class Query(graphene.ObjectType):
 
         return qs
 
-    def resolve_search(self, args, context, info):
+    def resolve_all_venues(self, info):
+        return event_models.Venue.objects.all()
+
+    def resolve_search(self, info):
         return [
             event_models.Event.objects.first(),
             student_groups_models.StudentGroup.objects.first(),
@@ -277,61 +265,59 @@ class Query(graphene.ObjectType):
             event_models.Event.objects.last(),
         ]
 
-    def resolve_event(self, args, context, info):
+    def resolve_event(self, info, event_id):
         return event_models.Event.objects.select_related(
             'featured_image',
             'bundle',
             'brand',
             'student_group'
-        ).get(pk=args.get('event_id'))
+        ).get(pk=event_id)
 
-    def resolve_all_groups(self, args, context, info):
+    def resolve_all_groups(self, info):
         qs = student_groups_models.StudentGroup.objects\
             .order_by('name')\
             .select_related('msl_group', 'logo')
 
         return qs
 
-    def resolve_all_images(self, args, context, info):
-        if not context.user.has_perm('matte.can_list_all_matte_image'):
+    def resolve_all_images(self, info):
+        if not info.context.user.has_perm('matte.can_list_all_matte_image'):
             raise PermissionError('not authorised to list images')
         qs = MatteImage.objects.all()
 
         return qs
 
-    def resolve_image(self, args, context, info):
-        if not context.user.has_perm('matte.can_view_matte_image'):
+    def resolve_image(self, info, media_id):
+        if not info.context.user.has_perm('matte.can_view_matte_image'):
             raise PermissionError('not authorised to view images')
-        qs = MatteImage.objects.get(pk=args.get('media_id'))
+        qs = MatteImage.objects.get(pk=media_id)
 
         return qs
 
-    def resolve_group(self, args, context, info):
-        return student_groups_models.StudentGroup.objects.select_related('logo').get(pk=args.get('groupId'))
+    def resolve_group(self, group_id):
+        return student_groups_models.StudentGroup.objects\
+            .select_related('logo').get(pk=group_id)
 
-    def resolve_viewer(self, args, context, info):
-        if context.user.is_authenticated:
-            return context.user
+    def resolve_viewer(self, info):
+        if info.context.user.is_authenticated:
+            return info.context.user
         return None
 
 
 class MoveEvent(graphene.Mutation):
-    class Input:
+    class Arguments:
         event_id = graphene.Int()
         destination_event_id = graphene.Int()
 
     ok = graphene.Boolean()
     event = graphene.Field(Event)
 
-    def mutate(self, args, context, info):
-        event_id = args.get('event_id')
-        destination_event_id = args.get('destination_event_id')
-
+    def mutate(self, root, info, event_id, destination_event_id):
         try:
             event = event_models.Event.objects.get(pk=event_id)
             dest_event = event_models.Event.objects.get(pk=destination_event_id)
 
-            success = event.move_under(dest_event, user=context.user)
+            success = event.move_under(dest_event, user=info.context.user)
 
             event.save()
 
