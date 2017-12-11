@@ -42,7 +42,6 @@ DJANGO_APPS = [
 #    'django.contrib.gis',
 ]
 THIRD_PARTY_APPS = [
-    'crispy_forms',  # Form layouts
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -200,9 +199,6 @@ TEMPLATES = [
         },
     },
 ]
-
-# See: http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
