@@ -1,3 +1,5 @@
+import arrow
+from django.db.models import Q
 from graphene_django import DjangoObjectType, DjangoConnectionField as _DjangoConnectionField
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.rich_text import expand_db_html
@@ -36,16 +38,15 @@ def convert_taggable_manager(field, registry=None):
 
 
 def create_connection(_node):
-    class TotalCountConnection(graphene.relay.Connection):
-        class Meta:
-            name = '{}Connection'.format(_node._meta.name)
-            node = _node
-
+    class TotalCountConnection(graphene.Connection):
         total_count = graphene.Int()
 
-        @staticmethod
-        def resolve_total_count(root, info):
-            return root.length
+        class Meta:
+            name = _node._meta.name + 'Connection'
+            node = _node
+
+        def resolve_total_count(self, info):
+            return self.length
 
     return TotalCountConnection
 
@@ -231,9 +232,13 @@ class Query(graphene.ObjectType):
     viewer = graphene.Field(ClientUser)
     search = graphene.ConnectionField(SearchResultConnection, query=graphene.String())
 
-    def resolve_all_events(self, info, qfilter):
+    def resolve_all_events(self, info, **kwargs):
+        qfilter = kwargs.get('filter')
+
         qs = event_models.Event.objects.select_related('featured_image', 'venue')\
-            .prefetch_related('children').order_by('start_time', 'end_time')
+            .prefetch_related('children').order_by('start_time', 'end_time').filter(
+            Q(mslevent__last_sync__gte=arrow.now().shift(minutes=-30).datetime) | Q(mslevent__isnull=True)
+        )
 
         if qfilter is None:
             return qs.filter(parent=None)
@@ -265,7 +270,9 @@ class Query(graphene.ObjectType):
             event_models.Event.objects.last(),
         ]
 
-    def resolve_event(self, info, event_id):
+    def resolve_event(self, info, **kwargs):
+        event_id = kwargs.get('event_id')
+
         return event_models.Event.objects.select_related(
             'featured_image',
             'bundle',
@@ -287,14 +294,18 @@ class Query(graphene.ObjectType):
 
         return qs
 
-    def resolve_image(self, info, media_id):
+    def resolve_image(self, info, **kwargs):
+        media_id = kwargs.get('media_id')
+
         if not info.context.user.has_perm('matte.can_view_matte_image'):
             raise PermissionError('not authorised to view images')
         qs = MatteImage.objects.get(pk=media_id)
 
         return qs
 
-    def resolve_group(self, group_id):
+    def resolve_group(self, info, **kwargs):
+        group_id = kwargs.get('group_id')
+
         return student_groups_models.StudentGroup.objects\
             .select_related('logo').get(pk=group_id)
 
@@ -329,5 +340,6 @@ class MoveEvent(graphene.Mutation):
 
 class Mutations(graphene.ObjectType):
     move_event = MoveEvent.Field()
+
 
 schema = graphene.Schema(query=Query, mutation=Mutations)

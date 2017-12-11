@@ -51,7 +51,6 @@ urlpatterns = [
     url(r'^pages/', include(wagtail_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^graphql', csrf_exempt(DRFAuthenticatedGraphQLView.as_view(graphiql=True))),
-
     url(r'^auth/', include(auth_urls)),
     url(r'^slack/', include(slack_urls)),
     url(r'^search/', include(search_urls)),

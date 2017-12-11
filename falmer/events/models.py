@@ -30,6 +30,24 @@ class BrandingPeriod(models.Model):
     name = models.CharField(max_length=72)
     website_link = models.URLField(blank=True)
     slug = models.SlugField(unique=True)
+    accent = models.CharField(max_length=9, blank=True, default='')
+    description = RichTextField(blank=True, default='')
+    logo = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
+    logo_vector = models.FileField(null=True, blank=True)
+
+    custom_panels = [
+        MultiFieldPanel([
+            FieldPanel('name', classname='title'),
+            FieldPanel('website_link'),
+            FieldPanel('slug'),
+            FieldPanel('accent'),
+            FieldPanel('description'),
+            ImageChooserPanel('logo'),
+            FieldPanel('logo_vector')
+        ], heading='The basics'),
+    ]
+
+    edit_handler = ObjectList(custom_panels)
 
     def __str__(self):
         return self.name
@@ -204,7 +222,7 @@ class Event(models.Model):
         )
 
     def move_under(self, parent, user):
-        if not user.has_perm('events.can_change_event'):
+        if not user.has_perm('events.change_event'):
             return False
 
         if parent.pk == self.pk:

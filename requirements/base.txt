@@ -13,13 +13,9 @@ django-environ==0.4.4
 whitenoise==3.3.1
 
 
-# Forms
-django-braces==1.11.0
-django-crispy-forms==1.7.0
-
 # Models
 django-model-utils==3.0.0
-django-extensions==1.9.7
+django-extensions==1.9.8
 
 # Images
 Pillow==4.3.0
@@ -49,11 +45,11 @@ slacker==0.9.60
 graphene-django==2.0.0
 django-cors-headers==2.1.0
 djangorestframework-camel-case==0.2.0
-wagtail==1.13
+wagtail==1.13.1
 beautifulsoup4==4.6.0
 requests==2.18.4
 fuzzywuzzy[speedup]
 mailchimp3==2.0.18
-arrow==0.10.0
+arrow==0.12.0
 djangorestframework-jwt==1.11.0
-boto3==1.4.7
+boto3==1.4.8
