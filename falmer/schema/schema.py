@@ -225,6 +225,7 @@ class Query(graphene.ObjectType):
     event = graphene.Field(Event, event_id=graphene.Int())
     all_groups = DjangoConnectionField(StudentGroup)
     group = graphene.Field(StudentGroup, groupId=graphene.Int())
+    branding_period = graphene.Field(BrandingPeriod, slug=graphene.String())
 
     all_images = DjangoConnectionField(Image)
     image = graphene.Field(Image, media_id=graphene.Int())
@@ -258,6 +259,10 @@ class Query(graphene.ObjectType):
             qs = qs.filter(brand__slug=qfilter['brand_slug'])
 
         return qs
+
+    def resolve_branding_period(self, info, **kwargs):
+        slug = kwargs.get('slug')
+        return event_models.BrandingPeriod.objects.get(slug=slug)
 
     def resolve_all_venues(self, info):
         return event_models.Venue.objects.all()

@@ -19,8 +19,8 @@ class Command(BaseCommand):
 
             events_list = data['events']
 
-            freshers = BrandingPeriod(
-                name='Freshers Week 2017',
+            freshers = BrandingPeriod.objects.get(
+                slug='refreshers-2018',
             )
 
             freshers.save()
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                     just_for_pgs=event['just_for_pgs'],
                     brand=freshers,
 
-                    embargo_until=datetime.datetime(2017, 8, 21, 12, 0),
+                    embargo_until=datetime.datetime(2018, 1, 10, 14, 0),
                 )
 
                 event_instance.save()
