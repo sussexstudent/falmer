@@ -85,6 +85,12 @@ class Image(DjangoObjectType):
 Image.Connection = create_connection(Image)
 
 
+class File(graphene.ObjectType):
+    resource = graphene.String()
+
+    def resolve_resource(self, info):
+        return self.url
+
 class Venue(DjangoObjectType):
     venue_id = graphene.Int()
 
@@ -109,10 +115,13 @@ class Type(DjangoObjectType):
 
 
 class BrandingPeriod(DjangoObjectType):
+    logo_vector = graphene.Field(File)
 
     class Meta:
         model = event_models.BrandingPeriod
 
+    def resolve_logo_vector(self, info):
+        return self.logo_vector
 
 class Bundle(DjangoObjectType):
 

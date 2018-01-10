@@ -32,6 +32,7 @@ class BrandingPeriod(models.Model):
     slug = models.SlugField(unique=True)
     accent = models.CharField(max_length=9, blank=True, default='')
     description = RichTextField(blank=True, default='')
+    event_append = RichTextField(blank=True, default='')
     logo = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
     logo_vector = models.FileField(null=True, blank=True)
 
@@ -42,6 +43,7 @@ class BrandingPeriod(models.Model):
             FieldPanel('slug'),
             FieldPanel('accent'),
             FieldPanel('description'),
+            FieldPanel('event_append'),
             ImageChooserPanel('logo'),
             FieldPanel('logo_vector')
         ], heading='The basics'),
