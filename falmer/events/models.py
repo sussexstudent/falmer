@@ -340,7 +340,7 @@ class MSLEvent(models.Model):
                 event_url = ''
 
             ticket_type = Event.MSL if api_content['HasTickets'] else Event.NA
-            ticket_data = event_url if api_content['HasTickets'] else ''
+            ticket_data = api_content['Url'] if api_content['HasTickets'] else ''
 
             self.event.title = title
             self.event.start_time = start_time
