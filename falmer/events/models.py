@@ -261,7 +261,7 @@ class MSLEvent(models.Model):
     org_id = models.CharField(max_length=30)
     org_name = models.CharField(max_length=255)
     title = models.TextField()
-    image_url = models.URLField(max_length=2000)
+    image_url = models.URLField(max_length=2000, blank=True, default='')
     url = models.URLField(max_length=2000)
     location = models.CharField(max_length=255)
     msl_event_id = models.CharField(max_length=255)
@@ -279,8 +279,11 @@ class MSLEvent(models.Model):
 
             event_url = api_content['Url']
 
-            if not api_content['HasTickets'] and event_url.startswith('https://www.sussexstudent.com/ents/event'):
+            if event_url.startswith('https://www.sussexstudent.com/ents/event'):
                 event_url = ''
+
+            ticket_type = Event.MSL if api_content['HasTickets'] else Event.NA
+            ticket_data = event_url if api_content['HasTickets'] else ''
 
             event = Event(
                 title=title,
@@ -292,6 +295,8 @@ class MSLEvent(models.Model):
                 url=event_url,
                 body=api_content['Body'],
                 student_group=StudentGroup.get_by_msl_id(api_content['OrganisationId']),
+                ticket_type=ticket_type,
+                ticket_data=ticket_data
             )
 
             local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
@@ -330,8 +335,12 @@ class MSLEvent(models.Model):
         if not self.disable_sync:
             event_url = api_content['Url']
 
-            if not api_content['HasTickets'] and event_url.startswith('https://www.sussexstudent.com/ents/event'):
+
+            if event_url.startswith('https://www.sussexstudent.com/ents/event'):
                 event_url = ''
+
+            ticket_type = Event.MSL if api_content['HasTickets'] else Event.NA
+            ticket_data = event_url if api_content['HasTickets'] else ''
 
             self.event.title = title
             self.event.start_time = start_time
@@ -342,6 +351,8 @@ class MSLEvent(models.Model):
             self.event.url = event_url
             self.event.body = api_content['Body']
             self.event.student_group = StudentGroup.get_by_msl_id(api_content['OrganisationId'])
+            self.event.ticket_type = ticket_type
+            self.event.ticket_data = ticket_data
 
             local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
 
