@@ -89,7 +89,6 @@ class Venue(models.Model):
 
     edit_handler = ObjectList(custom_panels)
 
-
     def __str__(self):
         return self.name
 
@@ -113,9 +112,11 @@ class Event(models.Model):
     )
 
     NATIVE = 'NT'
+    MSL = 'MSL'
     TICKET_TYPE_CHOICES = (
         (NA, 'n/a'),
         (NATIVE, 'Native'),
+        (MSL, 'MSL'),
     )
 
     SOFT_DRINKS_ALCOHOL = 'AV'
@@ -160,7 +161,7 @@ class Event(models.Model):
     cost = models.CharField(max_length=10, choices=COST_CHOICES, default=NA)
     alcohol = models.CharField(max_length=2, choices=ALCOHOL_CHOICES, default=NOT_ALCOHOL_FOCUSED)
 
-    ticket_type = models.CharField(max_length=2, choices=TICKET_TYPE_CHOICES, default=NA)
+    ticket_type = models.CharField(max_length=3, choices=TICKET_TYPE_CHOICES, default=NA)
     ticket_data = models.TextField(default='', blank=True)
 
     suitable_kids_families = models.BooleanField(default=False)
@@ -250,7 +251,7 @@ class MSLEvent(models.Model):
     event = models.OneToOneField(
         Event,
         on_delete=models.CASCADE,
-        primary_key=True
+        primary_key=True,
     )
     disable_sync = models.BooleanField(default=False)
     start_time = models.DateTimeField()
