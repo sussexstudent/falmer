@@ -45,5 +45,5 @@ class SectionContentPage(Page):
         'body',
         'sidebar_body',
         'contents_in_sidebar',
-        APIField('heading_image', serializer=WagtailImageSerializer()),
+        'heading_image',
     )

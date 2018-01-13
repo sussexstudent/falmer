@@ -48,7 +48,7 @@ class OfficerOverviewPage(Page):
     api_fields = (
         'role',
         'role_description',
-        APIField('officer_image', serializer=WagtailImageSerializer()),
+        'officer_image',
         'first_name',
         'last_name',
         'manifesto_tagline',
