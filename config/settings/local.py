@@ -65,6 +65,8 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TEMPLATE_CONTEXT': True,
 }
 
+MSL_SITE_HOST = 'http://localhost:3002'
+
 # django-extensions
 # ------------------------------------------------------------------------------
 INSTALLED_APPS += ['django_extensions', ]

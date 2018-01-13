@@ -20,6 +20,7 @@ from .base import *  # noqa
 # Raises ImproperlyConfigured exception if DJANGO_SECRET_KEY not in os.environ
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
+MSL_SITE_HOST = 'https://sussexstudent.com'
 
 # This ensures that Django will be able to detect a secure connection
 # properly on Heroku.
