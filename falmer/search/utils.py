@@ -1,25 +1,38 @@
 import uuid
+from collections import namedtuple
+
 import requests
 import bs4
 from fuzzywuzzy import process
 
-def get_group_result(result):
+PageResult = namedtuple('PageResult', ['uuid', 'link', 'title', 'description'])
 
+
+def get_group_result(result):
     return {
         'uuid': str(uuid.uuid4()),
         'link': result.find('a')['href'].replace('..', ''),
         'title': result.find('a').text,
         'description': result.findNext('dd').text,
     }
+
 
 def get_page_result(result):
-
     return {
         'uuid': str(uuid.uuid4()),
         'link': result.find('a')['href'].replace('..', ''),
         'title': result.find('a').text,
         'description': result.findNext('dd').text,
     }
+
+
+def convert_page_result_to_object(page_dict):
+    return PageResult(
+        uuid=page_dict['uuid'],
+        link=page_dict['link'],
+        title=page_dict['title'],
+        description=page_dict['description'],
+    )
 
 
 def get_event_result(result):
@@ -44,7 +57,7 @@ def get_news_result(result):
     return {
         'uuid': str(uuid.uuid4()),
         'link': anchor['href'].replace('..', ''),
-        'title': anchor.text,
+        'title': anchor.text.replace('&nbsp;', ' '),
         'description': result.find(class_='leader').text,
         'image': image['src'] if image else None,
     }
