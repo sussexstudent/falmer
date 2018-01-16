@@ -24,8 +24,8 @@ class FalmerUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, username, email=None, password=None, **extra_fields):
-        return self._create_user(username, email, password, False, False,
+    def create_user(self, identifier, **extra_fields):
+        return self._create_user(identifier, False, False,
                              **extra_fields)
 
     def create_superuser(self, identifier, **extra_fields):
