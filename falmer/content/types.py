@@ -11,6 +11,7 @@ class Page(graphene.ObjectType):
     type = graphene.String()
     slug = graphene.String()
     url_path = graphene.String()
+    path = graphene.String()
     data = GenericScalar()
     sub_pages = graphene.List(lambda: Page)
     parent_page = graphene.Field(lambda: Page)
@@ -26,6 +27,11 @@ class Page(graphene.ObjectType):
 
     def resolve_url_path(self, info):
         return self.url_path
+
+    def resolve_path(self, info):
+        if self.get_url_parts() is None:
+            return None
+        return self.get_url_parts()[2][6:]
 
     def resolve_data(self, info):
         data = dict()
