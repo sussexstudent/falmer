@@ -3,6 +3,7 @@ from graphene.types.generic import GenericScalar
 from wagtail.wagtailcore.blocks import StreamValue
 
 from falmer.content.serializers import WagtailImageSerializer
+from falmer.content.utils import underscore_to_camel, change_dict_naming_convention
 from falmer.matte.models import MatteImage
 
 
@@ -47,7 +48,7 @@ class Page(graphene.ObjectType):
                     data[field] = WagtailImageSerializer(instance=field_data).data
                 else:
                     data[field] = f'Unknown data type: {field_type.__name__}'
-        return data
+        return change_dict_naming_convention(data, underscore_to_camel)
 
     def resolve_parent_page(self, info):
         return self.get_parent()
