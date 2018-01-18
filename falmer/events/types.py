@@ -44,6 +44,8 @@ class BrandingPeriod(DjangoObjectType):
         model = models.BrandingPeriod
 
     def resolve_logo_vector(self, info):
+        if bool(self.logo_vector) is False:
+            return None
         return self.logo_vector
 
 
