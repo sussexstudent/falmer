@@ -8,7 +8,7 @@ class Query(graphene.ObjectType):
     all_images = DjangoConnectionField(types.Image)
     image = graphene.Field(types.Image, media_id=graphene.Int())
 
-    def resolve_all_images(self, info):
+    def resolve_all_images(self, info, **kwargs):
         if not info.context.user.has_perm('matte.can_list_all_matte_image'):
             raise PermissionError('not authorised to list images')
         qs = models.MatteImage.objects.all()
