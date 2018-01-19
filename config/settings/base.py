@@ -298,6 +298,8 @@ CELERY_RESULT_BACKEND = REDIS_LOCATION
 
 ADMIN_URL = r'^admin/'
 
+WAGTAIL_FRONTEND_LOGIN_URL = '/'
+
 GRAPHENE = {
     'SCHEMA': 'falmer.schema.schema.schema'
 }
