@@ -23,7 +23,7 @@ class WagtailImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MatteImage
-        fields = ('id', 'resource')
+        fields = ('id', 'resource', 'width', 'height')
 
     def get_resource(self, image):
         return image.file.name

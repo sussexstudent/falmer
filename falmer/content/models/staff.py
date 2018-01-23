@@ -6,9 +6,10 @@ from wagtail.wagtailsearch import index
 from wagtail.wagtailsnippets.blocks import SnippetChooserBlock
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailcore.models import Orderable
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
+from .core import Page
 
 
 @register_snippet
@@ -75,8 +76,6 @@ class StaffPage(Page):
     api_fields = (
         'body',
     )
-
-
 
 
 class StaffDepartment(Page):

@@ -1,13 +1,9 @@
-from django.db import models
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.models import Page, Orderable
-from wagtail.wagtailcore.fields import RichTextField, StreamField
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, TabbedInterface, StreamFieldPanel, ObjectList
-from wagtail.wagtailimages import get_image_model_string
-from wagtail.wagtailimages.blocks import ImageChooserBlock
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailcore.fields import StreamField
+from wagtail.wagtailadmin.edit_handlers import StreamFieldPanel
+
 
 from falmer.content.blocks import FigureBlock
+from falmer.content.models.core import Page
 
 
 class HomePage(Page):

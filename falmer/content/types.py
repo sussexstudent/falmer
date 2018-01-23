@@ -8,23 +8,33 @@ from falmer.matte.models import MatteImage
 
 
 class Page(graphene.ObjectType):
-    title = graphene.String()
     type = graphene.String()
+
+    title = graphene.String()
     slug = graphene.String()
+    last_published_at = graphene.String()
+
     url_path = graphene.String()
     path = graphene.String()
+
     data = GenericScalar()
+
     sub_pages = graphene.List(lambda: Page)
     parent_page = graphene.Field(lambda: Page)
+    ancestors = graphene.List(lambda: Page)
 
-    def resolve_title(self, info):
-        return self.title
 
     def resolve_type(self, info):
         return self.__class__.__name__
 
+    def resolve_title(self, info):
+        return self.title
+
     def resolve_slug(self, info):
         return self.slug
+
+    def resolve_last_published_at(self, info):
+        return self.last_published_at
 
     def resolve_url_path(self, info):
         return self.url_path
@@ -55,3 +65,6 @@ class Page(graphene.ObjectType):
 
     def resolve_sub_pages(self, info):
         return self.get_children().live()
+
+    def resolve_ancestors(self, info):
+        return self.get_ancestors()

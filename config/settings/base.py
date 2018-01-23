@@ -73,6 +73,7 @@ LOCAL_APPS = [
     'falmer.newsletters.apps.NewslettersConfig',
     'falmer.schema.apps.SchemaConfig',
     'falmer.events.apps.EventsConfig',
+    'falmer.kb.apps.KnowledgeBaseConfig',
     'falmer.slack.apps.SlackConfig',
     'falmer.search.apps.SearchConfig',
     'falmer.frontend.apps.FrontendConfig',

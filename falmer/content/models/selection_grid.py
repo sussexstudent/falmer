@@ -1,19 +1,15 @@
-from django.db import models
 from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.models import Page, Orderable
-from wagtail.wagtailcore.fields import RichTextField, StreamField
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, TabbedInterface, StreamFieldPanel, ObjectList
-from wagtail.wagtailimages import get_image_model_string
-from wagtail.wagtailimages.blocks import ImageChooserBlock
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailcore.fields import StreamField
+from wagtail.wagtailadmin.edit_handlers import TabbedInterface, StreamFieldPanel, ObjectList
 
-from falmer.content.blocks import HeroImageBlock, ImageBlock
+from falmer.content.blocks import HeroImageBlock, FalmerImageChooserBlock
+from falmer.content.models.core import Page
 
 
 class GridItem(blocks.StructBlock):
     title = blocks.CharBlock(required=True)
     link = blocks.URLBlock()
-    image = ImageBlock()
+    image = FalmerImageChooserBlock()
 
     class Meta:
         icon = 'item'

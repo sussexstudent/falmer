@@ -1,12 +1,10 @@
 from django.db import models
-from wagtail.api import APIField
-from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField, StreamField
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, TabbedInterface, StreamFieldPanel, ObjectList
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, TabbedInterface, StreamFieldPanel, ObjectList
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from falmer.content.blocks import PledgeBlock
-from falmer.content.serializers import WagtailImageSerializer
+from falmer.content.models.core import Page
 from falmer.matte.models import MatteImage
 
 
