@@ -90,6 +90,7 @@ class MSLStudentGroup(models.Model):
         self.msl_group_id = content['id']
         self.description = content['description']
         self.group.description = content['description']
+        self.group.name = content['name']
         self.link = content['link']
         self.group.link = content['link']
         self.logo_url = image or ''
