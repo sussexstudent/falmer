@@ -8,7 +8,7 @@ from . import models
 
 class Query(graphene.ObjectType):
     all_groups = DjangoConnectionField(StudentGroup)
-    group = graphene.Field(types.StudentGroup, groupId=graphene.Int())
+    group = graphene.Field(types.StudentGroup, group_id=graphene.Int())
 
     def resolve_all_groups(self, info):
         qs = models.StudentGroup.objects \
