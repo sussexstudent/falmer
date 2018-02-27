@@ -52,4 +52,4 @@ fuzzywuzzy[speedup]
 mailchimp3==2.0.18
 arrow==0.12.1
 djangorestframework-jwt==1.11.0
-boto3==1.5.28
+boto3==1.6.0
