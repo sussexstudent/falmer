@@ -1,4 +1,6 @@
 from wagtail.wagtailcore.blocks import StructBlock, RichTextBlock, ChoiceBlock
+
+from falmer.content.components.base import Component
 from .text import TextBlock
 
 
@@ -14,5 +16,5 @@ class CalloutBlock(StructBlock):
     )
 
 
-callout = ('callout', CalloutBlock())
+callout = Component('callout', CalloutBlock)
 

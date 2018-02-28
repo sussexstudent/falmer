@@ -2,6 +2,7 @@ from wagtail.wagtailcore import blocks
 from django.utils.translation import ugettext_lazy as _
 
 from falmer.content.blocks import FalmerPageChooserBlock
+from falmer.content.components.base import Component
 
 TARGETS = (
     ('', 'Open link in'),
@@ -28,7 +29,7 @@ class InternalLink(blocks.StructBlock):
         icon = 'link'
 
 
-internal_link = ('internal_link', InternalLink())
+internal_link = Component('internal_link', InternalLink)
 
 
 class ExternalLink(blocks.StructBlock):
@@ -48,7 +49,7 @@ class ExternalLink(blocks.StructBlock):
         icon = 'site'
 
 
-external_link = ('external_link', ExternalLink())
+external_link = Component('external_link', ExternalLink)
 
 
 class ButtonGroupLinks(blocks.StreamBlock):
@@ -62,4 +63,4 @@ class ButtonGroupLinks(blocks.StreamBlock):
         icon = 'link'
 
 
-button_group_links = ('button_group_links', ButtonGroupLinks())
+button_group_links = Component('button_group_links', ButtonGroupLinks)

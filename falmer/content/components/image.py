@@ -1,6 +1,7 @@
 from wagtail.wagtailcore import blocks
 
 from falmer.content.blocks import FalmerImageChooserBlock
+from falmer.content.components.base import Component
 
 
 class ImageBlock(blocks.StructBlock):
@@ -22,4 +23,4 @@ class ImageBlock(blocks.StructBlock):
         icon = 'image'
 
 
-image = ('image', ImageBlock())
+image = Component('image', ImageBlock)
