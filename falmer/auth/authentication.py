@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import exceptions
 import jwt
 
@@ -9,7 +10,7 @@ class MSLJWTAuthentication:
         try:
             token = request.META['HTTP_AUTHORIZATION'][7:]
             if token != '':
-                decoded = jwt.decode(token, 'test', algorithms=['HS256'])
+                decoded = jwt.decode(token, settings.MSL_JWT_SECRET, algorithms=['HS256'])
 
                 user = FalmerUser.objects.get_or_create_msl_user(decoded)
                 return user, None
