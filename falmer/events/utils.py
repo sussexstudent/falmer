@@ -29,7 +29,7 @@ def sync_events_from_msl():
     event_matches = {event.msl_event_id: event for event in MSLEvent.objects.filter(msl_event_id__in=msl_event_ids)}
 
     for msl_event_id in msl_event_ids:
-        if str(msl_event_id) in event_matches:
-            event_matches[str(msl_event_id)].update_from_msl(msl_events_map[msl_event_id])
+        if msl_event_id in event_matches:
+            event_matches[msl_event_id].update_from_msl(msl_events_map[msl_event_id])
         else:
             MSLEvent.create_from_msl(msl_events_map[msl_event_id])
