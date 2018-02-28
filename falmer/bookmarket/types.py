@@ -22,6 +22,7 @@ class MarketListing(DjangoObjectType):
     pk = graphene.Int()
     image = graphene.Field(Image)
     listing_user = graphene.Field(PublicUser)
+    contact_details = graphene.String()
 
     class Meta:
         model = models.Listing
@@ -37,6 +38,11 @@ class MarketListing(DjangoObjectType):
     def resolve_listing_user(self, info):
         return self.listing_user
 
+    def resolve_contact_details(self, info):
+        if not info.context.user.is_authenticated or not self.can_see_contact_details(info.context.user):
+            return None
+        else:
+            return self.contact_details
 
 MarketListing.connection = create_connection(MarketListing)
 

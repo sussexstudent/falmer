@@ -9,6 +9,7 @@ class MarketListingInput(graphene.InputObjectType):
     book_title = graphene.String(required=True)
     book_author = graphene.String(required=True)
     description = graphene.String(required=True)
+    contact_details = graphene.String(required=True)
     price = graphene.Float(required=True)
     section_id = graphene.Int(required=True)
 
@@ -17,6 +18,7 @@ class MarketListingUpdateInput(MarketListingInput):
     book_title = graphene.String()
     book_author = graphene.String()
     description = graphene.String()
+    contact_details = graphene.String()
     price = graphene.Float()
     section_id = graphene.Int()
     state = graphene.String()
@@ -41,6 +43,7 @@ class CreateMarketListing(graphene.Mutation):
                 book_title=listing_data.book_title,
                 book_author=listing_data.book_author,
                 description=listing_data.description,
+                contact_details=listing_data.contact_details,
                 listing_user=info.context.user,
                 section_id=listing_data.section_id,
                 buy_price=listing_data.price,
@@ -75,6 +78,12 @@ class UpdateMarketListing(graphene.Mutation):
             if 'price' in listing_data:
                 listing.buy_price = listing_data['price']
 
+            if 'description' in listing_data:
+                listing.description = listing_data['description']
+
+            if 'contact_details' in listing_data:
+                listing.contact_details = listing_data['contact_details']
+
             if 'section_id' in listing_data:
                 listing.section_id = listing_data['section_id']
 
@@ -99,8 +108,21 @@ class UpdateMarketListing(graphene.Mutation):
 # ChangeBookListingStatus
 
 
-# RequestBook
+class RequestDetails(graphene.Mutation):
+    class Arguments:
+        listing_id = graphene.Int()
+
+    listing = graphene.Field(types.MarketListing)
+
+    def mutate(self, info, listing_id):
+        listing = models.Listing.objects.public().get(pk=listing_id)
+
+        listing.record_request(info.context.user)
+
+        return RequestDetails(listing=listing)
+
 
 class Mutations(graphene.ObjectType):
     create_market_listing = CreateMarketListing.Field()
     update_market_listing = UpdateMarketListing.Field()
+    request_market_listing_contact_details = RequestDetails.Field()

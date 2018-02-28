@@ -39,6 +39,11 @@ class ListingsQuerySet(models.QuerySet):
         return self.get(pk=listing_id, listing_user=owner)
 
 
+class ListingContactRequester(TimeStampedModel, models.Model):
+    listing = models.ForeignKey('Listing', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+
 class Listing(TimeStampedModel, models.Model):
     objects = ListingsQuerySet.as_manager()
 
@@ -47,18 +52,21 @@ class Listing(TimeStampedModel, models.Model):
 
     description = models.TextField(default='', blank=True, null=False)
 
-    listing_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    listing_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='listings')
     section = models.ForeignKey(ListingSection, on_delete=models.CASCADE)
 
     buy_price = models.DecimalField(decimal_places=2, max_digits=3, null=False)
 
     state = models.CharField(max_length=10, default='DRAFT')
 
+    contact_details = models.TextField(null=False, default='')
+
     listing_change_canary = models.IntegerField(default=0, null=False, editable=False)
     listed_at = models.DateTimeField(null=True)
     deleted = models.BooleanField(default=False)
 
     images = models.ManyToManyField(MatteImage)
+    contact_requesters = models.ManyToManyField(settings.AUTH_USER_MODEL, through=ListingContactRequester, through_fields=('listing', 'user'))
 
     def featured_image(self):
         if self.images.count() > 0:
@@ -72,12 +80,23 @@ class Listing(TimeStampedModel, models.Model):
 
         self.state = next_state
 
+    def can_see_contact_details(self, user):
+        if self.listing_user == user:
+            return True
 
-# class ListingRequest(models.Model):
-#     listing = models.ForeignKey(Listing, related_name='requests')
-#     requester = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#
-#
+        if self.listingcontactrequester_set.filter(user=user).exists():
+            return True
+
+        return False
+
+    def record_request(self, user):
+        if not self.can_see_contact_details(user):
+            ListingContactRequester.objects.create(
+                listing=self,
+                user=user,
+            )
+
+
 # class ListingMessage(TimeStampedModel):
 #     request = models.ForeignKey(ListingRequest, related_name='offers')
 #     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
