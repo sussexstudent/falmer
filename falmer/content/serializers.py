@@ -20,10 +20,11 @@ def generate_image_url(image, filter_spec):
 
 class WagtailImageSerializer(serializers.ModelSerializer):
     resource = serializers.SerializerMethodField()
+    mediaId = serializers.IntegerField(source='id')
 
     class Meta:
         model = MatteImage
-        fields = ('id', 'resource', 'width', 'height')
+        fields = ('id', 'mediaId', 'resource', 'width', 'height')
 
     def get_resource(self, image):
         return image.file.name

@@ -1,3 +1,8 @@
 from django.contrib import admin
+from django.contrib.admin import register
+from . import models
 
-# Register your models here.
+@register(models.FalmerUser)
+class FalmerUserModelAdmin(admin.ModelAdmin):
+    pass
+

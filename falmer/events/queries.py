@@ -9,7 +9,7 @@ from . import models
 class Query(graphene.ObjectType):
     all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
     all_venues = DjangoConnectionField(Venue)
-    event = graphene.Field(Event, event_id=graphene.Int())
+    event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int())
     branding_period = graphene.Field(BrandingPeriod, slug=graphene.String())
 
     def resolve_all_events(self, info, **kwargs):
@@ -48,10 +48,18 @@ class Query(graphene.ObjectType):
 
     def resolve_event(self, info, **kwargs):
         event_id = kwargs.get('event_id')
+        msl_event_id = kwargs.get('msl_event_id')
+        print(event_id)
+        print(msl_event_id)
+        if event_id is not None:
+            return models.Event.objects.select_related(
+                'featured_image',
+                'bundle',
+                'brand',
+                'student_group'
+            ).get(pk=event_id)
 
-        return models.Event.objects.select_related(
-            'featured_image',
-            'bundle',
-            'brand',
-            'student_group'
-        ).get(pk=event_id)
+        if msl_event_id is not None:
+            return models.MSLEvent.objects.get(msl_event_id=msl_event_id).event
+
+        return None

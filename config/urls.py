@@ -20,7 +20,7 @@ from falmer.schema.api import api_router
 from falmer.auth import urls as auth_urls
 from falmer.slack import urls as slack_urls
 from falmer.launcher import urls as launcher_urls
-from falmer.events import urls as events_urls
+from falmer.matte import urls as matte_urls
 from falmer.search import urls as search_urls
 from falmer.newsletters import urls as newsletters_urls
 from falmer.frontend import urls as frontend_urls
@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'^graphql', csrf_exempt(DRFAuthenticatedGraphQLView.as_view(graphiql=True))),
     url(r'^auth/', include(auth_urls)),
     url(r'^slack/', include(slack_urls)),
+    url(r'^images/', include(matte_urls)),
     url(r'^search/', include(search_urls)),
     url(r'^newsletters/', include(newsletters_urls)),
     url(r'^o/', include(links_urls)),

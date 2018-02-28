@@ -11,9 +11,27 @@ from django.utils import timezone
 from wagtail.wagtailimages.models import Image, AbstractImage, AbstractRendition
 from .tasks import save_image_from_remote, perform_external_image_analysis
 
+# image sources
+# 100 - default, user wagtail
+# 1xx - Reserved
+# 2xx - Student Groups
+# 3xx - Events
+# 4xx - Book market
+
+SOURCE_DEFAULT = 100
+
+SOURCE_BOOK_MARKET_LISTING = 400
+
+SOURCE_CHOICES = (
+    (SOURCE_DEFAULT, 'Default'),
+    (SOURCE_BOOK_MARKET_LISTING, 'Book Market - Listing'),
+)
+
 
 class MatteImage(AbstractImage):
     labels = models.ManyToManyField('matte.ImageLabel', through='matte.ImageLabelThrough')
+
+    internal_source = models.IntegerField(choices=SOURCE_CHOICES, default=SOURCE_DEFAULT, null=False)
 
     admin_form_fields = Image.admin_form_fields + (
         # nothing yet

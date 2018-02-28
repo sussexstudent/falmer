@@ -264,7 +264,7 @@ class MSLEvent(models.Model):
     image_url = models.URLField(max_length=2000, blank=True, default='')
     url = models.URLField(max_length=2000)
     location = models.CharField(max_length=255)
-    msl_event_id = models.CharField(max_length=255)
+    msl_event_id = models.IntegerField(null=False)
     body_html = models.TextField()
     description = models.TextField()
 

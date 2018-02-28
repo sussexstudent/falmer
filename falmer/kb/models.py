@@ -14,10 +14,10 @@ class GuidePage(Page):
 class ReferencePage(Page):
     main = StreamField(
         StreamBlock([
-            components.text,
-            components.callout,
-            components.image,
-            components.button_group_links,
+            components.text.to_pair(),
+            components.callout.to_pair(),
+            components.image.to_pair(),
+            components.button_group_links.to_pair(),
         ]), verbose_name='Main Content',
         null=True, blank=True
     )

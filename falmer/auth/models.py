@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, Group
 from django.conf import settings
 from django.utils.crypto import get_random_string
 
@@ -9,6 +9,7 @@ AUTHORITY_INTERNAL_STAFF = 'IS'
 
 AUTHORITY_CHOICES = (
   ('IS', 'Internal Staff'),
+  ('MSL', 'MSL Users'),
 )
 
 
@@ -16,10 +17,9 @@ class FalmerUserManager(BaseUserManager):
     def _create_user(self, identifier,
                  is_staff, is_superuser, **extra_fields):
         if not identifier:
-            raise ValueError('The given username must be set')
+            raise ValueError('The given identifier must be set')
         user = self.model(identifier=identifier,
                           is_staff=is_staff, is_active=True,
-                          authority='IS',
                           is_superuser=is_superuser, **extra_fields)
         user.save(using=self._db)
         return user
@@ -32,10 +32,22 @@ class FalmerUserManager(BaseUserManager):
         return self._create_user(identifier, True, True,
                              **extra_fields)
 
+    def get_or_create_msl_user(self, verified_payload):
+        try:
+            user = self.get(authority='MSL', identifier=verified_payload['uniqueid'])
+        except self.model.DoesNotExist:
+            user = self.create_user(identifier=verified_payload['uniqueid'], authority='MSL')
+            user.name = f"{verified_payload['firstname']} {verified_payload['lastname']}"
+            user.save()
+            students = Group.objects.get(name='Students')
+            students.user_set.add(user)
+
+        return user
+
 
 class FalmerUser(AbstractBaseUser, PermissionsMixin):
     identifier = models.CharField(max_length=256, unique=True)
-    authority = models.CharField(max_length=4, choices=AUTHORITY_CHOICES)
+    authority = models.CharField(max_length=4, choices=AUTHORITY_CHOICES, )
     email = models.EmailField()
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -56,6 +68,8 @@ class FalmerUser(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.get_full_name()
 
+    def __str__(self):
+        return f'User: "{self.authority}/{self.identifier}"'
 
 class MagicLinkToken(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

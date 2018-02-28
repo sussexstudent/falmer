@@ -74,6 +74,7 @@ LOCAL_APPS = [
     'falmer.schema.apps.SchemaConfig',
     'falmer.events.apps.EventsConfig',
     'falmer.kb.apps.KnowledgeBaseConfig',
+    'falmer.bookmarket.apps.BookmarketConfig',
     'falmer.slack.apps.SlackConfig',
     'falmer.search.apps.SearchConfig',
     'falmer.frontend.apps.FrontendConfig',
@@ -90,12 +91,14 @@ MIDDLEWARE = [
 
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
-
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+    # 'falmer.auth.middleware.MSLJWTMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -326,12 +329,15 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
+MSL_JWT_SECRET = env('MSL_JWT_SECRET')
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'falmer.auth.authentication.MSLJWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),

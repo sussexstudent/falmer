@@ -12,7 +12,7 @@ class MoveEvent(graphene.Mutation):
     ok = graphene.Boolean()
     event = graphene.Field(types.Event)
 
-    def mutate(self, root, info, event_id, destination_event_id):
+    def mutate(self, info, event_id, destination_event_id):
         try:
             event = models.Event.objects.get(pk=event_id)
             dest_event = models.Event.objects.get(pk=destination_event_id)
