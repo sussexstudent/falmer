@@ -33,12 +33,11 @@ class FalmerUserManager(BaseUserManager):
                              **extra_fields)
 
     def get_or_create_msl_user(self, verified_payload):
-        try:
-            user = self.get(authority='MSL', identifier=verified_payload['uniqueid'])
-        except self.model.DoesNotExist:
-            user = self.create_user(identifier=verified_payload['uniqueid'], authority='MSL')
-            user.name = f"{verified_payload['firstname']} {verified_payload['lastname']}"
-            user.save()
+        user, created = self.get_or_create(authority='MSL', identifier=verified_payload['uniqueid'], defaults={
+            'name': f"{verified_payload['firstname']} {verified_payload['lastname']}"
+        })
+
+        if created:
             students = Group.objects.get(name='Students')
             students.user_set.add(user)
 
