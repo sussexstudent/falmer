@@ -5,8 +5,8 @@ from __future__ import unicode_literals
 from django.db import migrations
 import falmer.content.blocks
 import falmer.content.models.selection_grid
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -27,6 +27,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='selectiongridpage',
             name='body',
-            field=wagtail.wagtailcore.fields.StreamField((('heading_hero', wagtail.wagtailcore.blocks.StructBlock((('heading', wagtail.wagtailcore.blocks.CharBlock(help_text='Leave empty to use the page title', required=False)), ('image', falmer.content.blocks.ImageBlock())))), ('selection_grid', wagtail.wagtailcore.blocks.ListBlock(falmer.content.models.selection_grid.GridItem)))),
+            field=wagtail.core.fields.StreamField((('heading_hero', wagtail.core.blocks.StructBlock((('heading', wagtail.core.blocks.CharBlock(help_text='Leave empty to use the page title', required=False)), ('image', falmer.content.blocks.ImageBlock())))), ('selection_grid', wagtail.core.blocks.ListBlock(falmer.content.models.selection_grid.GridItem)))),
         ),
     ]

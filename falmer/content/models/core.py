@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from wagtail.wagtailcore.models import Page as WagtailPage
+from wagtail.core.models import Page as WagtailPage
 
 
 class Page(WagtailPage):

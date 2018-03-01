@@ -5,8 +5,8 @@ from __future__ import unicode_literals
 import falmer.content.models
 from django.db import migrations, models
 import django.db.models.deletion
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(blank=True, max_length=255, null=True)),
                 ('office_phone_number', models.CharField(blank=True, max_length=255, null=True)),
                 ('mobile_phone_number', models.CharField(blank=True, max_length=255, null=True)),
-                ('job_description', wagtail.wagtailcore.fields.RichTextField()),
+                ('job_description', wagtail.core.fields.RichTextField()),
                 ('office_location', models.CharField(blank=True, max_length=255, null=True)),
                 ('photo', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='matte.MatteImage')),
             ],
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='staffpage',
             name='body',
-            field=wagtail.wagtailcore.fields.StreamField((('staff_list', wagtail.wagtailcore.blocks.StructBlock((('body', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.ChooserBlock(required=falmer.content.models.StaffMemberSnippet))),))),), default=''),
+            field=wagtail.core.fields.StreamField((('staff_list', wagtail.core.blocks.StructBlock((('body', wagtail.core.blocks.ListBlock(wagtail.core.blocks.ChooserBlock(required=falmer.content.models.StaffMemberSnippet))),))),), default=''),
             preserve_default=False,
         ),
     ]

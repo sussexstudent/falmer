@@ -1,6 +1,6 @@
 import graphene
 from graphene.types.generic import GenericScalar
-from wagtail.wagtailcore.blocks import StreamValue
+from wagtail.core.blocks import StreamValue
 
 from falmer.content.serializers import WagtailImageSerializer
 from falmer.content.utils import underscore_to_camel, change_dict_naming_convention

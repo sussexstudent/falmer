@@ -1,8 +1,8 @@
 from django.db import models
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.fields import StreamField
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, TabbedInterface, StreamFieldPanel, ObjectList
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.core import blocks
+from wagtail.core.fields import StreamField
+from wagtail.admin.edit_handlers import FieldPanel, TabbedInterface, StreamFieldPanel, ObjectList
+from wagtail.images.edit_handlers import ImageChooserPanel
 
 from falmer.content.blocks import ContactBlock, SectionBlock
 from falmer.content.models.core import Page

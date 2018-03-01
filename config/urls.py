@@ -10,11 +10,11 @@ from rest_framework.decorators import api_view, parser_classes, authentication_c
 from rest_framework.parsers import BaseParser
 from rest_framework.permissions import AllowAny
 from rest_framework.settings import api_settings
-from wagtail.wagtailadmin import urls as wagtailadmin_urls
-from wagtail.wagtaildocs import urls as wagtaildocs_urls
-from wagtail.wagtailcore import urls as wagtail_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.documents import urls as wagtaildocs_urls
+from wagtail.core import urls as wagtail_urls
 from graphene_django.views import GraphQLView
-from wagtail.wagtailimages.views.serve import ServeView
+from wagtail.images.views.serve import ServeView
 
 from falmer.schema.api import api_router
 from falmer.auth import urls as auth_urls

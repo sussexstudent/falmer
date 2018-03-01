@@ -3,9 +3,9 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
-import wagtail.wagtailimages.blocks
+import wagtail.core.blocks
+import wagtail.core.fields
+import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='referencepage',
             name='main',
-            field=wagtail.wagtailcore.fields.StreamField((('text', wagtail.wagtailcore.blocks.StructBlock((('value', wagtail.wagtailcore.blocks.RichTextBlock()),))), ('image', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock(required=True)), ('alternative_title', wagtail.wagtailcore.blocks.CharBlock(required=False)), ('caption', wagtail.wagtailcore.blocks.CharBlock(required=False)), ('attribution', wagtail.wagtailcore.blocks.CharBlock(required=False))))), ('button_group_links', wagtail.wagtailcore.blocks.StreamBlock((('internal_link', wagtail.wagtailcore.blocks.StructBlock((('link', wagtail.wagtailcore.blocks.PageChooserBlock(required=True)), ('title', wagtail.wagtailcore.blocks.CharBlock(required=False))), label='Internal page')), ('external_link', wagtail.wagtailcore.blocks.StructBlock((('link', wagtail.wagtailcore.blocks.URLBlock(required=True)), ('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('target', wagtail.wagtailcore.blocks.ChoiceBlock(choices=[('', 'Open link in'), ('_self', 'Same window'), ('_blank', 'New window')], help_text='Open link in'))), label='External Page')))))), blank=True, null=True, verbose_name='Main Content'),
+            field=wagtail.core.fields.StreamField((('text', wagtail.core.blocks.StructBlock((('value', wagtail.core.blocks.RichTextBlock()),))), ('image', wagtail.core.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock(required=True)), ('alternative_title', wagtail.core.blocks.CharBlock(required=False)), ('caption', wagtail.core.blocks.CharBlock(required=False)), ('attribution', wagtail.core.blocks.CharBlock(required=False))))), ('button_group_links', wagtail.core.blocks.StreamBlock((('internal_link', wagtail.core.blocks.StructBlock((('link', wagtail.core.blocks.PageChooserBlock(required=True)), ('title', wagtail.core.blocks.CharBlock(required=False))), label='Internal page')), ('external_link', wagtail.core.blocks.StructBlock((('link', wagtail.core.blocks.URLBlock(required=True)), ('title', wagtail.core.blocks.CharBlock(required=True)), ('target', wagtail.core.blocks.ChoiceBlock(choices=[('', 'Open link in'), ('_self', 'Same window'), ('_blank', 'New window')], help_text='Open link in'))), label='External Page')))))), blank=True, null=True, verbose_name='Main Content'),
         ),
     ]

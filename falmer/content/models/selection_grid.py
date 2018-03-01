@@ -1,6 +1,6 @@
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.fields import StreamField
-from wagtail.wagtailadmin.edit_handlers import TabbedInterface, StreamFieldPanel, ObjectList
+from wagtail.core import blocks
+from wagtail.core.fields import StreamField
+from wagtail.admin.edit_handlers import TabbedInterface, StreamFieldPanel, ObjectList
 
 from falmer.content.blocks import HeroImageBlock, FalmerImageChooserBlock
 from falmer.content.models.core import Page

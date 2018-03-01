@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 import falmer.content.blocks
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -18,11 +18,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='homepage',
             name='full_time_officers',
-            field=wagtail.wagtailcore.fields.StreamField((('figure', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('subtitle', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('image', falmer.content.blocks.ImageBlock())))),)),
+            field=wagtail.core.fields.StreamField((('figure', wagtail.core.blocks.StructBlock((('title', wagtail.core.blocks.CharBlock(required=True)), ('subtitle', wagtail.core.blocks.CharBlock(required=True)), ('image', falmer.content.blocks.ImageBlock())))),)),
         ),
         migrations.AlterField(
             model_name='homepage',
             name='part_time_officers',
-            field=wagtail.wagtailcore.fields.StreamField((('figure', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('subtitle', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('image', falmer.content.blocks.ImageBlock())))),)),
+            field=wagtail.core.fields.StreamField((('figure', wagtail.core.blocks.StructBlock((('title', wagtail.core.blocks.CharBlock(required=True)), ('subtitle', wagtail.core.blocks.CharBlock(required=True)), ('image', falmer.content.blocks.ImageBlock())))),)),
         ),
     ]

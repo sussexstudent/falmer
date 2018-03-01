@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -17,11 +17,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sectioncontentpage',
             name='body',
-            field=wagtail.wagtailcore.fields.StreamField((('section', wagtail.wagtailcore.blocks.StructBlock((('heading', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('body', wagtail.wagtailcore.blocks.StreamBlock((('paragraph', wagtail.wagtailcore.blocks.RichTextBlock()),)))))),)),
+            field=wagtail.core.fields.StreamField((('section', wagtail.core.blocks.StructBlock((('heading', wagtail.core.blocks.CharBlock(required=True)), ('body', wagtail.core.blocks.StreamBlock((('paragraph', wagtail.core.blocks.RichTextBlock()),)))))),)),
         ),
         migrations.AlterField(
             model_name='sectioncontentpage',
             name='sidebar_body',
-            field=wagtail.wagtailcore.fields.StreamField((('paragraph', wagtail.wagtailcore.blocks.RichTextBlock()), ('contact', wagtail.wagtailcore.blocks.StructBlock((('body', wagtail.wagtailcore.blocks.TextBlock()), ('name', wagtail.wagtailcore.blocks.CharBlock()), ('email', wagtail.wagtailcore.blocks.EmailBlock())))))),
+            field=wagtail.core.fields.StreamField((('paragraph', wagtail.core.blocks.RichTextBlock()), ('contact', wagtail.core.blocks.StructBlock((('body', wagtail.core.blocks.TextBlock()), ('name', wagtail.core.blocks.CharBlock()), ('email', wagtail.core.blocks.EmailBlock())))))),
         ),
     ]

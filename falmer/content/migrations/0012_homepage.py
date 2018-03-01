@@ -5,8 +5,8 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 import falmer.content.blocks
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -21,8 +21,8 @@ class Migration(migrations.Migration):
             name='HomePage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('full_time_officers', wagtail.wagtailcore.fields.StreamField((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('subtitle', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('image', falmer.content.blocks.ImageBlock())))),
-                ('part_time_officers', wagtail.wagtailcore.fields.StreamField((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('subtitle', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('image', falmer.content.blocks.ImageBlock())))),
+                ('full_time_officers', wagtail.core.fields.StreamField((('title', wagtail.core.blocks.CharBlock(required=True)), ('subtitle', wagtail.core.blocks.CharBlock(required=True)), ('image', falmer.content.blocks.ImageBlock())))),
+                ('part_time_officers', wagtail.core.fields.StreamField((('title', wagtail.core.blocks.CharBlock(required=True)), ('subtitle', wagtail.core.blocks.CharBlock(required=True)), ('image', falmer.content.blocks.ImageBlock())))),
             ],
             options={
                 'abstract': False,

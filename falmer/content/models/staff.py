@@ -1,14 +1,14 @@
 from django.db import models
-from wagtail.wagtailimages import get_image_model_string
+from wagtail.images import get_image_model_string
 from modelcluster.fields import ParentalKey
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailsearch import index
-from wagtail.wagtailsnippets.blocks import SnippetChooserBlock
-from wagtail.wagtailsnippets.models import register_snippet
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.models import Orderable
-from wagtail.wagtailcore.fields import RichTextField, StreamField
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
+from wagtail.snippets.blocks import SnippetChooserBlock
+from wagtail.snippets.models import register_snippet
+from wagtail.core import blocks
+from wagtail.core.models import Orderable
+from wagtail.core.fields import RichTextField, StreamField
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
 from .core import Page
 
 

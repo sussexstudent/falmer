@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
             name='Freshers17HomePage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('blocks', wagtail.wagtailcore.fields.StreamField((('block', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('body', wagtail.wagtailcore.blocks.RichTextBlock()), ('link', wagtail.wagtailcore.blocks.CharBlock(required=False)), ('cta', wagtail.wagtailcore.blocks.CharBlock(required=False))))),))),
+                ('blocks', wagtail.core.fields.StreamField((('block', wagtail.core.blocks.StructBlock((('title', wagtail.core.blocks.CharBlock(required=True)), ('body', wagtail.core.blocks.RichTextBlock()), ('link', wagtail.core.blocks.CharBlock(required=False)), ('cta', wagtail.core.blocks.CharBlock(required=False))))),))),
             ],
             options={
                 'abstract': False,

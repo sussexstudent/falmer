@@ -8,7 +8,7 @@ from falmer.matte.models import MatteImage
 
 
 def generate_image_url(image, filter_spec):
-    from wagtail.wagtailimages.views.serve import generate_signature
+    from wagtail.images.views.serve import generate_signature
     signature = generate_signature(image.id, filter_spec)
     url = reverse('wagtailimages_serve', args=(signature, image.id, filter_spec))
 

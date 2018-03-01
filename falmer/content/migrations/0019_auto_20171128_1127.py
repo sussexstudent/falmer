@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 import falmer.content.blocks
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -18,16 +18,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='officeroverviewpage',
             name='pledges',
-            field=wagtail.wagtailcore.fields.StreamField((('pledge', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('body', falmer.content.blocks.RichTextWithExpandedContent(required=True)), ('image', falmer.content.blocks.ImageBlock()), ('status', wagtail.wagtailcore.blocks.ChoiceBlock(choices=[('in_progress', 'In Progress'), ('done', 'Done'), ('blank', 'Blank')]))))),)),
+            field=wagtail.core.fields.StreamField((('pledge', wagtail.core.blocks.StructBlock((('title', wagtail.core.blocks.CharBlock(required=True)), ('body', falmer.content.blocks.RichTextWithExpandedContent(required=True)), ('image', falmer.content.blocks.ImageBlock()), ('status', wagtail.core.blocks.ChoiceBlock(choices=[('in_progress', 'In Progress'), ('done', 'Done'), ('blank', 'Blank')]))))),)),
         ),
         migrations.AlterField(
             model_name='sectioncontentpage',
             name='body',
-            field=wagtail.wagtailcore.fields.StreamField((('section', wagtail.wagtailcore.blocks.StructBlock((('heading', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('body', wagtail.wagtailcore.blocks.StreamBlock((('paragraph', falmer.content.blocks.RichTextWithExpandedContent()),)))))),)),
+            field=wagtail.core.fields.StreamField((('section', wagtail.core.blocks.StructBlock((('heading', wagtail.core.blocks.CharBlock(required=True)), ('body', wagtail.core.blocks.StreamBlock((('paragraph', falmer.content.blocks.RichTextWithExpandedContent()),)))))),)),
         ),
         migrations.AlterField(
             model_name='sectioncontentpage',
             name='sidebar_body',
-            field=wagtail.wagtailcore.fields.StreamField((('paragraph', wagtail.wagtailcore.blocks.RichTextBlock()), ('contact', wagtail.wagtailcore.blocks.StructBlock((('body', wagtail.wagtailcore.blocks.TextBlock()), ('name', wagtail.wagtailcore.blocks.CharBlock()), ('email', wagtail.wagtailcore.blocks.EmailBlock()))))), blank=True),
+            field=wagtail.core.fields.StreamField((('paragraph', wagtail.core.blocks.RichTextBlock()), ('contact', wagtail.core.blocks.StructBlock((('body', wagtail.core.blocks.TextBlock()), ('name', wagtail.core.blocks.CharBlock()), ('email', wagtail.core.blocks.EmailBlock()))))), blank=True),
         ),
     ]

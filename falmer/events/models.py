@@ -4,10 +4,10 @@ import arrow
 from dateutil import tz
 from django.db import models, transaction
 from django_extensions.db.fields import AutoSlugField
-from wagtail.wagtailadmin.edit_handlers import MultiFieldPanel, FieldRowPanel, FieldPanel, \
+from wagtail.admin.edit_handlers import MultiFieldPanel, FieldRowPanel, FieldPanel, \
     ObjectList
-from wagtail.wagtailcore.fields import RichTextField
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.core.fields import RichTextField
+from wagtail.images.edit_handlers import ImageChooserPanel
 
 from falmer.links.utils import LinkedMetadata
 from falmer.matte.models import MatteImage, RemoteImage
@@ -94,7 +94,7 @@ class Venue(models.Model):
 
 
 class AutoLocationDisplayToVenue(models.Model):
-    venue = models.ForeignKey(Venue, null=False)
+    venue = models.ForeignKey(Venue, null=False, on_delete=models.CASCADE)
     location = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
@@ -137,7 +137,7 @@ class Event(models.Model):
         (SOLD_OUT, 'Sold out'),
     )
 
-    parent = models.ForeignKey('self', default=None, null=True, blank=True, related_name='children')
+    parent = models.ForeignKey('self', default=None, null=True, blank=True, related_name='children', on_delete=models.SET_NULL)
 
     title = models.TextField()
     slug = AutoSlugField(populate_from='title', unique=False)
@@ -151,10 +151,10 @@ class Event(models.Model):
     location_display = models.CharField(max_length=255, default='', blank=True)
     embargo_until = models.DateTimeField(null=True, blank=True)
 
-    venue = models.ForeignKey(Venue, blank=True, null=True)
+    venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.SET_NULL)
     short_description = models.TextField(default='')
     body = RichTextField(default='', blank=True)
-    student_group = models.ForeignKey(StudentGroup, null=True, blank=True, default=None)
+    student_group = models.ForeignKey(StudentGroup, null=True, blank=True, default=None, on_delete=models.SET_NULL)
 
     is_over_18_only = models.BooleanField(default=False)
     ticket_level = models.CharField(max_length=2, choices=TICKET_LEVEL_CHOICES, default=NA)
@@ -167,10 +167,10 @@ class Event(models.Model):
     suitable_kids_families = models.BooleanField(default=False)
     just_for_pgs = models.BooleanField(default=False)
 
-    bundle = models.ForeignKey(Bundle, null=True, blank=True)
-    brand = models.ForeignKey(BrandingPeriod, null=True, blank=True)
-    category = models.ForeignKey(Category, null=True, blank=True)
-    type = models.ForeignKey(Type, null=True, blank=True)
+    bundle = models.ForeignKey(Bundle, null=True, blank=True, on_delete=models.SET_NULL)
+    brand = models.ForeignKey(BrandingPeriod, null=True, blank=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+    type = models.ForeignKey(Type, null=True, blank=True, on_delete=models.SET_NULL)
 
     custom_panels = [
         MultiFieldPanel([

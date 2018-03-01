@@ -13,7 +13,7 @@ class MailChimpList(models.Model):
 
 
 class NewsletterResumeToken(models.Model):
-    list = models.ForeignKey(MailChimpList)
+    list = models.ForeignKey(MailChimpList, on_delete=models.CASCADE)
     email_id = models.CharField(max_length=255)
     continuation_token = models.CharField(max_length=255)
 

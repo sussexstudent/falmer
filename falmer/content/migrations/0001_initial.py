@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.fields
-import wagtail.wagtailcore.fields
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(blank=True, max_length=255, null=True)),
                 ('office_phone_number', models.CharField(blank=True, max_length=255, null=True)),
                 ('mobile_phone_number', models.CharField(blank=True, max_length=255, null=True)),
-                ('job_description', wagtail.wagtailcore.fields.RichTextField()),
+                ('job_description', wagtail.core.fields.RichTextField()),
                 ('office_location', models.CharField(blank=True, max_length=255, null=True)),
             ],
             options={

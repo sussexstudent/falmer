@@ -1,6 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
-from wagtail.wagtailcore.rich_text import expand_db_html
+from wagtail.core.rich_text import expand_db_html
 
 from falmer.matte.types import Image
 from falmer.schema.schema import create_connection, File

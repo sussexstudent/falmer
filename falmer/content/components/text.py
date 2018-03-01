@@ -1,4 +1,4 @@
-from wagtail.wagtailcore.blocks import StructBlock, RichTextBlock
+from wagtail.core.blocks import StructBlock, RichTextBlock
 
 from falmer.content.components.base import Component
 

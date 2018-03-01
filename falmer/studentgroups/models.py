@@ -9,7 +9,7 @@ class StudentGroup(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_prospective = models.BooleanField(default=False)
     description = models.TextField(default='', blank=True)
-    logo = models.ForeignKey(MatteImage, null=True, blank=True)
+    logo = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
     link = models.CharField(default='', max_length=255, blank=True)
 
     def __str__(self):
@@ -44,14 +44,14 @@ def get_group_image_url(url):
 
 
 class MSLStudentGroup(models.Model):
-    group = models.OneToOneField(StudentGroup, related_name='msl_group')
+    group = models.OneToOneField(StudentGroup, related_name='msl_group', on_delete=models.CASCADE)
 
     description = models.TextField(default='')
     msl_group_id = models.IntegerField(unique=True)
-    logo = models.ForeignKey(MatteImage, null=True)
+    logo = models.ForeignKey(MatteImage, null=True, on_delete=models.SET_NULL)
     link = models.CharField(max_length=255)
     logo_url = models.TextField(default='')
-    category = models.ForeignKey(MSLStudentGroupCategory)
+    category = models.ForeignKey(MSLStudentGroupCategory, on_delete=models.CASCADE)
     last_sync = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -120,7 +120,7 @@ class AwardAuthority(models.Model):
 
 
 class Award(models.Model):
-    authority = models.ForeignKey(AwardAuthority, blank=False, null=False)
+    authority = models.ForeignKey(AwardAuthority, blank=False, null=False, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=128)
     description = models.TextField(default='', blank=True)
@@ -131,8 +131,8 @@ class Award(models.Model):
 
 
 class GroupAwarded(models.Model):
-    group = models.ForeignKey(StudentGroup, blank=False, null=False)
-    award = models.ForeignKey(Award, blank=False, null=False)
+    group = models.ForeignKey(StudentGroup, blank=False, null=False, on_delete=models.CASCADE)
+    award = models.ForeignKey(Award, blank=False, null=False, on_delete=models.CASCADE)
 
     year = models.IntegerField(blank=False, null=False)
 

@@ -1,4 +1,4 @@
-from wagtail.wagtailcore import blocks
+from wagtail.core import blocks
 
 from falmer.content.blocks import FalmerImageChooserBlock
 from falmer.content.components.base import Component

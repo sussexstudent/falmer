@@ -1,7 +1,7 @@
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.blocks import RichTextBlock, PageChooserBlock
-from wagtail.wagtailcore.rich_text import expand_db_html
-from wagtail.wagtailimages.blocks import ImageChooserBlock
+from wagtail.core import blocks
+from wagtail.core.blocks import RichTextBlock, PageChooserBlock
+from wagtail.core.rich_text import expand_db_html
+from wagtail.images.blocks import ImageChooserBlock
 
 from falmer.content.serializers import WagtailImageSerializer
 

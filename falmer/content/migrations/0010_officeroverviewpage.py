@@ -5,8 +5,8 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 import falmer.content.blocks
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -23,13 +23,13 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('role', models.CharField(max_length=255)),
-                ('role_description', wagtail.wagtailcore.fields.RichTextField()),
+                ('role_description', wagtail.core.fields.RichTextField()),
                 ('first_name', models.CharField(max_length=255)),
                 ('last_name', models.CharField(max_length=255)),
                 ('manifesto_tagline', models.CharField(max_length=255)),
-                ('manifesto_overview', wagtail.wagtailcore.fields.RichTextField()),
+                ('manifesto_overview', wagtail.core.fields.RichTextField()),
                 ('twitter_username', models.CharField(max_length=30)),
-                ('pledges', wagtail.wagtailcore.fields.StreamField((('pledges', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('body', wagtail.wagtailcore.blocks.RichTextBlock(required=True)), ('image', falmer.content.blocks.ImageBlock()), ('status', wagtail.wagtailcore.blocks.ChoiceBlock(choices=[('in_progress', 'In Progress'), ('done', 'Done'), ('blank', 'Blank')]))))),))),
+                ('pledges', wagtail.core.fields.StreamField((('pledges', wagtail.core.blocks.StructBlock((('title', wagtail.core.blocks.CharBlock(required=True)), ('body', wagtail.core.blocks.RichTextBlock(required=True)), ('image', falmer.content.blocks.ImageBlock()), ('status', wagtail.core.blocks.ChoiceBlock(choices=[('in_progress', 'In Progress'), ('done', 'Done'), ('blank', 'Blank')]))))),))),
                 ('officer_image', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='matte.MatteImage')),
             ],
             options={

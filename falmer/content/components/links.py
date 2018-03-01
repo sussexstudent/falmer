@@ -1,4 +1,4 @@
-from wagtail.wagtailcore import blocks
+from wagtail.core import blocks
 from django.utils.translation import ugettext_lazy as _
 
 from falmer.content.blocks import FalmerPageChooserBlock

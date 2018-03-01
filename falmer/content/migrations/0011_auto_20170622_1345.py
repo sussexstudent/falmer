@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 import falmer.content.blocks
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='officeroverviewpage',
             name='pledges',
-            field=wagtail.wagtailcore.fields.StreamField((('pledge', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('body', wagtail.wagtailcore.blocks.RichTextBlock(required=True)), ('image', falmer.content.blocks.ImageBlock()), ('status', wagtail.wagtailcore.blocks.ChoiceBlock(choices=[('in_progress', 'In Progress'), ('done', 'Done'), ('blank', 'Blank')]))))),)),
+            field=wagtail.core.fields.StreamField((('pledge', wagtail.core.blocks.StructBlock((('title', wagtail.core.blocks.CharBlock(required=True)), ('body', wagtail.core.blocks.RichTextBlock(required=True)), ('image', falmer.content.blocks.ImageBlock()), ('status', wagtail.core.blocks.ChoiceBlock(choices=[('in_progress', 'In Progress'), ('done', 'Done'), ('blank', 'Blank')]))))),)),
         ),
     ]

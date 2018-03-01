@@ -1,7 +1,7 @@
 from graphql import GraphQLError
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, StreamFieldPanel
-from wagtail.wagtailcore.blocks import StreamBlock
-from wagtail.wagtailcore.fields import StreamField
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.core.blocks import StreamBlock
+from wagtail.core.fields import StreamField
 
 from falmer.content import components
 from falmer.content.models.core import Page

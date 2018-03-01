@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='selectiongridpage',
             name='hero',
-            field=wagtail.wagtailcore.fields.StreamField((('heading', wagtail.wagtailcore.blocks.CharBlock(required=True)),), default={}),
+            field=wagtail.core.fields.StreamField((('heading', wagtail.core.blocks.CharBlock(required=True)),), default={}),
             preserve_default=False,
         ),
     ]

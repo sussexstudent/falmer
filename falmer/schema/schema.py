@@ -4,7 +4,7 @@ import os
 from graphene_django import DjangoObjectType, DjangoConnectionField as _DjangoConnectionField
 import graphene
 from graphene_django.converter import convert_django_field
-from wagtail.wagtailcore.fields import StreamField
+from wagtail.core.fields import StreamField
 from taggit.managers import TaggableManager
 
 

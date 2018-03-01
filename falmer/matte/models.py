@@ -8,7 +8,7 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
-from wagtail.wagtailimages.models import Image, AbstractImage, AbstractRendition
+from wagtail.images.models import Image, AbstractImage, AbstractRendition
 from .tasks import save_image_from_remote, perform_external_image_analysis
 
 # image sources
@@ -119,7 +119,7 @@ class MatteImage(AbstractImage):
 
 
 class MatteRendition(AbstractRendition):
-    image = models.ForeignKey(MatteImage, related_name='renditions')
+    image = models.ForeignKey(MatteImage, related_name='renditions', on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (
@@ -152,7 +152,7 @@ def normalize_url(url):
 
 class RemoteImage(models.Model):
     image_url = models.URLField(unique=True)
-    matte_image = models.ForeignKey(MatteImage, null=True)
+    matte_image = models.ForeignKey(MatteImage, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.image_url
