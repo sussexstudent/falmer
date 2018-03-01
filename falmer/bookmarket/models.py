@@ -32,6 +32,9 @@ class ListingsQuerySet(models.QuerySet):
     def public(self):
         return self.filter(state='READY', listed_at__gte=arrow.utcnow().shift(days=-90).datetime)
 
+    def with_common(self):
+        return self.select_related('listing_user', 'section').prefetch_related('images')
+
     def created_by(self, user):
         return self.filter(listing_user=user)
 
@@ -69,8 +72,8 @@ class Listing(TimeStampedModel, models.Model):
     contact_requesters = models.ManyToManyField(settings.AUTH_USER_MODEL, through=ListingContactRequester, through_fields=('listing', 'user'))
 
     def featured_image(self):
-        if self.images.count() > 0:
-            return self.images.last()
+        if len(self.images.all()) > 0:
+            return self.images.all()[0]
         else:
             return None
 

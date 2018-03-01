@@ -51,7 +51,7 @@ class Query(graphene.ObjectType):
             qs = qs\
                 .filter(section__slug=qfilter['section'])
 
-        return qs
+        return qs.prefetch_related('images')
 
     def resolve_all_market_sections(self, info, **kwargs):
         return models.ListingSection.objects.order_by('title').all()
@@ -59,7 +59,7 @@ class Query(graphene.ObjectType):
     def resolve_market_listing(self, info, **kwargs):
         listing_id = kwargs.get('listing_id')
 
-        return models.Listing.objects.get_public_or_owned_by_user(
+        return models.Listing.objects.with_common().get_public_or_owned_by_user(
             pk=listing_id, user=info.context.user
         )
 
