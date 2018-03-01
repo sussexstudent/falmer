@@ -37,3 +37,9 @@ class Image(views.APIView):
                 'ok': True,
                 'data': WagtailImageSerializer(instance=image).data
             }, status=200)
+        else:
+            print('file upload issue', image.errors)
+            return Response({
+                'ok': False,
+                'errors': image.errors
+            }, status=400)
