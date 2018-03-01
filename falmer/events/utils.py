@@ -28,8 +28,14 @@ def sync_events_from_msl():
     msl_event_ids = set(msl_events_map)
     event_matches = {event.msl_event_id: event for event in MSLEvent.objects.filter(msl_event_id__in=msl_event_ids)}
 
+    report = {}
+
     for msl_event_id in msl_event_ids:
         if msl_event_id in event_matches:
             event_matches[msl_event_id].update_from_msl(msl_events_map[msl_event_id])
+            report[msl_event_id] = 'updated'
         else:
-            MSLEvent.create_from_msl(msl_events_map[msl_event_id])
+            # MSLEvent.create_from_msl(msl_events_map[msl_event_id])
+            report[msl_event_id] = 'created new'
+
+    print(report)
