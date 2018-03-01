@@ -55,7 +55,7 @@ class Listing(TimeStampedModel, models.Model):
     listing_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='listings')
     section = models.ForeignKey(ListingSection, on_delete=models.CASCADE)
 
-    buy_price = models.DecimalField(decimal_places=2, max_digits=3, null=False)
+    buy_price = models.DecimalField(decimal_places=2, max_digits=4, null=False)
 
     state = models.CharField(max_length=10, default='DRAFT')
 
