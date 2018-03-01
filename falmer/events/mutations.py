@@ -13,6 +13,8 @@ class MoveEvent(graphene.Mutation):
     event = graphene.Field(types.Event)
 
     def mutate(self, info, event_id, destination_event_id):
+        assert info.context.user.is_staff
+
         try:
             event = models.Event.objects.get(pk=event_id)
             dest_event = models.Event.objects.get(pk=destination_event_id)
