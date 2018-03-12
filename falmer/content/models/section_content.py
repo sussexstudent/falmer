@@ -21,6 +21,7 @@ class SectionContentPage(Page):
 
     contents_in_sidebar = models.BooleanField(default=True)
     heading_image = models.ForeignKey(MatteImage, null=True, blank=False, on_delete=models.SET_NULL)
+    heading_image_as_hero = models.BooleanField(default=False)
 
     sidebar_body = StreamField([
         ('paragraph', blocks.RichTextBlock()),
