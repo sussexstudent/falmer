@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import ListMembersAPIView
 
 urlpatterns = [
-  url(r'^(?P<list_slug>[-\w]+)/members$', ListMembersAPIView.as_view()),
+    path('<slug:list_slug>/members', ListMembersAPIView.as_view()),
 ]

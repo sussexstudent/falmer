@@ -1,10 +1,9 @@
-from django.conf.urls import url
-from django.views.decorators.csrf import csrf_exempt
+from django.urls import path
 
 from .views import application_serve, FrontendAPI
 
 
 urlpatterns = [
-    url(r'^frontend/', FrontendAPI.as_view()),
-    url(r'^.*/$', application_serve),
+    path('frontend/', FrontendAPI.as_view()),
+    path('<path:path>', application_serve),
 ]

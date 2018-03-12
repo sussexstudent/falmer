@@ -1,11 +1,12 @@
-from django.conf.urls import url
+from django.urls import path
+
 from .views import magic_link_login, logout_view, email_link_request, email_link_sent, generate_jwt, me
 
 urlpatterns = [
-    url(r'^logout/', logout_view, name='auth-logout'),
-    url(r'^login-request/', email_link_request, name='auth-request'),
-    url(r'^login-sent/', email_link_sent, name='auth-request-sent'),
-    url(r'^magic-link/(?P<token>\w+)/', magic_link_login, name='auth-magic_link'),
-    url(r'^token/', generate_jwt, name='auth-magic_link'),
-    url(r'^me/', me, name='auth-magic_link'),
+    path('logout/', logout_view, name='auth-logout'),
+    path('login-request/', email_link_request, name='auth-request'),
+    path('login-sent/', email_link_sent, name='auth-request-sent'),
+    path('magic-link/<int:token>/', magic_link_login, name='auth-magic_link'),
+    path('token/', generate_jwt, name='auth-magic_link'),
+    path('me/', me, name='auth-magic_link'),
 ]

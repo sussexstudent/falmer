@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import list_events
 
 urlpatterns = [
-  url(r'^$', list_events),
+  path('', list_events),
 ]

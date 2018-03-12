@@ -1,9 +1,8 @@
-from django.conf.urls import url
-from django.views.decorators.csrf import csrf_exempt
+from django.urls import path
 
 from .views import LinkRenderer
 
 
 urlpatterns = [
-    url(r'^(?P<model>\w+)/(?P<pk>\w+)/', LinkRenderer.as_view()),
+    path('<str:model>/<int:pk>/', LinkRenderer.as_view()),
 ]
