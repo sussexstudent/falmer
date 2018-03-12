@@ -45,5 +45,6 @@ class SectionContentPage(Page):
         'body',
         'sidebar_body',
         'contents_in_sidebar',
+        'heading_image_as_hero',
         'heading_image',
     )
