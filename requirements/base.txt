@@ -41,6 +41,7 @@ celery==4.1.0
 
 # Your custom requirements go here
 
+djangorestframework==3.7.7
 slacker==0.9.60
 graphene-django==2.0.0
 django-cors-headers==2.2.0
