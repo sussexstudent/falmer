@@ -30,6 +30,7 @@ class SectionContentPage(Page):
 
     sidebar_content_panels = [
         FieldPanel('contents_in_sidebar'),
+        FieldPanel('heading_image_as_hero'),
         StreamFieldPanel('sidebar_body'),
     ]
 
