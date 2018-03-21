@@ -24,7 +24,7 @@ dev = """
 """
 
 
-def application_serve(request, path):
+def application_serve(request):
     if request.is_ajax() is False:
         try:
             deployment = FrontendDeployment.objects.filter(enabled=True).latest('created_at')
