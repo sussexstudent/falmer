@@ -1,9 +1,9 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from .views import application_serve, FrontendAPI
 
 
 urlpatterns = [
     path('frontend/', FrontendAPI.as_view()),
-    path('<path:path>', application_serve),
+    re_path(r'^.*/$', application_serve),
 ]
