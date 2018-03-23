@@ -8,6 +8,9 @@ from falmer.auth.models import FalmerUser
 class MSLJWTAuthentication:
     def authenticate(self, request):
         try:
+            if request.META['HTTP_AUTHORIZATION'].startswith('Falmer '):
+                return None
+
             token = request.META['HTTP_AUTHORIZATION'][7:]
             if token != '':
                 decoded = jwt.decode(token, settings.MSL_JWT_SECRET, algorithms=['HS256'])

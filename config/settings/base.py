@@ -94,7 +94,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
     # 'falmer.auth.middleware.MSLJWTMiddleware',
@@ -326,7 +326,7 @@ MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY', default=None)
 FRONTEND_DEPLOY_SECRET = env('FRONTEND_DEPLOY_SECRET', default=None)
 
 JWT_AUTH = {
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_AUTH_HEADER_PREFIX': 'Falmer',
 }
 
 APPEND_SLASH = True
@@ -338,9 +338,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'falmer.auth.authentication.MSLJWTAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ),
 }
