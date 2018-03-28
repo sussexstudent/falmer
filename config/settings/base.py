@@ -200,6 +200,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # Your stuff: custom template context processors go here
             ],
+            'libraries':{
+                'matte_tags': 'falmer.matte.templatetags.matte_tags',
+
+            }
         },
     },
 ]
