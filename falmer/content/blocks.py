@@ -39,7 +39,7 @@ class ContactBlock(blocks.StructBlock):
 
 class SectionBlock(blocks.StructBlock):
     heading = blocks.CharBlock(required=True)
-    heading_image = FalmerImageChooserBlock()
+    heading_image = FalmerImageChooserBlock(required=False)
     body = blocks.StreamBlock([
         ('paragraph', RichTextWithExpandedContent()),
     ])
