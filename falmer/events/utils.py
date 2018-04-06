@@ -35,7 +35,7 @@ def sync_events_from_msl():
             event_matches[msl_event_id].update_from_msl(msl_events_map[msl_event_id])
             report[msl_event_id] = 'updated'
         else:
-            # MSLEvent.create_from_msl(msl_events_map[msl_event_id])
+            MSLEvent.create_from_msl(msl_events_map[msl_event_id])
             report[msl_event_id] = 'created new'
 
     print(report)
