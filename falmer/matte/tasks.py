@@ -32,7 +32,7 @@ def save_image_from_remote(remote_image_pk):
             # Write image block to temporary file
             lf.write(block)
 
-        image_model = create_image_from_bytes(files.File(lf), file_name)
+        image_model = create_image_from_bytes(files.File(lf), file_name, remote.internal_source)
 
         if image_model is not None:
             remote.matte_image = image_model

@@ -10,7 +10,7 @@ from wagtail.core.fields import RichTextField
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 from falmer.links.utils import LinkedMetadata
-from falmer.matte.models import MatteImage, RemoteImage
+from falmer.matte.models import MatteImage, RemoteImage, SOURCE_EVENT_FEATURE
 from falmer.studentgroups.models import StudentGroup
 
 
@@ -299,7 +299,7 @@ class MSLEvent(models.Model):
                 ticket_data=ticket_data
             )
 
-            local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
+            local_remote_image = RemoteImage.try_image(api_content['ImageUrl'], SOURCE_EVENT_FEATURE)
 
             if local_remote_image is not None:
                 event.featured_image = local_remote_image
@@ -354,7 +354,7 @@ class MSLEvent(models.Model):
             self.event.ticket_type = ticket_type
             self.event.ticket_data = ticket_data
 
-            local_remote_image = RemoteImage.try_image(api_content['ImageUrl'])
+            local_remote_image = RemoteImage.try_image(api_content['ImageUrl'], SOURCE_EVENT_FEATURE)
 
             if local_remote_image is not None:
                 self.event.featured_image = local_remote_image

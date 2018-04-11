@@ -20,10 +20,16 @@ from .tasks import save_image_from_remote, perform_external_image_analysis
 
 SOURCE_DEFAULT = 100
 
+SOURCE_GROUP_LOGO = 200
+
+SOURCE_EVENT_FEATURE = 300
+
 SOURCE_BOOK_MARKET_LISTING = 400
 
 SOURCE_CHOICES = (
     (SOURCE_DEFAULT, 'Default'),
+    (SOURCE_GROUP_LOGO, 'Student Groups - Logo'),
+    (SOURCE_EVENT_FEATURE, 'Events - Feature'),
     (SOURCE_BOOK_MARKET_LISTING, 'Book Market - Listing'),
 )
 
@@ -153,12 +159,13 @@ def normalize_url(url):
 class RemoteImage(models.Model):
     image_url = models.URLField(unique=True)
     matte_image = models.ForeignKey(MatteImage, null=True, on_delete=models.CASCADE)
+    internal_source = models.IntegerField(choices=SOURCE_CHOICES, default=SOURCE_DEFAULT, null=False)
 
     def __str__(self):
         return self.image_url
 
     @staticmethod
-    def try_image(url):
+    def try_image(url, internal_source):
         if url is None or url == '':
             return None
 
@@ -175,6 +182,7 @@ class RemoteImage(models.Model):
             record = RemoteImage.objects.create(
                 image_url=url,
                 matte_image=None,
+                internal_source=internal_source,
             )
 
             save_image_from_remote.delay(record.pk)

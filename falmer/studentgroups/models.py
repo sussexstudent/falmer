@@ -1,7 +1,7 @@
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
 
-from falmer.matte.models import MatteImage, RemoteImage
+from falmer.matte.models import MatteImage, RemoteImage, SOURCE_GROUP_LOGO
 
 
 class StudentGroup(models.Model):
@@ -75,7 +75,7 @@ class MSLStudentGroup(models.Model):
             category=category,
         )
 
-        local_remote_image = RemoteImage.try_image(image)
+        local_remote_image = RemoteImage.try_image(image, SOURCE_GROUP_LOGO)
 
         if local_remote_image is not None:
             msl_group.logo = local_remote_image
@@ -97,7 +97,7 @@ class MSLStudentGroup(models.Model):
         category, created_category = MSLStudentGroupCategory.objects.get_or_create(name=content['category'])
         self.category = category
 
-        local_remote_image = RemoteImage.try_image(image)
+        local_remote_image = RemoteImage.try_image(image, SOURCE_GROUP_LOGO)
 
         if local_remote_image is not None:
             self.logo = local_remote_image
