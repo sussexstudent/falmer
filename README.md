@@ -1,9 +1,9 @@
 # Falmer
-*Experimental Django-powered API for services & content*
+*Django-powered API for services & content*
 
 Currently the union is not in control of backend, leading some areas of poor UX, reliance of the CMS provider adding features 'one-day' or at cost. We've been able to improve services via 'serverless' helpers via AWS Lambda, but lack of persistent is limiting.
 
-Falmer houses experimental service API's to explore what can be achieved with more control.
+Falmer houses service API's to explore what can be achieved with more control.
 
 An main rule of the services that Falmer provides while still existing as an experiment is the idea that if required services can be wound down with minimal refactoring.
 
