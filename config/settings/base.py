@@ -77,6 +77,7 @@ LOCAL_APPS = [
     'falmer.bookmarket.apps.BookmarketConfig',
     'falmer.slack.apps.SlackConfig',
     'falmer.search.apps.SearchConfig',
+    'falmer.commercial.apps.CommercialConfig',
     'falmer.frontend.apps.FrontendConfig',
     'falmer.studentgroups.apps.StudentGroupsConfig',
     'falmer.links.apps.LinksConfig',
