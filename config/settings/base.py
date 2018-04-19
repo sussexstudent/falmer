@@ -68,6 +68,7 @@ LOCAL_APPS = [
     #'falmer.taskapp.apps.CeleryConfig',
     'falmer.auth.apps.AuthConfig',
     'falmer.content.apps.ContentConfig',
+    'falmer.flags.apps.FlagsConfig',
     'falmer.launcher.apps.LauncherConfig',
     'falmer.matte.apps.MatteConfig',
     'falmer.newsletters.apps.NewslettersConfig',
