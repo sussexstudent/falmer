@@ -67,6 +67,7 @@ class Event(DjangoObjectType):
     event_id = graphene.Int()
     children = graphene.List(lambda: Event)
     parent = graphene.Field(lambda: Event)
+    msl_event_id = graphene.Int()
 
     class Meta:
         model = models.Event
@@ -77,6 +78,9 @@ class Event(DjangoObjectType):
 
     def resolve_event_id(self, info):
         return self.pk
+
+    def resolve_msl_event_id(self, info):
+        return self.get_msl_event_id()
 
     def resolve_student_group(self, info):
         return self.student_group

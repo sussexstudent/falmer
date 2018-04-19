@@ -216,6 +216,12 @@ class Event(models.Model):
 
     edit_handler = ObjectList(custom_panels)
 
+    def get_msl_event_id(self):
+        try:
+            return MSLEvent.objects.get(event=self).msl_event_id
+        except MSLEvent.DoesNotExist:
+            return None
+
     def get_linked_meta(self):
         return LinkedMetadata(
             title='{} | What\'s on'.format(self.title),
