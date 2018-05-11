@@ -1,6 +1,6 @@
 from wagtail.contrib.modeladmin.options import (
         ModelAdmin, modeladmin_register, ModelAdminGroup)
-from .models import StudentGroup, AwardAuthority, Award, GroupAwarded
+from .models import StudentGroup, AwardAuthority, AwardPeriod, Award, GroupAwarded
 
 
 class StudentGroupAdmin(ModelAdmin):
@@ -28,11 +28,19 @@ class AwardAdmin(ModelAdmin):
     search_fields = ('name',)
 
 
+class AwardPeriodAdmin(ModelAdmin):
+    model = AwardPeriod
+    menu_icon = 'date'  # change as required
+    menu_order = 200  # will put in 3rd place (000 being 1st, 100 2nd)
+    list_display = ('display_name', 'authority')
+    search_fields = ('display_name',)
+
+
 class GroupAwardedAdmin(ModelAdmin):
     model = GroupAwarded
     menu_icon = 'date'  # change as required
     menu_order = 200  # will put in 3rd place (000 being 1st, 100 2nd)
-    list_display = ('group', 'award', 'year')
+    list_display = ('group', 'award', 'period', 'grade')
 
 
 class StudentGroupAdminGroup(ModelAdminGroup):

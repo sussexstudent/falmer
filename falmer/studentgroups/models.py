@@ -29,6 +29,10 @@ class StudentGroup(models.Model):
 
 
 class MSLStudentGroupCategory(models.Model):
+    class Meta:
+        verbose_name = 'MSL Student Group Category'
+        verbose_name_plural = 'MSL Student Group Categories'
+
     name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -44,6 +48,10 @@ def get_group_image_url(url):
 
 
 class MSLStudentGroup(models.Model):
+    class Meta:
+        verbose_name = 'MSL Student Group'
+        verbose_name_plural = 'MSL Student Groups'
+
     group = models.OneToOneField(StudentGroup, related_name='msl_group', on_delete=models.CASCADE)
 
     description = models.TextField(default='')
@@ -112,11 +120,26 @@ class MSLStudentGroup(models.Model):
 
 
 class AwardAuthority(models.Model):
+    class Meta:
+        verbose_name = 'Award Authority'
+        verbose_name_plural = 'Award Authorities'
+
     name = models.CharField(max_length=128)
     slug = AutoSlugField(unique=True, populate_from='name')
 
     def __str__(self):
         return self.name
+
+
+class AwardPeriod(models.Model):
+    class Meta:
+        verbose_name = 'Award Period'
+        verbose_name_plural = 'Award Periods'
+
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    authority = models.ForeignKey(AwardAuthority, blank=False, null=False, on_delete=models.CASCADE)
+    display_name = models.CharField(max_length=128)
 
 
 class Award(models.Model):
@@ -131,17 +154,20 @@ class Award(models.Model):
 
 
 class GroupAwarded(models.Model):
+    class Meta:
+        verbose_name = 'Group Award'
+        verbose_name_plural = 'Group Awards'
+        unique_together = (('group', 'award', 'period', 'grade'), )
+
     group = models.ForeignKey(StudentGroup, blank=False, null=False, on_delete=models.CASCADE)
     award = models.ForeignKey(Award, blank=False, null=False, on_delete=models.CASCADE)
 
-    year = models.IntegerField(blank=False, null=False)
-
-    class Meta:
-        unique_together = (('group', 'award', 'year'), )
+    period = models.ForeignKey(AwardPeriod, blank=False, null=False, on_delete=models.CASCADE)
+    grade = models.IntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
-        return '{group} awarded {award}, in {year}'.format(
+        return '{group} awarded {award} for {period}'.format(
             group=self.group.name,
             award=self.award.name,
-            year=self.year
+            period=self.period
         )
