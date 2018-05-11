@@ -67,6 +67,9 @@ class FalmerUser(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.get_full_name()
 
+    def name_or_email(self):
+        return self.name or self.email or self.identifier
+
     def __str__(self):
         return f'User: "{self.authority}/{self.identifier}"'
 
