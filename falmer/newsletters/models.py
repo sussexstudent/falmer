@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class MailChimpList(models.Model):
     class Meta:
         verbose_name = 'MailChimp List'

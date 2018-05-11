@@ -16,8 +16,8 @@ from .models import MailChimpList, NewsletterResumeToken
 
 def get_mailchimp_client():
     client = MailChimp(
-        settings.MAILCHIMP_API_USERNAME,
         settings.MAILCHIMP_API_KEY,
+        settings.MAILCHIMP_API_USERNAME,
         timeout=10.0
     )
 
