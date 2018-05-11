@@ -49,8 +49,6 @@ class Query(graphene.ObjectType):
     def resolve_event(self, info, **kwargs):
         event_id = kwargs.get('event_id')
         msl_event_id = kwargs.get('msl_event_id')
-        print(event_id)
-        print(msl_event_id)
         if event_id is not None:
             return models.Event.objects.select_related(
                 'featured_image',

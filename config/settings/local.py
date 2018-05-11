@@ -66,6 +66,7 @@ DEBUG_TOOLBAR_CONFIG = {
         'debug_toolbar.panels.redirects.RedirectsPanel',
     ],
     'SHOW_TEMPLATE_CONTEXT': True,
+    'HIDE_IN_STACKTRACES': []
 }
 
 MSL_SITE_HOST = 'http://localhost:3002'
@@ -111,3 +112,6 @@ LOGGING = {
         },
     },
 }
+
+GROOVES_ENDPOINT = 'http://brudil-2.local:6789'
+GROOVES_QUERY_TOKEN = 'testtoken'

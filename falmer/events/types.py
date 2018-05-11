@@ -2,6 +2,7 @@ import graphene
 from graphene_django import DjangoObjectType
 from wagtail.core.rich_text import expand_db_html
 
+from falmer.events.grooves import event_sparkline, EventSparklineVariables
 from falmer.matte.types import Image
 from falmer.schema.schema import create_connection, File
 from falmer.studentgroups.types import StudentGroup
@@ -68,6 +69,7 @@ class Event(DjangoObjectType):
     children = graphene.List(lambda: Event)
     parent = graphene.Field(lambda: Event)
     msl_event_id = graphene.Int()
+    two_week_spark = graphene.List(graphene.Int)
 
     class Meta:
         model = models.Event
@@ -90,6 +92,9 @@ class Event(DjangoObjectType):
 
     def resolve_parent(self, info):
         return self.parent
+
+    def resolve_two_week_spark(self, info):
+        return event_sparkline.get(EventSparklineVariables(event_id=self.pk, interval='1 day', length='14 days'))
 
 
 Event.Connection = create_connection(Event)

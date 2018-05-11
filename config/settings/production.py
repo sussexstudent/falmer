@@ -195,3 +195,5 @@ ADMIN_URL = env('DJANGO_ADMIN_URL')
 
 # Your production stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
+GROOVES_ENDPOINT = env('GROOVES_ENDPOINT')
+GROOVES_QUERY_TOKEN = env('GROOVES_QUERY_TOKEN')
