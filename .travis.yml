@@ -9,5 +9,5 @@ before_install:
 language: python
 python:
   - "3.6"
-install: "pip install -r requirements/test.txt"
+install: "pipenv install"
 script: pytest
