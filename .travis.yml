@@ -9,5 +9,7 @@ before_install:
 language: python
 python:
   - "3.6"
-install: "pipenv install"
+install:
+  - "pip install pipenv --upgrade"
+  - "pipenv install"
 script: pytest
