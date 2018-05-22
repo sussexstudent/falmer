@@ -46,7 +46,7 @@ slacker==0.9.60
 graphene-django==2.0.0
 django-cors-headers==2.2.0
 djangorestframework-camel-case==0.2.0
-wagtail==2.0
+wagtail==2.1
 beautifulsoup4==4.6.0
 requests==2.18.4
 fuzzywuzzy[speedup]==0.16.0
