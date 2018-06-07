@@ -1,4 +1,6 @@
 import graphene
+import arrow
+from django.db.models import Q
 
 from falmer.schema.schema import DjangoConnectionField
 from falmer.studentgroups.types import StudentGroup
@@ -13,7 +15,8 @@ class Query(graphene.ObjectType):
     def resolve_all_groups(self, info):
         qs = models.StudentGroup.objects \
             .order_by('name') \
-            .select_related('msl_group', 'logo')
+            .select_related('msl_group', 'logo') \
+            .filter(Q(msl_group__last_sync__gte=arrow.now().shift(minutes=-70).datetime) | Q(msl_group__isnull=True))
 
         return qs
 
