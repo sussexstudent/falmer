@@ -47,6 +47,6 @@ class StudentGroupAdminGroup(ModelAdminGroup):
     menu_label = 'Student Groups'
     menu_icon = 'folder-open-inverse'  # change as required
     menu_order = 200  # will put in 3rd place (000 being 1st, 100 2nd)
-    items = (StudentGroupAdmin, GroupAwardedAdmin, AwardAdmin, AwardAuthorityAdmin)
+    items = (StudentGroupAdmin, GroupAwardedAdmin, AwardPeriodAdmin, AwardAdmin, AwardAuthorityAdmin)
 
 modeladmin_register(StudentGroupAdminGroup)
