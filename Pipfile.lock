@@ -419,11 +419,10 @@
         },
         "mailchimp3": {
             "hashes": [
-                "sha256:1da12e48fad5bbe7649287e93041c1218cbca7115863b7d6c321b558c2eebf58",
-                "sha256:3ba88a1acfac879a252111adb681cb5d2fd2d70de0d388bb0b083122faaded9c"
+                "sha256:ed1ae55ca1f1e9c129b3b3a5b7c7bbd7d587e69347560ad2f1d94a22e5d656e8",
+                "sha256:d7f610724a641c8bffe52a4bc42531b9a52e2e1feca0a516c25a91a38cfe686b"
             ],
-            "index": "pypi",
-            "version": "==3.0.2"
+            "version": "==3.0.4"
         },
         "pillow": {
             "hashes": [
