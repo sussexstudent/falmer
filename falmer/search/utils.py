@@ -65,7 +65,7 @@ def get_news_result(result):
 
 def get_results_for_term(term):
     # get page
-    req = requests.get('https://www.sussexstudent.com/search/?q={}'.format(term))
+    req = requests.get('https://www.sussexstudent.com/msl-search/?q={}'.format(term))
 
     document = bs4.BeautifulSoup(req.text)
 
