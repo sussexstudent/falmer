@@ -37,6 +37,7 @@ django-storages="*"
 django-anymail="*"
 raven="*"
 "psycopg2-binary" = "*"
+colorama = "*"
 
 [dev-packages]
 "flake8"="*"
