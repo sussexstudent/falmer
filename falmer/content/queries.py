@@ -21,7 +21,7 @@ class Query(graphene.ObjectType):
             result = root_page.route(info.context, path.split('/'))
             return result.page
         except Http404:
-            raise GraphQLError(f'404: Page not found for {path}')
+            return None
 
     def resolve_all_pages(self, info):
         return Page.objects.specific().live()
