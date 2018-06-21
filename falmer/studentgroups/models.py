@@ -1,7 +1,11 @@
+import re
+
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
 
 from falmer.matte.models import MatteImage, RemoteImage, SOURCE_GROUP_LOGO
+
+MATCH_ORG_LINK = re.compile('/organisation/([a-z0-9_-]+)/')
 
 
 class StudentGroup(models.Model):
@@ -11,6 +15,7 @@ class StudentGroup(models.Model):
     description = models.TextField(default='', blank=True)
     logo = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
     link = models.CharField(default='', max_length=255, blank=True)
+    slug = models.CharField(default=None, max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -47,6 +52,15 @@ def get_group_image_url(url):
     return url
 
 
+def get_slug(link):
+    if link:
+        match = re.match(MATCH_ORG_LINK, link)
+        if match:
+            return match.group(1)
+
+    return None
+
+
 class MSLStudentGroup(models.Model):
     class Meta:
         verbose_name = 'MSL Student Group'
@@ -69,6 +83,7 @@ class MSLStudentGroup(models.Model):
     def create_from_msl(content):
         group = StudentGroup.objects.create(
             name=content['name'],
+            slug=get_slug(content['link'])
         )
 
         category, created_category = MSLStudentGroupCategory.objects.get_or_create(name=content['category'])
@@ -99,6 +114,7 @@ class MSLStudentGroup(models.Model):
         self.description = content['description']
         self.group.description = content['description']
         self.group.name = content['name']
+        self.group.slug = get_slug(content['link'])
         self.link = content['link']
         self.group.link = content['link']
         self.logo_url = image or ''
@@ -159,7 +175,7 @@ class GroupAwarded(models.Model):
         verbose_name_plural = 'Group Awards'
         unique_together = (('group', 'award', 'period', 'grade'), )
 
-    group = models.ForeignKey(StudentGroup, blank=False, null=False, on_delete=models.CASCADE)
+    group = models.ForeignKey(StudentGroup, blank=False, null=False, on_delete=models.CASCADE, related_name='awards')
     award = models.ForeignKey(Award, blank=False, null=False, on_delete=models.CASCADE)
 
     period = models.ForeignKey(AwardPeriod, blank=False, null=False, on_delete=models.CASCADE)
