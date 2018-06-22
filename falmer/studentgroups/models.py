@@ -28,6 +28,9 @@ class StudentGroup(models.Model):
     link = models.CharField(default='', max_length=255, blank=True)
     slug = models.CharField(default=None, max_length=255, blank=True, null=True, unique=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
