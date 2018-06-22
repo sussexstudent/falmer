@@ -7,6 +7,17 @@ from falmer.matte.models import MatteImage, RemoteImage, SOURCE_GROUP_LOGO
 
 MATCH_ORG_LINK = re.compile('/organisation/([a-z0-9_-]+)/')
 
+AWARD_ICONS = (
+    ('community', 'LeafCommunity'),
+    ('development', 'LeafDevelopment'),
+    ('social', 'LeafSocial'),
+    ('student-voice', 'LeafStudentVoice'),
+    ('team-sussex', 'LeafTeamSussex'),
+    ('communications', 'LeafCommunications'),
+    ('fundraising', 'LeafFundraising'),
+    ('inclusivity', 'LeafInclusivity'),
+)
+
 
 class StudentGroup(models.Model):
     name = models.CharField(max_length=255)
@@ -15,7 +26,7 @@ class StudentGroup(models.Model):
     description = models.TextField(default='', blank=True)
     logo = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
     link = models.CharField(default='', max_length=255, blank=True)
-    slug = models.CharField(default=None, max_length=255, blank=True, null=True)
+    slug = models.CharField(default=None, max_length=255, blank=True, null=True, unique=True)
 
     def __str__(self):
         return self.name
@@ -157,6 +168,9 @@ class AwardPeriod(models.Model):
     authority = models.ForeignKey(AwardAuthority, blank=False, null=False, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=128)
 
+    def __str__(self):
+        return self.display_name
+
 
 class Award(models.Model):
     authority = models.ForeignKey(AwardAuthority, blank=False, null=False, on_delete=models.CASCADE)
@@ -164,6 +178,7 @@ class Award(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(default='', blank=True)
     slug = AutoSlugField(unique=True, populate_from='name')
+    icon = models.CharField(max_length=24, choices=AWARD_ICONS, default=AWARD_ICONS[0][0], null=False, blank=False)
 
     def __str__(self):
         return self.name
@@ -178,7 +193,7 @@ class GroupAwarded(models.Model):
     group = models.ForeignKey(StudentGroup, blank=False, null=False, on_delete=models.CASCADE, related_name='awards')
     award = models.ForeignKey(Award, blank=False, null=False, on_delete=models.CASCADE)
 
-    period = models.ForeignKey(AwardPeriod, blank=False, null=False, on_delete=models.CASCADE)
+    period = models.ForeignKey(AwardPeriod, blank=False, null=False, on_delete=models.CASCADE, related_name='awarded')
     grade = models.IntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
