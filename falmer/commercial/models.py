@@ -48,6 +48,8 @@ class Offer(models.Model):
         help_text='The deal itself, "40%", "By one get one free", etc'
     )
 
+    is_featured = models.BooleanField(default=False)
+
     category = models.ForeignKey(OfferCategory, blank=False, null=False, on_delete=models.CASCADE)
 
     main = StreamField(
@@ -68,6 +70,7 @@ class Offer(models.Model):
         FieldPanel('company_name', classname='full title'),
         FieldPanel('company_website'),
         FieldPanel('category'),
+        FieldPanel('is_featured'),
         ImageChooserPanel('company_logo'),
         StreamFieldPanel('main'),
     ]
