@@ -1,13 +1,16 @@
 import arrow
 import graphene
 from django.db.models import Q
-from falmer.events.types import Event, EventFilter, Venue, BrandingPeriod
+from falmer.events.filters import EventFilterSet
+from falmer.events.types import Venue, BrandingPeriod, Event
+from falmer.schema.fields import FalmerDjangoFilterConnectionField
 from falmer.schema.schema import DjangoConnectionField
 from . import models
 
 
 class Query(graphene.ObjectType):
-    all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
+    # all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
+    all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet)
     all_venues = DjangoConnectionField(Venue)
     event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int())
     branding_period = graphene.Field(BrandingPeriod, slug=graphene.String())
@@ -15,7 +18,7 @@ class Query(graphene.ObjectType):
     def resolve_all_events(self, info, **kwargs):
         qfilter = kwargs.get('filter')
 
-        qs = models.Event.objects.select_related('featured_image', 'venue') \
+        qs = models.Event.objects.select_related('featured_image', 'venue', 'mslevent') \
             .prefetch_related('children').order_by('start_time', 'end_time').filter(
             Q(mslevent__last_sync__gte=arrow.now().shift(minutes=-30).datetime) | Q(mslevent__isnull=True)
         )

@@ -9,6 +9,8 @@ from wagtail.admin.edit_handlers import MultiFieldPanel, FieldRowPanel, FieldPan
 from wagtail.core.fields import RichTextField
 from wagtail.images.edit_handlers import ImageChooserPanel
 
+from falmer.auth.models import FalmerUser
+from falmer.core.models import TimeStampedModel
 from falmer.links.utils import LinkedMetadata
 from falmer.matte.models import MatteImage, RemoteImage, SOURCE_EVENT_FEATURE
 from falmer.studentgroups.models import StudentGroup
@@ -76,7 +78,6 @@ class Venue(models.Model):
     website_link = models.CharField(max_length=255, default='')
     short_description = models.TextField(default='')
     featured_image = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
-
 
     custom_panels = [
         MultiFieldPanel([
@@ -172,6 +173,8 @@ class Event(models.Model):
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
     type = models.ForeignKey(Type, null=True, blank=True, on_delete=models.SET_NULL)
 
+    # likes = models.ManyToManyField(FalmerUser, through='EventLike')
+
     custom_panels = [
         MultiFieldPanel([
             FieldPanel('title', classname='title'),
@@ -258,6 +261,7 @@ class MSLEvent(models.Model):
         Event,
         on_delete=models.CASCADE,
         primary_key=True,
+        related_name='mslevent'
     )
     disable_sync = models.BooleanField(default=False)
     start_time = models.DateTimeField()
@@ -386,3 +390,29 @@ class MSLEvent(models.Model):
         self.body_html = api_content['Body']
         self.description = api_content['Description']
         self.save()
+
+
+LIKE_SOURCES = (
+    ('USER', 'User'),
+    ('UNLIKED', 'Unliked'),
+    ('RECOMMENDATION', 'Recommendation')
+)
+
+SOURCE_LOCATION = (
+    ('LISTINGS', 'Listings'),
+    ('COLLECTION', 'Collection'),
+    ('MATCHER', 'Matcher')
+)
+
+#
+# class EventLike(TimeStampedModel, models.Model):
+#     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+#     user = models.ForeignKey(FalmerUser, on_delete=models.CASCADE)
+#
+#     source = models.CharField(max_length=16, choices=LIKE_SOURCES)
+#     initial_source = models.CharField(max_length=16, choices=LIKE_SOURCES)
+#
+#     source_location = models.CharField(max_length=16, choices=SOURCE_LOCATION)
+#
+#     class Meta:
+#         unique_together = ('event', 'user')
