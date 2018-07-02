@@ -26,10 +26,6 @@ class Image(DjangoObjectType):
     def resolve_media_id(self, info):
         return self.pk
 
-    def resolve_labels(self, info):
-        return models.ImageLabelThrough.objects.select_related('label') \
-            .filter(image=self).order_by('-confidence')
-
     class Meta:
         model = models.MatteImage
         interfaces = (graphene.Node, )

@@ -6,7 +6,6 @@ from falmer.content.models import StaffMemberSnippet
 from falmer.matte.models import MatteImage
 
 
-
 def generate_image_url(image, filter_spec):
     from wagtail.images.views.serve import generate_signature
     signature = generate_signature(image.id, filter_spec)
