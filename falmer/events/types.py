@@ -1,12 +1,17 @@
 import graphene
 from graphene_django import DjangoObjectType
 from wagtail.core.rich_text import expand_db_html
-
-from falmer.events.grooves import event_sparkline, EventSparklineVariables
+import django_filters
 from falmer.matte.types import Image
 from falmer.schema.schema import create_connection, File
 from falmer.studentgroups.types import StudentGroup
 from . import models
+
+
+class BrandingPeriodFilter(graphene.InputObjectType):
+    from_time = graphene.String()
+    to_time = graphene.String()
+    ignore_time_if_archived = graphene.Boolean()
 
 
 class EventFilter(graphene.InputObjectType):
@@ -56,6 +61,12 @@ class Bundle(DjangoObjectType):
         model = models.Bundle
 
 
+class MSLEvent(DjangoObjectType):
+    class Meta:
+        model = models.MSLEvent
+        interfaces = (graphene.Node, )
+
+
 class Event(DjangoObjectType):
     venue = graphene.Field(Venue)
     featured_image = graphene.Field(Image)
@@ -69,7 +80,7 @@ class Event(DjangoObjectType):
     children = graphene.List(lambda: Event)
     parent = graphene.Field(lambda: Event)
     msl_event_id = graphene.Int()
-    two_week_spark = graphene.List(graphene.Int)
+    msl_event = graphene.Field(lambda: MSLEvent)
 
     class Meta:
         model = models.Event
@@ -84,6 +95,12 @@ class Event(DjangoObjectType):
     def resolve_msl_event_id(self, info):
         return self.get_msl_event_id()
 
+    def resolve_msl_event(self, info):
+        try:
+            return self.mslevent
+        except models.MSLEvent.DoesNotExist:
+            return None
+
     def resolve_student_group(self, info):
         return self.student_group
 
@@ -92,9 +109,6 @@ class Event(DjangoObjectType):
 
     def resolve_parent(self, info):
         return self.parent
-
-    def resolve_two_week_spark(self, info):
-        return event_sparkline.get(EventSparklineVariables(event_id=self.pk, interval='1 day', length='14 days'))
 
 
 Event.Connection = create_connection(Event)
