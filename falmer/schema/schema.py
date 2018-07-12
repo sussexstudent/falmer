@@ -7,6 +7,8 @@ from graphene_django.converter import convert_django_field
 from wagtail.core.fields import StreamField
 from taggit.managers import TaggableManager
 
+from falmer.content.types import GenericPage, page_types_map
+
 
 class DjangoConnectionField(_DjangoConnectionField):
 
@@ -119,4 +121,4 @@ Mutations = type(
     mutations_properties
 )
 
-schema = graphene.Schema(query=Queries, mutation=Mutations)
+schema = graphene.Schema(query=Queries, types=list(page_types_map.values()) + [GenericPage], mutation=Mutations)

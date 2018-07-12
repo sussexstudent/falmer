@@ -11,7 +11,7 @@ class GuidePage(Page):
     pass
 
 
-class ReferencePage(Page):
+class KBReferencePage(Page):
     main = StreamField(
         StreamBlock([
             components.text.to_pair(),
@@ -32,13 +32,14 @@ class ReferencePage(Page):
 
 
 class TopicPage(Page):
-    subpage_types = (ReferencePage, GuidePage, )
+    subpage_types = (KBReferencePage, GuidePage, )
 
     def pages(self):
         return self.get_children().live()
 
     def section(self):
         return self.get_parent().specific
+
 
 class SectionPage(Page):
     subpage_types = (TopicPage, )

@@ -20,3 +20,6 @@ class Page(WagtailPage):
 
     class Meta:
         proxy = True
+
+    def get_assumption_path(self):
+        return None
