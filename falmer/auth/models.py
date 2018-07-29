@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, Group
 from django.conf import settings
 from django.utils.crypto import get_random_string
+from django.utils.translation import gettext_lazy as _
 
 from falmer.slack.models import SlackUser
 
@@ -14,22 +15,23 @@ AUTHORITY_CHOICES = (
 
 
 class FalmerUserManager(BaseUserManager):
-    def _create_user(self, identifier,
+    def _create_user(self, identifier, password,
                  is_staff, is_superuser, **extra_fields):
         if not identifier:
             raise ValueError('The given identifier must be set')
         user = self.model(identifier=identifier,
                           is_staff=is_staff, is_active=True,
                           is_superuser=is_superuser, **extra_fields)
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_user(self, identifier, **extra_fields):
-        return self._create_user(identifier, False, False,
+        return self._create_user(identifier, '' ,False, False,
                              **extra_fields)
 
-    def create_superuser(self, identifier, **extra_fields):
-        return self._create_user(identifier, True, True,
+    def create_superuser(self, identifier, password, **extra_fields):
+        return self._create_user(identifier, password, True, True,
                              **extra_fields)
 
     def get_or_create_msl_user(self, verified_payload):
@@ -46,8 +48,9 @@ class FalmerUserManager(BaseUserManager):
 
 class FalmerUser(AbstractBaseUser, PermissionsMixin):
     identifier = models.CharField(max_length=256, unique=True)
+    password = models.CharField(_('password'), max_length=128, default='', blank=True)
     authority = models.CharField(max_length=4, choices=AUTHORITY_CHOICES, )
-    email = models.EmailField()
+    email = models.EmailField(blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     name = models.CharField(max_length=128, default='', blank=True)
@@ -72,6 +75,7 @@ class FalmerUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'User: "{self.authority}/{self.identifier}"'
+
 
 class MagicLinkToken(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
