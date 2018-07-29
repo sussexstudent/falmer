@@ -9,11 +9,20 @@ from falmer.schema.schema import create_connection
 from . import models
 
 
+class MSLStudentGroupCategory(DjangoObjectType):
+    class Meta:
+        model = models.MSLStudentGroupCategory
+
+
 class MSLStudentGroup(DjangoObjectType):
     logo = graphene.Field(Image)
+    category = graphene.Field(MSLStudentGroupCategory)
 
     class Meta:
         model = models.MSLStudentGroup
+
+    def resolve_category(self, info):
+        return self.category
 
 
 class AwardAuthority(DjangoObjectType):

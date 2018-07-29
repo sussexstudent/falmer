@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from .models import MSLStudentGroup
 
+
 def get_msl_groups_page():
     req = requests.get('https://www.sussexstudent.com/sportsoc-next')
 
@@ -11,22 +12,42 @@ def get_msl_groups_page():
     return None
 
 
+def dl_to_dict(el):
+    map = {}
+    current_key = '_'
+
+    for item in el.children:
+        if item.name == 'dt':
+            key = item.text
+            if key not in map:
+                map[key] = []
+            current_key = key
+
+        if item.name == 'dd':
+            map[current_key].append(item.text)
+
+    return map
+
+
 def parse_group(el):
     anchor = el.find('a')
     description = el.find(class_='msl-gl-description')
+
+    dl_map = dl_to_dict(el.find(class_='msl-gl-attributes'))
 
     data = {
         'id': int(el.attrs['data-msl-grouping-id']),
         'name': anchor.text,
         'link': anchor.attrs['href'],
         'description': description.text.strip() if description is not None else '',
-        'category': 'Uncategorised',
+        'category': 'Uncategorised' if 'Category' not in dl_map else dl_map['Category'][0],
     }
 
     previous = el.find_previous_sibling('li')
     if previous is not None and 'class' in previous.attrs and 'msl-gl-logo' in previous.attrs['class']:
         img = el.find_previous_sibling('li').find('img')
-        data['logo_url'] = 'https://www.sussexstudent.com{}'.format(img.attrs['src'].replace('..', '').split('?')[0])
+        rewritten_image_path = img.attrs['src'].replace('..', '').split('?')[0]
+        data['logo_url'] = 'https://www.sussexstudent.com{}'.format(rewritten_image_path)
 
     return data
 
