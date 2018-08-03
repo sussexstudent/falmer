@@ -1,9 +1,12 @@
 [[source]]
+
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+
 [packages]
+
 django-environ = "*"
 whitenoise = "*"
 django-model-utils = "*"
@@ -19,39 +22,48 @@ graphene-django = "*"
 django-cors-headers = "*"
 djangorestframework-camel-case = "*"
 wagtail = "*"
-"beautifulsoup4" = "*"
+beautifulsoup4 = "*"
 requests = "*"
-fuzzywuzzy = {extras = ["speedup"], version = "*"}
-"mailchimp3" = "*"
+mailchimp3 = "*"
 arrow = "*"
 djangorestframework-jwt = "*"
-"boto3" = "*"
+boto3 = "*"
 django-filter = "<2.0"
-Django = "==2.0.8"
+Django = "==2.1"
 Pillow = "*"
-"argon2_cffi" = "*"
+argon2_cffi = "*"
 PyJWT = "*"
-gevent="*"
-gunicorn="*"
-django-storages="*"
-django-anymail="*"
-raven="*"
-"psycopg2-binary" = "*"
+gevent = "*"
+gunicorn = "*"
+django-storages = "*"
+django-anymail = "*"
+raven = "*"
+psycopg2-binary = "*"
 colorama = "*"
 django-treebeard = "*"
 
+
 [dev-packages]
-"flake8"="*"
-django-test-plus="*"
-pytest-django="*"
-pytest-sugar="*"
-django-coverage-plugin="*"
-Sphinx="*"
-Werkzeug="*"
-factory-boy="*"
-django-debug-toolbar="*"
-ipdb="*"
+
+flake8 = "*"
+django-test-plus = "*"
+pytest-django = "*"
+pytest-sugar = "*"
+django-coverage-plugin = "*"
+Sphinx = "*"
+Werkzeug = "*"
+factory-boy = "*"
+django-debug-toolbar = "*"
+ipdb = "*"
 coverage = "*"
 
+
 [requires]
+
 python_version = "3.7"
+
+
+[packages.fuzzywuzzy]
+
+extras = [ "speedup",]
+version = "*"
