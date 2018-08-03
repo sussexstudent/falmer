@@ -19,6 +19,8 @@ class EventFilterSet(FilterSet):
 
     title = CharFilter(lookup_expr='icontains')
 
+    brand = CharFilter(field_name='brand__slug')
+
     to_time = IsoDateTimeFilter(field_name='start_time', lookup_expr='lte')
 
     from_time = IsoDateTimeFilter(field_name='end_time', lookup_expr='gte')
