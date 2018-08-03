@@ -11,7 +11,7 @@ def get_filtering_input_from_filterset(filterset_class, node_type):
         a Graphene Field. These arguments will be available to
         filter against in the GraphQL
     """
-    from graphene_django.form_converter import convert_form_field
+    from graphene_django.forms.converter import convert_form_field
 
     args = {}
     for name, filter_field in six.iteritems(filterset_class.base_filters):

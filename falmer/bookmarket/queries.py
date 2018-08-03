@@ -15,8 +15,8 @@ class MarketListingsFilter(graphene.InputObjectType):
 
 
 class ListingsFilter(django_filters.FilterSet):
-    book_title = django_filters.CharFilter(lookup_expr=['iexact'])
-    book_author = django_filters.CharFilter(lookup_expr=['iexact'])
+    book_title = django_filters.CharFilter(lookup_expr='iexact')
+    book_author = django_filters.CharFilter(lookup_expr='iexact')
 
     class Meta:
         model = models.Listing

@@ -26,8 +26,8 @@ fuzzywuzzy = {extras = ["speedup"], version = "*"}
 arrow = "*"
 djangorestframework-jwt = "*"
 "boto3" = "*"
-django-filter = "*"
-Django = "*"
+django-filter = "<2.0"
+Django = "==2.0.8"
 Pillow = "*"
 "argon2_cffi" = "*"
 PyJWT = "*"
@@ -38,6 +38,7 @@ django-anymail="*"
 raven="*"
 "psycopg2-binary" = "*"
 colorama = "*"
+django-treebeard = "*"
 
 [dev-packages]
 "flake8"="*"
@@ -53,4 +54,4 @@ ipdb="*"
 coverage = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
