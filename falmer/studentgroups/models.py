@@ -2,6 +2,7 @@ import re
 
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
+from wagtail.search import index
 
 from falmer.matte.models import MatteImage, RemoteImage, SOURCE_GROUP_LOGO
 
@@ -19,7 +20,7 @@ AWARD_ICONS = (
 )
 
 
-class StudentGroup(models.Model):
+class StudentGroup(index.Indexed, models.Model):
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     is_prospective = models.BooleanField(default=False)
@@ -27,6 +28,11 @@ class StudentGroup(models.Model):
     logo = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
     link = models.CharField(default='', max_length=255, blank=True)
     slug = models.CharField(default=None, max_length=255, blank=True, null=True, unique=True)
+
+    search_fields = [
+        index.SearchField('name', partial_match=True, boost=10),
+        index.SearchField('description'),
+    ]
 
     class Meta:
         ordering = ['name']
