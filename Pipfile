@@ -19,7 +19,7 @@ graphene-django = "*"
 django-cors-headers = "*"
 djangorestframework-camel-case = "*"
 wagtail = "*"
-"beautifulsoup4" = "*"
+"beautifulsoup4" = "==4.6.0"
 requests = "*"
 fuzzywuzzy = {extras = ["speedup"], version = "*"}
 "mailchimp3" = "*"
