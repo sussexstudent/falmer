@@ -59,7 +59,9 @@ THIRD_PARTY_APPS = [
     'wagtail.contrib.modeladmin',
     'wagtail.core',
     'wagtail.api.v2',
+    'wagtail.contrib.postgres_search',
     'graphene_django',
+    'treebeard',
     'modelcluster',
     'taggit',
 ]
@@ -348,4 +350,11 @@ REST_FRAMEWORK = {
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+}
+
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.contrib.postgres_search.backend',
+        'SEARCH_CONFIG': 'english',
+    }
 }

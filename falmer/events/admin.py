@@ -1,12 +1,16 @@
 from django.contrib import admin
 from django.contrib.admin import register
+from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
 
-from falmer.events.models import Event, MSLEvent, Venue, AutoLocationDisplayToVenue, BrandingPeriod, Category, Type, Bundle
+from falmer.events.models import Event, MSLEvent, Venue, AutoLocationDisplayToVenue, \
+    BrandingPeriod, Type, Bundle, CategoryNode
 
 
 @register(Venue)
 class VenueModelAdmin(admin.ModelAdmin):
     pass
+
 
 @register(AutoLocationDisplayToVenue)
 class VenueModelAdmin(admin.ModelAdmin):
@@ -28,9 +32,10 @@ class BrandingPeriodModelAdmin(admin.ModelAdmin):
     list_display = ('name', )
 
 
-@register(Category)
-class CategoryModelAdmin(admin.ModelAdmin):
+@register(CategoryNode)
+class CategoryModelAdmin(TreeAdmin):
     list_display = ('name', )
+    form = movenodeform_factory(CategoryNode)
 
 
 @register(Type)
