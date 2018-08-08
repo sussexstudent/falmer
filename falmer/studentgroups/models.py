@@ -187,6 +187,7 @@ class Award(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(default='', blank=True)
     slug = AutoSlugField(unique=True, populate_from='name')
+    link = models.URLField(blank=True, default='')
     icon = models.CharField(max_length=24, choices=AWARD_ICONS, default=AWARD_ICONS[0][0], null=False, blank=False)
 
     def __str__(self):

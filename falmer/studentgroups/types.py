@@ -69,7 +69,7 @@ class StudentGroup(DjangoObjectType):
         return self.pk
 
     def resolve_awards(self, info):
-        x = models.GroupAwarded.objects.select_related('award').filter(group=self)
+        x = models.GroupAwarded.objects.select_related('award').order_by('-grade').filter(group=self)
 
         return models.AwardPeriod.objects.select_related('authority').prefetch_related(Prefetch('awarded', queryset=x, to_attr='awards')).filter(awarded__group=self).distinct()
 
