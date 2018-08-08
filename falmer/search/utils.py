@@ -4,6 +4,11 @@ from collections import namedtuple
 import requests
 import bs4
 from fuzzywuzzy import process
+from falmer.content.models.core import Page
+from wagtail.search.backends import get_search_backend
+
+from falmer.events.models import Event
+from falmer.studentgroups.models import StudentGroup
 
 PageResult = namedtuple('PageResult', ['uuid', 'link', 'title', 'description'])
 
@@ -64,6 +69,8 @@ def get_news_result(result):
 
 
 def get_results_for_term(term):
+
+    s = get_search_backend()
     # get page
     req = requests.get('https://www.sussexstudent.com/msl-search/?q={}'.format(term))
 
@@ -74,6 +81,11 @@ def get_results_for_term(term):
     events = [get_event_result(result) for result in document.select('.search_events .event')]
     news = [get_news_result(result) for result in document.select('.search_news .news_item')]
 
+    falmer_groups = s.search(term, StudentGroup.objects.all())
+    falmer_events = s.search(term, Event.objects.all())
+
+    print(falmer_groups)
+    print(falmer_events)
 
     all_unsorted = groups + pages + events + news
     results_map = {item['uuid']:item for item in all_unsorted}
@@ -89,3 +101,57 @@ def get_results_for_term(term):
         'events': [item['uuid'] for item in events],
         'top': [title_map[fuzz_result[0]] for fuzz_result in fuzz_sorted],
     }
+
+
+def get_item_id(item):
+    model = item.__class__.__name__
+    return f'{model}_{item.pk}'
+
+
+def get_item_title(item):
+    if hasattr(item, 'title'):
+        return item.title
+
+    if hasattr(item, 'name'):
+        return item.name
+
+    return ''
+
+
+SearchQueryData = namedtuple('SearchQueryData', ('events', 'content', 'groups', 'combined'))
+
+
+def get_falmer_results_for_term(term):
+    s = get_search_backend()
+
+    falmer_content = Page.objects.search(term)
+    falmer_groups = s.search(term, StudentGroup.objects.all())
+    falmer_events = s.search(term, Event.objects.all())
+
+    all_unsorted = list(falmer_content) + list(falmer_groups) + list(falmer_events)
+
+    title_map = {get_item_title(item): get_item_id(item) for item in all_unsorted}
+
+    fuzz_sorted = process.extract(term, title_map.keys(), limit=15)
+
+    return SearchQueryData(
+        content=falmer_content,
+        groups=falmer_groups,
+        events=falmer_events,
+        combined=[title_map[fuzz_result[0]] for fuzz_result in fuzz_sorted],
+    )
+
+    # results_map = {item['uuid']:item for item in all_unsorted}
+    # title_map = {item['title']:item['uuid'] for item in all_unsorted}
+    #
+    # fuzz_sorted = process.extract(term, title_map.keys(), limit=15)
+    #
+    # return {
+    #     'results': results_map,
+    #     'groups': [item['uuid'] for item in groups],
+    #     'news': [item['uuid'] for item in news],
+    #     'pages': [item['uuid'] for item in pages],
+    #     'events': [item['uuid'] for item in events],
+    #     'top': [title_map[fuzz_result[0]] for fuzz_result in fuzz_sorted],
+    # }
+    #

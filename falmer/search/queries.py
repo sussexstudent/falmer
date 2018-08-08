@@ -1,18 +1,15 @@
 import graphene
 
-from falmer.events.types import Event
-from falmer.studentgroups.types import StudentGroup
+from falmer.search.types import SearchQuery
+from falmer.search.utils import get_falmer_results_for_term
 
 
-class PageResult(graphene.ObjectType):
-    pass
+class Query(graphene.ObjectType):
+    search = graphene.Field(SearchQuery, query=graphene.String())
 
+    def resolve_search(self, info, query):
+        results = get_falmer_results_for_term(query)
 
-class SearchResult(graphene.Union):
-    class Meta:
-        types = (Event, StudentGroup)
+        print([type(result) for result in results])
 
-
-class SearchResultConnection(graphene.Connection):
-    class Meta:
-        node = SearchResult
+        return results
