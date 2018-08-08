@@ -227,9 +227,9 @@
         },
         "django-modelcluster": {
             "hashes": [
-                "sha256:2a6c0638ba295d44fc316c42b6da20509b186fe3500c674539441d451de5abfe"
+                "sha256:42bd7fa91af9996d7dfd34e6b027445acbece188d371d63abd19dde4c7ac8fc8"
             ],
-            "version": "==4.1"
+            "version": "==4.2"
         },
         "django-redis": {
             "hashes": [
