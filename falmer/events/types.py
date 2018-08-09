@@ -7,6 +7,12 @@ from falmer.studentgroups.types import StudentGroup
 from . import models
 
 
+class PAValues(graphene.Enum):
+    NA = 0
+    NEGATIVE = 1
+    POSITIVE = 2
+
+
 class BrandingPeriodFilter(graphene.InputObjectType):
     from_time = graphene.String()
     to_time = graphene.String()
@@ -34,6 +40,16 @@ class Category(DjangoObjectType):
 
     class Meta:
         model = models.Category
+
+
+class CategoryNode(DjangoObjectType):
+    parent = graphene.Field(lambda: CategoryNode)
+
+    class Meta:
+        model = models.CategoryNode
+
+    def resolve_parent(self, info):
+        return self.get_parent()
 
 
 class Type(DjangoObjectType):
@@ -69,7 +85,7 @@ class MSLEvent(DjangoObjectType):
 class Event(DjangoObjectType):
     venue = graphene.Field(Venue)
     featured_image = graphene.Field(Image)
-    category = graphene.Field(Category)
+    categories = graphene.List(CategoryNode)
     type = graphene.Field(Type)
     brand = graphene.Field(BrandingPeriod)
     bundle = graphene.Field(Bundle)
@@ -102,6 +118,9 @@ class Event(DjangoObjectType):
 
     def resolve_student_group(self, info):
         return self.student_group
+
+    def resolve_categories(self, info):
+        return self.category.all()
 
     def resolve_children(self, info):
         return self.children.all()
