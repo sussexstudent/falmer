@@ -1,5 +1,6 @@
 from wagtail.core import blocks
 from django.utils.translation import ugettext_lazy as _
+from wagtail.documents.blocks import DocumentChooserBlock
 
 from falmer.content.blocks import FalmerPageChooserBlock
 from falmer.content.components.base import Component
@@ -30,6 +31,27 @@ class InternalLink(blocks.StructBlock):
 
 
 internal_link = Component('internal_link', InternalLink)
+
+
+class DocumentLink(blocks.StructBlock):
+    """
+    Single Internal link block
+    """
+    link = DocumentChooserBlock(required=True)
+    title = blocks.CharBlock(required=False)
+
+    @property
+    def get_title(self):
+        if self.title:
+            return self.title
+        else:
+            self.link.name
+
+    class Meta:
+        icon = 'link'
+
+
+document_link = Component('document_link', InternalLink)
 
 
 class ExternalLink(blocks.StructBlock):

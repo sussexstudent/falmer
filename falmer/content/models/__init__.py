@@ -5,3 +5,37 @@ from .officer_overview import OfficerOverviewPage
 from .homepage import HomePage
 from .freshers import FreshersHomepage
 from .generic import ContentRootPage, AnswerPage, ReferencePage, DetailedGuidePage, DetailedGuideSectionPage
+from .basic import StubPage, BasicContentPage
+from .outlets import OutletIndexPage, OutletPage
+
+
+all_pages = (
+    StaffPage,
+    StaffDepartment,
+    StaffSection,
+    StaffMemberSnippet,
+    StaffMember,
+
+    SectionContentPage,
+
+    SelectionGridPage,
+
+    OfficerOverviewPage,
+
+    HomePage,
+
+    ContentRootPage,
+    AnswerPage,
+    ReferencePage,
+    DetailedGuidePage,
+    DetailedGuideSectionPage,
+
+    StubPage,
+    BasicContentPage,
+
+    OutletIndexPage,
+    OutletPage,
+)
+
+
+name_to_class_map = {cls.__name__: cls for cls in all_pages}

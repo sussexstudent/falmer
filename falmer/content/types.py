@@ -1,8 +1,10 @@
 import graphene
 from graphene.types.generic import GenericScalar
+from graphene_django import DjangoObjectType
 from wagtail.core.blocks import StreamValue
 
 from falmer.content import models
+from falmer.content.models import name_to_class_map
 from falmer.content.serializers import WagtailImageSerializer
 from falmer.content.utils import underscore_to_camel, change_dict_naming_convention
 from falmer.matte.models import MatteImage
@@ -89,8 +91,10 @@ class Page(graphene.Interface):
     data = GenericScalar()
 
     sub_pages = graphene.List(lambda: Page)
+    sibling_pages = graphene.List(lambda: Page)
     parent_page = graphene.Field(lambda: Page)
-    ancestors = graphene.List(lambda: Page)
+    ancestor_pages = graphene.List(lambda: Page)
+    closest_ancestor_of_type = graphene.Field(lambda: Page, content_type=graphene.String(), inclusive=graphene.Boolean())
 
     def resolve_content_type(self, info):
         return self.__class__.__name__
@@ -122,6 +126,7 @@ class Page(graphene.Interface):
         return self.get_url_parts()[2][6:]
 
     def resolve_data(self, info):
+        raise DeprecationWarning('Data is deprecated! Specify page fields directly')
         data = dict()
         if hasattr(self.__class__, 'api_fields'):
             for field in self.__class__.api_fields:
@@ -143,12 +148,21 @@ class Page(graphene.Interface):
     def resolve_sub_pages(self, info):
         return self.get_children().specific().live()
 
-    def resolve_ancestors(self, info):
-        return self.get_ancestors()
+    def resolve_sibling_pages(self, info):
+        return self.get_siblings().specific().live()
+
+    def resolve_ancestor_pages(self, info):
+        return self.get_ancestors().specific().live()
+
+    def resolve_closest_ancestor_of_type(self, info, content_type=None, inclusive=False):
+        try:
+            print(name_to_class_map[content_type])
+            return self.get_ancestors(inclusive).type(name_to_class_map[content_type]).last()
+        except IndexError:
+            return None
 
     @classmethod
     def resolve_type(cls, instance, info):
-        print('TYPE REQUIRED')
         name = instance.__class__.__name__
         if name in page_types_map:
             return page_types_map[name]
@@ -158,12 +172,13 @@ class Page(graphene.Interface):
 
 def generate_interfaces_for_type(page_models):
     types = {}
-    meta = type('Meta', (), {
-        'interfaces': (Page, )
-    })
 
     for page in page_models:
-        types[page.__name__] = type(page.__name__, (graphene.ObjectType, ), {
+        meta = type('Meta', (), {
+            'interfaces': (Page, ),
+            'model': page,
+        })
+        types[page.__name__] = type(page.__name__, (DjangoObjectType, ), {
             'Meta': meta
         })
 
@@ -186,6 +201,8 @@ page_types_map = generate_interfaces_for_type((
     models.ReferencePage,
     models.DetailedGuidePage,
     models.DetailedGuideSectionPage,
+    models.OutletIndexPage,
+    models.OutletPage,
 ))
 
 

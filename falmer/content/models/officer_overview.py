@@ -8,6 +8,10 @@ from falmer.content.models.core import Page
 from falmer.matte.models import MatteImage
 
 
+class OfficersIndex(Page):
+    pass
+
+
 class OfficerOverviewPage(Page):
     role = models.CharField(max_length=255)
     role_description = RichTextField()
@@ -24,6 +28,8 @@ class OfficerOverviewPage(Page):
     pledges = StreamField([
         ('pledge', PledgeBlock()),
     ])
+
+    parent_page_types = ('content.OfficersIndex', )
 
     content_panels = Page.content_panels + [
         FieldPanel('role'),

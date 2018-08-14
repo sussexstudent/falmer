@@ -35,14 +35,19 @@ def change_dict_naming_convention(d, convert_function):
     Returns:
         Dictionary with the new keys.
     """
-    new = {}
-    for k, v in d.items():
-        new_v = v
-        if isinstance(v, dict):
-            new_v = change_dict_naming_convention(v, convert_function)
-        elif isinstance(v, list):
-            new_v = list()
-            for x in v:
-                new_v.append(change_dict_naming_convention(x, convert_function))
-        new[convert_function(k)] = new_v
-    return new
+    if isinstance(d, dict):
+        new = {}
+        for k, v in d.items():
+            new_v = v
+            if isinstance(v, dict):
+                new_v = change_dict_naming_convention(v, convert_function)
+            elif isinstance(v, list):
+                new_v = list()
+                for x in v:
+                    new_v.append(change_dict_naming_convention(x, convert_function))
+            new[convert_function(k)] = new_v
+        return new
+    elif isinstance(d, list):
+        return [change_dict_naming_convention(item, convert_function) for item in d]
+
+    return d

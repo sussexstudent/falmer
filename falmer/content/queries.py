@@ -17,6 +17,9 @@ class Query(graphene.ObjectType):
         root_page = info.context.site.root_page
 
         try:
+            if path == '':
+                return root_page
+
             result = root_page.route(info.context, path.split('/'))
             return result.page
         except Http404:

@@ -8,10 +8,12 @@ from falmer.content.models.core import Page
 
 
 class GuidePage(Page):
-    pass
+    parent_page_types = ('kb.TopicPage', )
 
 
 class KBReferencePage(Page):
+    parent_page_types = ('kb.TopicPage', )
+
     main = StreamField(
         StreamBlock([
             components.text.to_pair(),
@@ -33,6 +35,7 @@ class KBReferencePage(Page):
 
 class TopicPage(Page):
     subpage_types = (KBReferencePage, GuidePage, )
+    parent_page_types = ('kb.SectionPage', )
 
     def pages(self):
         return self.get_children().live()
@@ -43,6 +46,7 @@ class TopicPage(Page):
 
 class SectionPage(Page):
     subpage_types = (TopicPage, )
+    parent_page_types = ('kb.KnowledgeBaseRoot', )
 
     def topics(self):
         return self.get_children().live().specific()
