@@ -39,6 +39,7 @@ raven="*"
 "psycopg2-binary" = "*"
 colorama = "*"
 django-treebeard = "*"
+wagtailmenus = "*"
 
 [dev-packages]
 "flake8"="*"
