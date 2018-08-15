@@ -19,8 +19,8 @@ class GenericContentPageMixin(models.Model):
     class Meta:
         abstract = True
 
-    related_links = StreamField([('link_section', RelatedLinkSection())])
-    staff_owners = StreamField([('staff_member', StaffMemberChooser(StaffMemberSnippet))])
+    related_links = StreamField(StreamBlock([('link_section', RelatedLinkSection())], required=False, blank=True), blank=True)
+    staff_owners = StreamField(StreamBlock([('staff_member', StaffMemberChooser(StaffMemberSnippet))], required=False, blank=True), blank=True)
 
     promote_panels = [
         StreamFieldPanel('related_links'),
@@ -28,15 +28,15 @@ class GenericContentPageMixin(models.Model):
     ]
 
 
-    api_fields = [
-        'related_links',
-        'staff_owners',
-    ]
-
-class ContentRootPage(Page):
+class KBRootPage(Page):
     class Meta:
         verbose_name = 'Content Root'
 
+    subpage_types = ('content.KBCategoryPage', )
+
+
+class KBCategoryPage(Page):
+    parent_page_types = ('content.KBRootPage', )
     subpage_types = (
         'content.ReferencePage',
         'content.AnswerPage',
@@ -48,7 +48,7 @@ class ReferencePage(GenericContentPageMixin, Page):
     class Meta:
         verbose_name = 'Reference'
 
-    parent_page_types = ('content.ContentRootPage', )
+    parent_page_types = ('content.KBCategoryPage', )
     subpage_types = ()
 
     content = StreamField(
@@ -69,16 +69,12 @@ class ReferencePage(GenericContentPageMixin, Page):
 
     promote_panels = Page.promote_panels + GenericContentPageMixin.promote_panels
 
-    api_fields = GenericContentPageMixin.api_fields + [
-        'content',
-    ]
-
 
 class AnswerPage(GenericContentPageMixin, Page):
     class Meta:
         verbose_name = 'Answer'
 
-    parent_page_types = ('content.ContentRootPage', )
+    parent_page_types = ('content.KBCategoryPage', )
     subpage_types = ()
 
     content = StreamField(
@@ -99,16 +95,12 @@ class AnswerPage(GenericContentPageMixin, Page):
 
     promote_panels = Page.promote_panels + GenericContentPageMixin.promote_panels
 
-    api_fields = GenericContentPageMixin.api_fields + [
-        'content',
-    ]
-
 
 class DetailedGuidePage(GenericContentPageMixin, Page):
     class Meta:
         verbose_name = 'Detailed Guide'
 
-    parent_page_types = ('content.ContentRootPage', )
+    parent_page_types = ('content.KBCategoryPage', )
     subpage_types = ('content.DetailedGuideSectionPage', )
 
     promote_panels = Page.promote_panels + GenericContentPageMixin.promote_panels
@@ -137,10 +129,6 @@ class DetailedGuideSectionPage(Page):
     ]
 
     promote_panels = Page.promote_panels
-
-    api_fields = [
-        'content',
-    ]
 
     def get_assumption_path(self):
         return self.get_parent().get_url_parts()[2][6:]

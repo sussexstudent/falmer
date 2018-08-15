@@ -4,7 +4,7 @@ from .selection_grid import SelectionGridPage
 from .officer_overview import OfficerOverviewPage
 from .homepage import HomePage
 from .freshers import FreshersHomepage
-from .generic import ContentRootPage, AnswerPage, ReferencePage, DetailedGuidePage, DetailedGuideSectionPage
+from .generic import KBRootPage, KBCategoryPage, AnswerPage, ReferencePage, DetailedGuidePage, DetailedGuideSectionPage
 from .basic import StubPage, BasicContentPage
 from .outlets import OutletIndexPage, OutletPage
 
@@ -24,7 +24,8 @@ all_pages = (
 
     HomePage,
 
-    ContentRootPage,
+    KBRootPage,
+    KBCategoryPage,
     AnswerPage,
     ReferencePage,
     DetailedGuidePage,

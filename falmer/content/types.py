@@ -4,7 +4,7 @@ from graphene_django import DjangoObjectType
 from wagtail.core.blocks import StreamValue
 
 from falmer.content import models
-from falmer.content.models import name_to_class_map
+from falmer.content.models import name_to_class_map, all_pages
 from falmer.content.serializers import WagtailImageSerializer
 from falmer.content.utils import underscore_to_camel, change_dict_naming_convention
 from falmer.matte.models import MatteImage
@@ -56,22 +56,6 @@ class PageResult(graphene.ObjectType):
             return None
         return self.get_url_parts()[2][6:]
 
-    def resolve_data(self, info):
-        data = dict()
-        if hasattr(self.__class__, 'api_fields'):
-            for field in self.__class__.api_fields:
-                field_data = getattr(self, field)
-                field_type = field_data.__class__
-                if field_type is StreamValue:
-                    data[field] = field_data.stream_block.get_api_representation(field_data, info.context)
-                elif field_type in (str, bool, int, float):
-                    data[field] = field_data
-                elif field_type is MatteImage:
-                    data[field] = WagtailImageSerializer(instance=field_data).data
-                else:
-                    data[field] = f'Unknown data type: {field_type.__name__}'
-        return change_dict_naming_convention(data, underscore_to_camel)
-
 
 class Page(graphene.Interface):
     content_type = graphene.String()
@@ -87,8 +71,6 @@ class Page(graphene.Interface):
     url_path = graphene.String()
     path = graphene.String()
     assumption_path = graphene.String()
-
-    data = GenericScalar()
 
     sub_pages = graphene.List(lambda: Page)
     sibling_pages = graphene.List(lambda: Page)
@@ -125,23 +107,6 @@ class Page(graphene.Interface):
             return None
         return self.get_url_parts()[2][6:]
 
-    def resolve_data(self, info):
-        raise DeprecationWarning('Data is deprecated! Specify page fields directly')
-        data = dict()
-        if hasattr(self.__class__, 'api_fields'):
-            for field in self.__class__.api_fields:
-                field_data = getattr(self, field)
-                field_type = field_data.__class__
-                if field_type is StreamValue:
-                    data[field] = field_data.stream_block.get_api_representation(field_data, info.context)
-                elif field_type in (str, bool, int, float):
-                    data[field] = field_data
-                elif field_type is MatteImage:
-                    data[field] = WagtailImageSerializer(instance=field_data).data
-                else:
-                    data[field] = f'Unknown data type: {field_type.__name__}'
-        return change_dict_naming_convention(data, underscore_to_camel)
-
     def resolve_parent_page(self, info):
         return self.get_parent()
 
@@ -156,7 +121,6 @@ class Page(graphene.Interface):
 
     def resolve_closest_ancestor_of_type(self, info, content_type=None, inclusive=False):
         try:
-            print(name_to_class_map[content_type])
             return self.get_ancestors(inclusive).type(name_to_class_map[content_type]).last()
         except IndexError:
             return None
@@ -184,26 +148,8 @@ def generate_interfaces_for_type(page_models):
 
     return types
 
-#
-# class DetailedGuideSectionPage(graphene.ObjectType):
-#     class Meta:
-#         interfaces = (Page, )
-#
-page_types_map = generate_interfaces_for_type((
-    models.StaffPage,
-    models.SectionContentPage,
-    models.SelectionGridPage,
-    models.OfficerOverviewPage,
-    models.HomePage,
-    models.FreshersHomepage,
-    models.ContentRootPage,
-    models.AnswerPage,
-    models.ReferencePage,
-    models.DetailedGuidePage,
-    models.DetailedGuideSectionPage,
-    models.OutletIndexPage,
-    models.OutletPage,
-))
+
+page_types_map = generate_interfaces_for_type(all_pages)
 
 
 class GenericPage(graphene.ObjectType):
