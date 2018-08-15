@@ -60,6 +60,7 @@ THIRD_PARTY_APPS = [
     'wagtail.core',
     'wagtail.api.v2',
     'wagtail.contrib.postgres_search',
+    'wagtailmenus',
     'graphene_django',
     'treebeard',
     'modelcluster',
@@ -203,6 +204,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'wagtailmenus.context_processors.wagtailmenus',
                 # Your stuff: custom template context processors go here
             ],
             'libraries':{
