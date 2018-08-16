@@ -34,9 +34,10 @@ class Command(BaseCommand):
 
         for event in events_list:
             print(event['title'])
-            print(event['type'])
-            t, c = Type.objects.get_or_create(name__iexact=event['type'])
-            print(t, c)
+            if event['type'] != '':
+                t, c = Type.objects.get_or_create(name__iexact=event['type'])
+            else:
+                t = None
             event_instance = Event(
                 title=event['title'],
                 start_time=arrow.get(event['start_time']).replace(tzinfo=tz.gettz('Europe/London')).datetime,
@@ -61,7 +62,8 @@ class Command(BaseCommand):
             event_instance.save()
 
             for cat in event['categories']:
-                try:
-                    event_instance.category.add(CategoryNode.objects.get(name__iexact=cat))
-                except CategoryNode.DoesNotExist:
-                    print(f'missing category: {cat}')
+                cat_instance = CategoryNode.objects.filter(name__iexact=cat.replace('and', '&')).first()
+                if cat_instance is not None:
+                    event_instance.category.add(cat_instance)
+                else:
+                    print(f'-> missing category: {cat}')
