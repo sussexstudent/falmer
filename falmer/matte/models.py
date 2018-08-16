@@ -9,6 +9,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from wagtail.images.models import Image, AbstractImage, AbstractRendition
+from wagtail.search import index
+
 from .tasks import save_image_from_remote, perform_external_image_analysis
 
 # image sources
@@ -42,6 +44,10 @@ class MatteImage(AbstractImage):
     admin_form_fields = Image.admin_form_fields + (
         # nothing yet
     )
+
+    search_fields = AbstractImage.search_fields + [
+        index.FilterField('internal_source'),
+    ]
 
     class Meta:
         permissions = (
