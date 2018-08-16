@@ -1,6 +1,8 @@
 import arrow
 import graphene
 from django.db.models import Q
+from django.utils import timezone
+
 from falmer.events.filters import EventFilterSet
 from falmer.events.types import Venue, BrandingPeriod, Event
 from falmer.schema.fields import FalmerDjangoFilterConnectionField
@@ -19,7 +21,7 @@ class Query(graphene.ObjectType):
         qfilter = kwargs.get('filter')
 
         qs = models.Event.objects.select_related('featured_image', 'venue', 'mslevent') \
-            .prefetch_related('children').order_by('start_time', 'end_time')
+            .prefetch_related('children').order_by('start_time', 'end_time').filter(Q(embargo_until=None) | Q(embargo_until__lte=timezone.now()))
 
         if qfilter is None:
             return qs.filter(parent=None)
