@@ -31,13 +31,13 @@ class Bundle(models.Model):
 
 
 PA_NOT_SET = 0
-PA_NEGATIVE = 1
-PA_POSITIVE = 2
+PA_FALSE = 1
+PA_TRUE = 2
 
 PA_VALUES = (
     (PA_NOT_SET, 'Not set/inherit'),
-    (PA_NEGATIVE, 'Negative'),
-    (PA_POSITIVE, 'Positive')
+    (PA_FALSE, 'False'),
+    (PA_TRUE, 'True')
 )
 
 
