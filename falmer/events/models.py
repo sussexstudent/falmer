@@ -87,10 +87,13 @@ class BrandingPeriod(models.Model):
     logo = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
     logo_vector = models.FileField(null=True, blank=True)
 
+    override_listings_root = models.CharField(max_length=255, default='', blank=True)
+
     custom_panels = [
         MultiFieldPanel([
             FieldPanel('name', classname='title'),
             FieldPanel('website_link'),
+            FieldPanel('override_listings_root'),
             FieldPanel('slug'),
             FieldPanel('accent'),
             FieldPanel('description'),
