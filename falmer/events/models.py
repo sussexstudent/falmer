@@ -223,11 +223,13 @@ class Event(index.Indexed, PASet, models.Model):
         (NA, 'n/a'),
     )
 
+    EVENTBRITE = 'EB'
     NATIVE = 'NT'
     MSL = 'MSL'
     TICKET_TYPE_CHOICES = (
         (NA, 'n/a'),
         (NATIVE, 'Native'),
+        (EVENTBRITE, 'Eventbrite'),
         (MSL, 'MSL'),
     )
 
