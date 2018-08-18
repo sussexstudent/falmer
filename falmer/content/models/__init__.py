@@ -36,6 +36,8 @@ all_pages = (
 
     OutletIndexPage,
     OutletPage,
+
+    FreshersHomepage
 )
 
 

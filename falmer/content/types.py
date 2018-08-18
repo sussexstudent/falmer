@@ -1,13 +1,7 @@
 import graphene
 from graphene.types.generic import GenericScalar
 from graphene_django import DjangoObjectType
-from wagtail.core.blocks import StreamValue
-
-from falmer.content import models
 from falmer.content.models import name_to_class_map, all_pages
-from falmer.content.serializers import WagtailImageSerializer
-from falmer.content.utils import underscore_to_camel, change_dict_naming_convention
-from falmer.matte.models import MatteImage
 
 
 class PageResult(graphene.ObjectType):
@@ -72,10 +66,10 @@ class Page(graphene.Interface):
     path = graphene.String()
     assumption_path = graphene.String()
 
-    sub_pages = graphene.List(lambda: Page)
-    sibling_pages = graphene.List(lambda: Page)
+    sub_pages = graphene.List(lambda: Page, in_menu=graphene.Boolean())
+    sibling_pages = graphene.List(lambda: Page, in_menu=graphene.Boolean())
     parent_page = graphene.Field(lambda: Page)
-    ancestor_pages = graphene.List(lambda: Page)
+    ancestor_pages = graphene.List(lambda: Page, in_menu=graphene.Boolean())
     closest_ancestor_of_type = graphene.Field(lambda: Page, content_type=graphene.String(), inclusive=graphene.Boolean())
 
     def resolve_content_type(self, info):
@@ -110,14 +104,28 @@ class Page(graphene.Interface):
     def resolve_parent_page(self, info):
         return self.get_parent()
 
-    def resolve_sub_pages(self, info):
-        return self.get_children().specific().live()
+    def resolve_sub_pages(self, info, in_menu=None):
+        q = self.get_children().specific().live()
+        if in_menu is True:
+            q = q.in_menu()
 
-    def resolve_sibling_pages(self, info):
-        return self.get_siblings().specific().live()
+        return q
 
-    def resolve_ancestor_pages(self, info):
-        return self.get_ancestors().specific().live()
+    def resolve_sibling_pages(self, info, in_menu=None):
+        q = self.get_siblings().specific().live()
+
+        if in_menu is True:
+            q = q.in_menu()
+
+        return q
+
+    def resolve_ancestor_pages(self, info, in_menu=None):
+        q = self.get_ancestors().specific().live()
+
+        if in_menu is True:
+            q = q.in_menu()
+
+        return q
 
     def resolve_closest_ancestor_of_type(self, info, content_type=None, inclusive=False):
         try:
