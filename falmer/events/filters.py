@@ -15,6 +15,14 @@ class EventFilterSet(FilterSet):
             'student_group',
             'from_time',
             'to_time',
+
+            'audience_just_for_pgs',
+            'audience_suitable_kids_families',
+            'audience_good_to_meet_people',
+            'is_over_18_only',
+            'cost',
+            'alcohol',
+            'type'
         )
 
     title = CharFilter(lookup_expr='icontains')
