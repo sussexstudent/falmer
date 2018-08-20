@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from falmer.events.filters import EventFilterSet
-from falmer.events.types import Venue, BrandingPeriod, Event
+from falmer.events.types import Venue, BrandingPeriod, Event, Bundle
 from falmer.schema.fields import FalmerDjangoFilterConnectionField
 from falmer.schema.schema import DjangoConnectionField
 from . import models
@@ -16,6 +16,7 @@ class Query(graphene.ObjectType):
     all_venues = DjangoConnectionField(Venue)
     event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int())
     branding_period = graphene.Field(BrandingPeriod, slug=graphene.String())
+    bundle = graphene.Field(Bundle, slug=graphene.String())
 
     def resolve_all_events(self, info, **kwargs):
         qfilter = kwargs.get('filter')
@@ -54,6 +55,10 @@ class Query(graphene.ObjectType):
     def resolve_branding_period(self, info, **kwargs):
         slug = kwargs.get('slug')
         return models.BrandingPeriod.objects.get(slug=slug)
+
+    def resolve_bundle(self, info, **kwargs):
+        slug = kwargs.get('slug')
+        return models.Bundle.objects.get(slug=slug)
 
     def resolve_all_venues(self, info):
         return models.Venue.objects.all()
