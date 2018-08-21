@@ -10,7 +10,7 @@ class EventAdmin(ModelAdmin):
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title', 'start_time', 'embargo_until')
-    list_filter = ('embargo_until', )
+    list_filter = ('embargo_until', 'ticket_type', )
     search_fields = ('title',)
 
 
