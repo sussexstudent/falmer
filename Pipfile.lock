@@ -1042,11 +1042,10 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:86a8dbf407e437351cef4dba46736e9c5a6e3c3ac71b2e942209748e76ff2086",
-                "sha256:e74466e97ac14582a8188ff4c53e6cc3810315f342f6096899332ae864c1d432"
+                "sha256:4abcd98faeea3eb95bd05aa6a7b121d5f89d72e4d36ddb0dcbbfd1ec9f3651d1",
+                "sha256:2e7c330338b2732ddb992217962e3454aa7290434e75329b1a6739cea41bea6b"
             ],
-            "markers": "python_version != '3.3.*' and python_version != '3.1.*' and python_version != '3.0.*' and python_version != '3.2.*' and python_version >= '2.7'",
-            "version": "==3.7.1"
+            "version": "==3.7.3"
         },
         "pytest-django": {
             "hashes": [
