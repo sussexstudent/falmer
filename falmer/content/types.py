@@ -21,6 +21,8 @@ class PageResult(graphene.ObjectType):
 
     data = GenericScalar()
 
+    id = graphene.Int()
+
     def resolve_content_type(self, info):
         return self.__class__.__name__
 
@@ -44,6 +46,9 @@ class PageResult(graphene.ObjectType):
 
     def resolve_assumption_path(self, info):
         return self.get_assumption_path()
+
+    def resolve_id(self, info):
+        return self.pk
 
     def resolve_path(self, info):
         if self.get_url_parts() is None:
