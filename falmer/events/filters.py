@@ -22,7 +22,8 @@ class EventFilterSet(FilterSet):
             'is_over_18_only',
             'cost',
             'alcohol',
-            'type'
+            'type',
+            'ticket_level'
         )
 
     title = CharFilter(lookup_expr='icontains')
