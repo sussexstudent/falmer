@@ -296,6 +296,10 @@ class Event(index.Indexed, PASet, models.Model):
     search_fields = [
         index.SearchField('title', partial_match=True, boost=10),
         index.SearchField('short_description'),
+        index.FilterField('embargo_until'),
+        index.FilterField('last_sync'),
+        index.FilterField('event_id'),
+        index.FilterField('start_time'),
     ]
 
     custom_panels = [
