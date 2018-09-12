@@ -2,7 +2,7 @@ from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core import blocks
 from wagtail.core.blocks import StreamBlock
-from wagtail.core.fields import StreamField
+from wagtail.core.fields import StreamField, RichTextField
 
 from falmer.content import components
 from falmer.content.components.links import ButtonGroupLinks
@@ -34,6 +34,12 @@ class KBRootPage(Page):
 
     subpage_types = ('content.KBCategoryPage', )
 
+    introduction = RichTextField(default='', blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('introduction'),
+    ]
+
 
 class KBCategoryPage(Page):
     parent_page_types = ('content.KBRootPage', )
@@ -48,6 +54,10 @@ class KBCategoryPage(Page):
     content_panels = Page.content_panels + [
        FieldPanel('page_icon')
     ]
+
+    @property
+    def page_icon_url(self):
+        return None if self.page_icon is None else self.page_icon.url
 
 
 class ReferencePage(GenericContentPageMixin, Page):

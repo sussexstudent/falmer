@@ -2,29 +2,13 @@ import importlib
 from inspect import getmembers, isclass
 import os
 
-from graphene import Scalar
-from graphene_django.converter import convert_django_field
-from taggit.managers import TaggableManager
-from wagtail.core.fields import StreamField
+# from django.db.models import FileField
+import graphene
+from .converters import register_converters
 
-from falmer.content.utils import underscore_to_camel, change_dict_naming_convention
-
-
-class GenericStreamFieldType(Scalar):
-    @staticmethod
-    def serialize(stream_value):
-        return change_dict_naming_convention(stream_value.stream_block.get_api_representation(stream_value), underscore_to_camel)
-
-
-@convert_django_field.register(StreamField)
-def convert_stream_field(field, registry=None):
-    return GenericStreamFieldType(
-        description=field.help_text, required=not field.null
-    )
-
+register_converters()
 
 from graphene_django import DjangoConnectionField as _DjangoConnectionField
-import graphene
 
 
 from falmer.content.types import GenericPage, page_types_map
@@ -43,11 +27,6 @@ class DjangoConnectionField(_DjangoConnectionField):
         # return default_queryset & queryset
         """
         return queryset
-
-
-@convert_django_field.register(TaggableManager)
-def convert_taggable_manager(field, registry=None):
-    return "hello there"
 
 
 def create_connection(_node):
