@@ -1,19 +1,21 @@
 from django.db import models
 from wagtail.images import get_image_model_string
-from modelcluster.fields import ParentalKey
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from wagtail.snippets.blocks import SnippetChooserBlock
 from wagtail.snippets.models import register_snippet
 from wagtail.core import blocks
-from wagtail.core.models import Orderable
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, HelpPanel, MultiFieldPanel
 from .core import Page
 
 
 @register_snippet
 class StaffMemberSnippet(index.Indexed, models.Model):
+    class Meta:
+        verbose_name = 'Job Role'
+        verbose_name_plural = 'Job Roles'
+
     photo = models.ForeignKey(
         get_image_model_string(),
         null=True,
@@ -22,7 +24,7 @@ class StaffMemberSnippet(index.Indexed, models.Model):
         related_name='+'
     )
     name = models.CharField(max_length=255)
-    job_title = models.CharField(max_length=255, null=True, blank=True)
+    job_title = models.CharField(max_length=255, null=True, blank=False)
     email = models.EmailField(max_length=255, null=True, blank=True)
     office_phone_number = models.CharField(max_length=255, null=True, blank=True)
     mobile_phone_number = models.CharField(max_length=255, null=True, blank=True)
@@ -30,22 +32,27 @@ class StaffMemberSnippet(index.Indexed, models.Model):
     office_location = models.CharField(max_length=255, null=True, blank=True)
 
     panels = [
-        FieldPanel('name'),
-        FieldPanel('job_title'),
-        FieldPanel('email'),
-        FieldPanel('office_phone_number'),
-        FieldPanel('mobile_phone_number'),
-        ImageChooserPanel('photo'),
-        FieldPanel('job_description'),
+        HelpPanel('Humans should be assigned to the job role. If a person has switched roles, please update snippet of their new role with their infomation, rather than updating their current role snippet with their new role.'),
+        MultiFieldPanel((
+            FieldPanel('name'),
+            FieldPanel('mobile_phone_number'),
+            ImageChooserPanel('photo'),
+            FieldPanel('email'),
+        ), heading='Employee centric details'),
+        MultiFieldPanel((
+            FieldPanel('job_title'),
+            FieldPanel('job_description'),
+            FieldPanel('office_phone_number'),
+        ), heading='Role centric details', help_text='These should not need to change'),
     ]
 
     search_fields = [
+        index.SearchField('job_title', partial_match=True, boost=1.1),
         index.SearchField('name', partial_match=True),
-        index.SearchField('job_title', partial_match=True),
     ]
 
     def __str__(self):
-        return self.name
+        return f'{self.job_title} ({self.name})'
 
 
 class StaffMemberChooser(SnippetChooserBlock):
@@ -76,42 +83,4 @@ class StaffPage(Page):
     api_fields = (
         'body',
     )
-
-
-class StaffDepartment(Page):
-    subpage_types = ('StaffSection',)
-
-
-class StaffSection(Page):
-    content_panels = Page.content_panels + [
-        InlinePanel('staff', label="Staff"),
-    ]
-
-
-class StaffMember(Orderable):
-    department = ParentalKey(StaffSection, related_name='staff')
-    photo = models.ForeignKey(
-        get_image_model_string(),
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-    name = models.CharField(max_length=255)
-    job_title = models.CharField(max_length=255, null=True, blank=True)
-    email = models.EmailField(max_length=255, null=True, blank=True)
-    office_phone_number = models.CharField(max_length=255, null=True, blank=True)
-    mobile_phone_number = models.CharField(max_length=255, null=True, blank=True)
-    job_description = RichTextField()
-    office_location = models.CharField(max_length=255, null=True, blank=True)
-
-    panels = [
-        FieldPanel('name'),
-        FieldPanel('job_title'),
-        FieldPanel('email'),
-        FieldPanel('office_phone_number'),
-        FieldPanel('mobile_phone_number'),
-        ImageChooserPanel('photo'),
-        FieldPanel('job_description'),
-    ]
 

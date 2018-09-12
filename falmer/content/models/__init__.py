@@ -1,5 +1,5 @@
 from falmer.content.models.core import ClickThrough
-from .staff import StaffPage, StaffDepartment, StaffSection, StaffMemberSnippet, StaffMember
+from .staff import StaffPage, StaffMemberSnippet
 from .section_content import SectionContentPage
 from .selection_grid import SelectionGridPage
 from .officer_overview import OfficerOverviewPage
@@ -12,10 +12,7 @@ from .outlets import OutletIndexPage, OutletPage
 
 all_pages = (
     StaffPage,
-    StaffDepartment,
-    StaffSection,
     StaffMemberSnippet,
-    StaffMember,
 
     SectionContentPage,
 
