@@ -16,6 +16,8 @@ class GridItem(blocks.StructBlock):
 
 
 class SelectionGridPage(Page):
+    parent_page_types = []
+
     body = StreamField([
         ('heading_hero', HeroImageBlock()),
         ('selection_grid', blocks.ListBlock(GridItem)),

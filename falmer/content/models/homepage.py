@@ -7,6 +7,8 @@ from falmer.content.models.core import Page
 
 
 class HomePage(Page):
+    parent_page_types = []
+
     full_time_officers = StreamField([
         ('figure', FigureBlock())
     ])

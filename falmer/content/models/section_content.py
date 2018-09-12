@@ -10,6 +10,8 @@ from falmer.matte.models import MatteImage
 
 
 class SectionContentPage(Page):
+    parent_page_types = []
+
     body = StreamField([
         ('section', SectionBlock()),
     ])
