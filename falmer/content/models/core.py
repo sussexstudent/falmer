@@ -1,6 +1,8 @@
 from django.conf import settings
+from django.db import models
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel
 from wagtail.core.models import Page as WagtailPage
 
 from falmer.content.utils import get_public_path_for_page
@@ -27,3 +29,20 @@ class Page(WagtailPage):
     @property
     def public_path(self):
         return get_public_path_for_page(self)
+
+
+class ClickThrough(Page):
+    target_page = models.ForeignKey('content.Page', models.SET_NULL, 'click_throughs', blank=True, null=True)
+    target_link = models.TextField(blank=True, default='')
+
+    @property
+    def public_path(self):
+        if self.target_page:
+            return self.target_page.public_path
+
+        return self.target_link
+
+    content_panels = Page.content_panels + [
+        PageChooserPanel('target_page'),
+        FieldPanel('target_link'),
+    ]
