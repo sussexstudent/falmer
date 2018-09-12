@@ -43,6 +43,12 @@ class KBCategoryPage(Page):
         'content.DetailedGuidePage',
     )
 
+    page_icon = models.FileField(blank=True, null=True, default=None)
+
+    content_panels = Page.content_panels + [
+       FieldPanel('page_icon')
+    ]
+
 
 class ReferencePage(GenericContentPageMixin, Page):
     class Meta:
