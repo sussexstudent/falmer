@@ -2,6 +2,7 @@ import graphene
 from graphene.types.generic import GenericScalar
 from graphene_django import DjangoObjectType
 from falmer.content.models import name_to_class_map, all_pages
+from falmer.content.utils import get_public_path_for_page
 
 
 class PageResult(graphene.ObjectType):
@@ -51,9 +52,7 @@ class PageResult(graphene.ObjectType):
         return self.pk
 
     def resolve_path(self, info):
-        if self.get_url_parts() is None:
-            return None
-        return self.get_url_parts()[2][6:]
+        return self.public_path
 
 
 class Page(graphene.Interface):
@@ -102,9 +101,10 @@ class Page(graphene.Interface):
         return self.get_assumption_path()
 
     def resolve_path(self, info):
-        if self.get_url_parts() is None:
-            return None
-        return self.get_url_parts()[2][6:]
+        if hasattr(self, 'public_path'):
+            return self.public_path
+        else:
+            return get_public_path_for_page(self)
 
     def resolve_parent_page(self, info):
         return self.get_parent()

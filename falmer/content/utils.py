@@ -51,3 +51,10 @@ def change_dict_naming_convention(d, convert_function):
         return [change_dict_naming_convention(item, convert_function) for item in d]
 
     return d
+
+
+def get_public_path_for_page(page):
+    if page.get_url_parts() is None:
+        return None
+
+    return page.get_url_parts()[2][6:]
