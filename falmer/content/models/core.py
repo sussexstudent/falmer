@@ -17,6 +17,12 @@ class Page(WagtailPage):
 
         return redirect(f'{settings.MSL_SITE_HOST}{self.public_path}')
 
+    def serve_preview(self, request, mode_name):
+        return HttpResponse('Apologies, previewing articles that aren\'t published currently '
+                            'isn\'t supported')
+
+        #return HttpResponse(f'{self.title}, {self.draft_title}, {self.pk}')
+
     def get_live_children(self):
         return self.get_children().live()
 
