@@ -51,7 +51,7 @@ class DocumentLink(blocks.StructBlock):
         icon = 'link'
 
 
-document_link = Component('document_link', InternalLink)
+document_link = Component('document_link', DocumentLink)
 
 
 class ExternalLink(blocks.StructBlock):

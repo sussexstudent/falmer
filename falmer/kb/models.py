@@ -54,6 +54,7 @@ class SectionPage(Page):
 
 class KnowledgeBaseRoot(Page):
     subpage_types = (SectionPage, )
+    parent_page_types = []
 
     def sections(self):
         return self.get_children().live().specific()
