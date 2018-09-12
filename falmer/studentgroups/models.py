@@ -32,8 +32,12 @@ class StudentGroup(index.Indexed, models.Model):
     search_fields = [
         index.SearchField('name', partial_match=True, boost=10),
         index.SearchField('description'),
-        index.FilterField('last_sync'),
         index.FilterField('id'),
+        index.FilterField('last_sync'),
+
+        index.RelatedFields('msl_group', [
+            index.FilterField('last_sync'),
+        ])
     ]
 
     class Meta:

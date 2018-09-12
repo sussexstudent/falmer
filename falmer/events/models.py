@@ -297,9 +297,15 @@ class Event(index.Indexed, PASet, models.Model):
         index.SearchField('title', partial_match=True, boost=10),
         index.SearchField('short_description'),
         index.FilterField('embargo_until'),
+        index.FilterField('start_time'),
         index.FilterField('last_sync'),
         index.FilterField('event_id'),
-        index.FilterField('start_time'),
+        index.FilterField('mslevent__event_id'),
+
+        index.RelatedFields('mslevent', [
+            index.FilterField('event_id'),
+            index.FilterField('last_sync'),
+        ])
     ]
 
     custom_panels = [
