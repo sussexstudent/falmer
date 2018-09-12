@@ -4,14 +4,18 @@ from wagtail.core.rich_text import expand_db_html
 from wagtail.images.blocks import ImageChooserBlock
 
 from falmer.content.serializers import WagtailImageSerializer
+from falmer.content.utils import get_public_path_for_page
 
 
 class FalmerPageChooserBlock(PageChooserBlock):
     def get_api_representation(self, value, context=None):
-        site_id, root_path, root_url = value.get_url_parts()
+
+        if value is None:
+            return None
+
         return {
             'title': value.title,
-            'path': root_url[6:],
+            'path': get_public_path_for_page(value),
         }
 
 
