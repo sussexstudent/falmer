@@ -4,6 +4,7 @@ from wagtail.documents.blocks import DocumentChooserBlock
 
 from falmer.content.blocks import FalmerPageChooserBlock
 from falmer.content.components.base import Component
+from falmer.content.serializers import DocumentLinkSerializer
 
 TARGETS = (
     ('', 'Open link in'),
@@ -41,7 +42,7 @@ class DocumentLink(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
 
     @property
-    def get_title(self):
+    def get_title(self): # weird; property with get_
         if self.title:
             return self.title
         else:
@@ -49,6 +50,9 @@ class DocumentLink(blocks.StructBlock):
 
     class Meta:
         icon = 'link'
+
+    def get_api_representation(self, value, context=None):
+        return DocumentLinkSerializer(value).data
 
 
 document_link = Component('document_link', DocumentLink)

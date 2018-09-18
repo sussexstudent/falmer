@@ -35,3 +35,11 @@ class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffMemberSnippet
         fields = ('name', 'job_title', 'email', 'office_phone_number', 'mobile_phone_number', 'job_description', 'office_location', 'photo')
+
+
+class DocumentLinkSerializer(serializers.Serializer):
+    title = serializers.CharField()
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, o):
+        return settings.PUBLIC_HOST + o['link'].url
