@@ -107,7 +107,7 @@ class Page(graphene.Interface):
             return get_public_path_for_page(self)
 
     def resolve_parent_page(self, info):
-        return self.get_parent()
+        return self.get_parent().specific()
 
     def resolve_sub_pages(self, info, in_menu=None):
         q = self.get_children().specific().live()
