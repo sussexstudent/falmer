@@ -30,11 +30,11 @@ class OutletPage(Page):
 
     menu = StreamField([
         components.document_link.to_pair()
-    ])
+    ], blank=True)
 
     deals = StreamField([
         components.text.to_pair(),
-    ])
+    ], blank=True)
 
     linked_venue = models.ForeignKey(Venue, blank=True, null=True, help_text='Link this outlet with a venue\'s events', on_delete=models.SET_NULL)
 

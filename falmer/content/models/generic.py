@@ -70,7 +70,6 @@ class ReferencePage(GenericContentPageMixin, Page):
     content = StreamField(
         StreamBlock([
             components.text.to_pair(),
-            components.callout.to_pair(),
             components.alert.to_pair(),
             components.inset.to_pair(),
             components.image.to_pair(),
@@ -131,7 +130,6 @@ class DetailedGuideSectionPage(Page):
     content = StreamField(
         StreamBlock([
             components.text.to_pair(),
-            components.callout.to_pair(),
             components.alert.to_pair(),
             components.inset.to_pair(),
             components.image.to_pair(),
