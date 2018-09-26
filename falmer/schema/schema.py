@@ -48,6 +48,8 @@ class File(graphene.ObjectType):
     resource = graphene.String()
 
     def resolve_resource(self, info):
+        if self is None:
+            return ''
         return self.url
 
 
@@ -114,5 +116,6 @@ Mutations = type(
     tuple(mutations_base_classes),
     mutations_properties
 )
+
 
 schema = graphene.Schema(query=Queries, types=list(page_types_map.values()) + [GenericPage], mutation=Mutations)

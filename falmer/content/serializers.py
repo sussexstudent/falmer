@@ -42,4 +42,6 @@ class DocumentLinkSerializer(serializers.Serializer):
     url = serializers.SerializerMethodField()
 
     def get_url(self, o):
-        return settings.PUBLIC_HOST + o['link'].url
+        if o is not None and ['link'] is not None:
+            return settings.PUBLIC_HOST + o['link'].url
+        return ''

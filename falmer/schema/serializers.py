@@ -49,60 +49,6 @@ class PageParentField(WagtailPageParentField):
         return serializer.to_representation(value)
 
 
-class ContentField(Field):
-    """
-    Returns a dict of content fields so that they are namespaced and not among other model fields.
-    The param `fields` is a list of tuples (field name, serializer field) of the content fields
-    to be returned.
-
-    Example of returned value:
-        {
-            "header": [
-              {
-                "value": "test header content",
-                "type": "markdown"
-              }
-            ],
-            "main": [
-              {
-                "value": "test main content",
-                "type": "markdown"
-              }
-            ]
-        }
-    """
-    def __init__(self, *args, **kwargs):
-        self.fields = kwargs.pop('fields')
-        super().__init__(*args, **kwargs)
-
-    def get_attribute(self, instance):
-        return instance
-
-    def to_representation(self, page):
-        content = {}
-
-        if page:
-            for field_name, serializer_field in self.fields:
-                if hasattr(page, field_name):
-                    value = getattr(page, field_name)
-
-                    field = serializer_field()
-                    field.context = dict(self.context)
-                    content[field_name] = field.to_representation(value)
-        return content
-
-
-class FalmerStreamField(StreamField):
-    def to_representation(self, value):
-        if value is None:
-            # treat None as identical to an empty stream
-            return []
-
-        return [
-            {'type': child.block.name, 'value': child.block.get_api_representation(child.value, context=self.context)}
-            for child in value  # child is a BoundBlock instance
-        ]
-
 class PageSerializer(WagtailPageSerializer):
     parent = PageParentField(read_only=True)
     children = ChildrenField(read_only=True)

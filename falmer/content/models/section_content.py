@@ -4,7 +4,7 @@ from wagtail.core.fields import StreamField
 from wagtail.admin.edit_handlers import FieldPanel, TabbedInterface, StreamFieldPanel, ObjectList
 from wagtail.images.edit_handlers import ImageChooserPanel
 
-from falmer.content.blocks import ContactBlock, SectionBlock
+from falmer.content.blocks import ContactBlock, SectionBlock, RichTextWithExpandedContent
 from falmer.content.models.core import Page
 from falmer.matte.models import MatteImage
 
@@ -26,7 +26,7 @@ class SectionContentPage(Page):
     heading_image_as_hero = models.BooleanField(default=False)
 
     sidebar_body = StreamField([
-        ('paragraph', blocks.RichTextBlock()),
+        ('paragraph', RichTextWithExpandedContent()),
         ('contact', ContactBlock()),
     ], blank=True)
 

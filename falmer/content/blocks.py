@@ -28,9 +28,9 @@ ImageBlock = FalmerImageChooserBlock
 
 
 class RichTextWithExpandedContent(RichTextBlock):
-    def get_prep_value(self, value):
-        return expand_db_html(value.source)
 
+    def get_api_representation(self, value, context=None):
+        return expand_db_html(value.source)
 
 class ContactBlock(blocks.StructBlock):
     body = blocks.TextBlock()

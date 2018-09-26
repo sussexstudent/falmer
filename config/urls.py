@@ -52,7 +52,6 @@ urlpatterns = [
                   path('content-api/v2/', api_router.urls),
                   path('admin/', admin.site.urls),
                   re_path(r'^cms/', include(wagtailadmin_urls)),
-                  path('pages/', include(wagtail_urls)),
                   path('documents/', include(wagtaildocs_urls)),
                   path('graphql/', csrf_exempt(DRFAuthenticatedGraphQLView.as_view(graphiql=True))),
                   path('auth/', include(auth_urls)),
@@ -62,7 +61,8 @@ urlpatterns = [
                   path('newsletters/', include(newsletters_urls)),
                   path('o/', include(links_urls)),
                   path('', include(launcher_urls)),
-                  path('', include(frontend_urls))
+                  path('', include(frontend_urls)),
+                  path('', include(wagtail_urls)),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

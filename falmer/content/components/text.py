@@ -1,10 +1,11 @@
-from wagtail.core.blocks import StructBlock, RichTextBlock
+from wagtail.core.blocks import StructBlock
 
+from falmer.content.blocks import RichTextWithExpandedContent
 from falmer.content.components.base import Component
 
 
 class TextBlock(StructBlock):
-    value = RichTextBlock(features=['h2', 'bold', 'italic', 'ol', 'ul', 'hr', 'link'])
+    value = RichTextWithExpandedContent(features=['h2', 'bold', 'italic', 'ol', 'ul', 'hr', 'link'])
 
 
 text = Component('text', TextBlock)
