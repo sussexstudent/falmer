@@ -18,7 +18,6 @@ class PageResult(graphene.ObjectType):
 
     url_path = graphene.String()
     path = graphene.String()
-    assumption_path = graphene.String()
 
     data = GenericScalar()
 
@@ -45,9 +44,6 @@ class PageResult(graphene.ObjectType):
     def resolve_url_path(self, info):
         return self.url_path
 
-    def resolve_assumption_path(self, info):
-        return self.get_assumption_path()
-
     def resolve_id(self, info):
         return self.pk
 
@@ -68,7 +64,6 @@ class Page(graphene.Interface):
 
     url_path = graphene.String()
     path = graphene.String()
-    assumption_path = graphene.String()
 
     sub_pages = graphene.List(lambda: Page, in_menu=graphene.Boolean())
     sibling_pages = graphene.List(lambda: Page, in_menu=graphene.Boolean())
@@ -96,9 +91,6 @@ class Page(graphene.Interface):
 
     def resolve_url_path(self, info):
         return self.url_path
-
-    def resolve_assumption_path(self, info):
-        return self.get_assumption_path()
 
     def resolve_path(self, info):
         if hasattr(self, 'public_path'):

@@ -16,14 +16,20 @@ class Query(graphene.ObjectType):
 
         root_page = info.context.site.root_page
 
-        try:
-            if path == '':
-                return root_page
+        if path == '':
+            return root_page
 
-            result = root_page.route(info.context, path.split('/'))
-            return result.page
-        except Http404:
-            return None
+        path_components = path.split('/')
+
+        for lim in range(len(path_components), 1, -1):
+            try:
+                print('trying', path_components[:lim])
+                result = root_page.route(info.context, path_components[:lim])
+                return result.page
+            except Http404:
+                continue
+
+        return None
 
     def resolve_all_pages(self, info):
         return Page.objects.specific().live()

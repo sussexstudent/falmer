@@ -29,9 +29,6 @@ class Page(WagtailPage):
     class Meta:
         proxy = True
 
-    def get_assumption_path(self):
-        return None
-
     @property
     def public_path(self):
         return get_public_path_for_page(self)

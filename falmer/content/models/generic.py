@@ -143,6 +143,3 @@ class DetailedGuideSectionPage(Page):
     ]
 
     promote_panels = Page.promote_panels
-
-    def get_assumption_path(self):
-        return self.get_parent().get_url_parts()[2][6:]
