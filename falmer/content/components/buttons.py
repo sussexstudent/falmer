@@ -11,3 +11,11 @@ class StartButton(blocks.StructBlock):
 
 
 start_button = Component('start_button', StartButton)
+
+
+class BasicButton(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    page = FalmerPageChooserBlock(required=False)
+    link = blocks.URLBlock(required=False)
+
+basic_button = Component('basic_button', BasicButton)

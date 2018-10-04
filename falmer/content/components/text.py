@@ -5,7 +5,7 @@ from falmer.content.components.base import Component
 
 
 class TextBlock(StructBlock):
-    value = RichTextWithExpandedContent(features=['h2', 'bold', 'italic', 'ol', 'ul', 'hr', 'link'])
+    value = RichTextWithExpandedContent(features=['h2', 'h3', 'bold', 'italic', 'ol', 'ul', 'hr', 'link'])
 
 
 text = Component('text', TextBlock)

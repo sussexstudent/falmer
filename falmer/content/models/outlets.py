@@ -1,7 +1,7 @@
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks import StreamBlock
-from wagtail.core.fields import StreamField
+from wagtail.core.fields import StreamField, RichTextField
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 from falmer.content import components
@@ -38,6 +38,9 @@ class OutletPage(Page):
 
     linked_venue = models.ForeignKey(Venue, blank=True, null=True, help_text='Link this outlet with a venue\'s events', on_delete=models.SET_NULL)
 
+    google_maps_place_id = models.TextField(max_length=255, blank=True, default='')
+    contact_details = RichTextField(blank=True, default='')
+
     content_panels = Page.content_panels + [
         StreamFieldPanel('main'),
         ImageChooserPanel('hero_image'),
@@ -45,6 +48,8 @@ class OutletPage(Page):
         StreamFieldPanel('menu'),
         StreamFieldPanel('deals'),
         FieldPanel('linked_venue'),
+        FieldPanel('google_maps_place_id'),
+        FieldPanel('contact_details'),
     ]
 
     api_fields = [

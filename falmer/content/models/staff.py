@@ -70,7 +70,7 @@ class StaffListBlock(blocks.StructBlock):
 
 
 class StaffPage(Page):
-    parent_page_types = ('wagtailcore.Page', )
+
     body = StreamField([
         ('heading', blocks.CharBlock(classname="full title")),
         ('staff_list', StaffListBlock()),

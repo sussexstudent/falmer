@@ -1,7 +1,9 @@
 import re
-from wagtail.core.blocks import StructBlock,CharBlock,ListBlock, BooleanBlock, RegexBlock
+from wagtail.core.blocks import StructBlock,CharBlock,ListBlock, BooleanBlock, RegexBlock, StreamBlock
 
 from falmer.content.components.base import Component
+from falmer.content.components.buttons import basic_button
+from falmer.content.components.text import text
 
 OPENING_TIME_REGEX = re.compile('[Mo|Tu|We|Th|Fr|Sa|Su|\-|,]+ [0-9]{2}:[0-9]{2}-[0-9]{2}:[0-9]{2}')
 
@@ -13,3 +15,15 @@ class OpeningTimesBlock(StructBlock):
 
 
 opening_times = Component('opening_times', OpeningTimesBlock)
+
+
+class SidebarCard(StructBlock):
+    heading = CharBlock(required=True)
+
+    content = StreamBlock([
+        text.to_pair(),
+        basic_button.to_pair(),
+    ])
+
+
+sidebar_card = Component('sidebar_card', SidebarCard)

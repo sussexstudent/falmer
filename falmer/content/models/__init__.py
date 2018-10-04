@@ -8,6 +8,7 @@ from .freshers import FreshersHomepage
 from .generic import KBRootPage, KBCategoryPage, AnswerPage, ReferencePage, DetailedGuidePage, DetailedGuideSectionPage
 from .basic import StubPage, BasicContentPage
 from .outlets import OutletIndexPage, OutletPage
+from .scheme import SchemeIndexPage, SchemePage
 
 
 all_pages = (
@@ -34,6 +35,9 @@ all_pages = (
 
     OutletIndexPage,
     OutletPage,
+
+    SchemeIndexPage,
+    SchemePage,
 
     FreshersHomepage,
 

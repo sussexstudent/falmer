@@ -15,7 +15,7 @@ class GenericStreamFieldType(graphene.Scalar):
 class RichTextFieldType(graphene.String):
     @staticmethod
     def serialize(value):
-        return expand_db_html(value.source)
+        return expand_db_html(value)
 
 
 class FalmerFile(graphene.ObjectType):
