@@ -63,6 +63,7 @@ urlpatterns = [
                   path('', include(launcher_urls)),
                   path('', include(wagtail_urls)),
                   path('', include(frontend_urls)),
+                  path('', include(wagtail_urls)),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
