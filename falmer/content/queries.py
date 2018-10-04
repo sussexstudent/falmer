@@ -21,9 +21,8 @@ class Query(graphene.ObjectType):
 
         path_components = path.split('/')
 
-        for lim in range(len(path_components), 1, -1):
+        for lim in range(len(path_components), 0, -1):
             try:
-                print('trying', path_components[:lim])
                 result = root_page.route(info.context, path_components[:lim])
                 return result.page
             except Http404:
