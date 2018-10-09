@@ -441,11 +441,10 @@
         },
         "mailchimp3": {
             "hashes": [
-                "sha256:d7f610724a641c8bffe52a4bc42531b9a52e2e1feca0a516c25a91a38cfe686b",
-                "sha256:ed1ae55ca1f1e9c129b3b3a5b7c7bbd7d587e69347560ad2f1d94a22e5d656e8"
+                "sha256:77fa4e8587abfc145394a53f844822c5660d0b4dffbcc162700e02be275183c2",
+                "sha256:12dcb25e9243a11404d34c91256ba0fc5aff3dc54ec9c5e2af077bd43d4dd5fb"
             ],
-            "index": "pypi",
-            "version": "==3.0.4"
+            "version": "==3.0.6"
         },
         "markdown": {
             "hashes": [
