@@ -302,9 +302,9 @@
         },
         "draftjs-exporter": {
             "hashes": [
-                "sha256:d2ceeef98185ba02355496851aee17d25951f5d8c72c12f8af6c186e312e9598"
+                "sha256:9809f140c39d2084022c9ade69fe14c558a574dea5c1e34ba3bfe07c4b5f7844"
             ],
-            "version": "==2.1.2"
+            "version": "==2.1.3"
         },
         "fuzzywuzzy": {
             "hashes": [
