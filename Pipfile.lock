@@ -645,10 +645,9 @@
         },
         "slacker": {
             "hashes": [
-                "sha256:646d8fb2ca04858374da1b54e9818f88dc2b254deb0f74bf0f3911773e7eaf94"
+                "sha256:00a42970a0e75eb469f75265deb21a0df753916b1a2beff3983ab1993d4eaa3a"
             ],
-            "index": "pypi",
-            "version": "==0.9.65"
+            "version": "==0.11.0"
         },
         "typing": {
             "hashes": [
