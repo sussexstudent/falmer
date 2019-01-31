@@ -279,10 +279,10 @@
         },
         "djangorestframework-camel-case": {
             "hashes": [
-                "sha256:989c5c2d0324069fc1ecea4a5cb8913749d5f2f3c507b38977913ff1b76a719e"
+                "sha256:5aa2bb693b808a5541f392ae6bb83e5ec78a75be9fb71798b88d5a98908e8f9d",
+                "sha256:5e9764e3aa507f25747eddad22234da0c00c981d44fa8335e490cd9a0a6bdf5f"
             ],
-            "index": "pypi",
-            "version": "==0.2.0"
+            "version": "==1.0.1"
         },
         "djangorestframework-jwt": {
             "hashes": [
