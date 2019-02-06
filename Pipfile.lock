@@ -589,23 +589,17 @@
         },
         "regex": {
             "hashes": [
-                "sha256:116a15f36ea1acd705765f40c6ff5384fc20cbeb28f2a167a2a6a2517d592941",
-                "sha256:1e90c3456fcec72a3a7d70b6152db2d8399e9561d95ec9f3c04470ae985186bf",
-                "sha256:3c30e63fd0da414d1aa45524fcd342719636e2501716b55f5ee958d4e9751e32",
-                "sha256:413098e01cfb07f1060234f01203f660a5cd8f30eade16db881ae3f4f7d0886f",
-                "sha256:4d4582ab3664af721d16cc6b66181eb4bfcfed6ad32002094e7019607d05051a",
-                "sha256:4d5cd5434c05dbb52cc6d368e47f83a012ad4074197b529adbba39d4cda90219",
-                "sha256:5b58d9476166baf51eba6a686cff22668c764ae14a13566568afb9460506a2f4",
-                "sha256:72a79b6bc599d628cd40cb948b6924b8070ef54af41135a03e8fe916d4a7f455",
-                "sha256:749e164d836b9d2298f6ae7e7f0922f6ed0e507fd1cdce95586b827c19c0fe61",
-                "sha256:753befa998d9f466b45ae5f695c83846ba17d6d4b832dea108a0747d4bce613b",
-                "sha256:83a1877ff6972b94ba07cc33c994522aeba647e448e0cbed7ad128561fe15bfd",
-                "sha256:9308dbce8e5ff4ee06b172a777f6c7f650a5835a5ad41a6080eb501639c27a2f",
-                "sha256:9ad64244e980cec9adfd1b73da8d894dfc70552867f42171690b0a65ce665216",
-                "sha256:b82e9d4d80614c2250a7c2aa1905a4b0f2671a01fce506bf85a0908987ee95c5",
-                "sha256:f587a55aef1c6a8b4e527980049606278b32b826fb05386472d4e3994f538b28"
+                "sha256:5f3c61b814de1009eaf5a16bfeda5989ffbbeacbffa287007090f4dafac5b904",
+                "sha256:87aa6b24bdc5a35a0ea66af73a221e4970844359bfe8fe1c418b5e143978d692",
+                "sha256:413995b3e2e7511b6a7540f8270e707d478989c3c2d39aa0596a6d3083f660bc",
+                "sha256:8a0626d55531e6927f3fc5e5f4e572539b0059a37d6201539abaf5c47c92462d",
+                "sha256:8ab66a320ea5bd365cf4e0181cf16ae186d4c109e65914ebc2f8dff8e7167c5b",
+                "sha256:0f19ae8a7776ef15a9962004ab7b3d5c445ca53f2ce080ec2e001f3c11de7607",
+                "sha256:8783233b34527b3678c101fdbda9ed1ac31ef9de2ed938f876cd32855ca1db38",
+                "sha256:a004a59c8a7b16bccbca0a6c2ba5e70899e05c9aac946cfb4410dd972a2c8ad8",
+                "sha256:f4661ff902ffa818e49fa67d9b0c19fc44f648a2bca3016ee4b8aae0e369c76e"
             ],
-            "version": "==2018.7.11"
+            "version": "==2019.02.06"
         },
         "requests": {
             "hashes": [
