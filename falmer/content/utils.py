@@ -57,4 +57,4 @@ def get_public_path_for_page(page):
     if page.get_url_parts() is None:
         return None
 
-    return page.get_url_parts()[2]
+    return page.get_url_parts()[2][8:]
