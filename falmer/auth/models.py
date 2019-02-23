@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, Group
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, Group, \
+    Permission
 from django.conf import settings
+from django.db.models import Q
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 
@@ -75,6 +77,14 @@ class FalmerUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'User: "{self.authority}/{self.identifier}"'
+
+    def get_permissions(self):
+        if self.is_superuser:
+            permissions = Permission.objects.all()
+        else:
+            permissions = Permission.objects.filter(Q(user=self) | Q(group__user=self)).all()
+
+        return set([p.pk for p in permissions])
 
 
 class MagicLinkToken(models.Model):

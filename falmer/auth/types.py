@@ -1,4 +1,5 @@
 import graphene
+from django.contrib.auth.models import Permission as DjangoPermission
 from graphene_django import DjangoObjectType
 from . import models
 
@@ -7,6 +8,7 @@ class ClientUser(DjangoObjectType):
     name = graphene.String()
     has_cms_access = graphene.Boolean()
     user_id = graphene.Int()
+    permissions = graphene.List(graphene.Int)
 
     class Meta:
         model = models.FalmerUser
@@ -21,3 +23,15 @@ class ClientUser(DjangoObjectType):
     def resolve_has_cms_access(self, info):
         return self.has_perm('wagtailadmin.access_admin')
 
+    def resolve_permissions(self, info):
+        return self.get_permissions()
+
+
+class Permission(DjangoObjectType):
+    content_type = graphene.String()
+
+    class Meta:
+        model = DjangoPermission
+
+    def resolve_content_type(self, info):
+        return self.content_type.app_label
