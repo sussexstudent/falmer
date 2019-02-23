@@ -3,7 +3,8 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, re_path
+from django.contrib.auth.views import redirect_to_login
+from django.urls import path, re_path, reverse
 from django.views import defaults as default_views
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, parser_classes, authentication_classes, \
@@ -42,8 +43,11 @@ class DRFAuthenticatedGraphQLView(GraphQLView):
         view = api_view(['GET', 'POST'])(view)
         return view
 
+def redirect_to_my_auth(request):
+    return redirect_to_login(reverse('wagtailadmin_home'), login_url='launcher')
 
 urlpatterns = [
+                  url(r'^cms/login', redirect_to_my_auth, name='wagtailadmin_login'),
                   url(settings.ADMIN_URL, admin.site.urls),
 
                   url(r'^images/([^/]*)/(\d*)/([^/]*)/[^/]*$',

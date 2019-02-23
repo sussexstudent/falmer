@@ -4,5 +4,5 @@ from .views import launcher
 
 
 urlpatterns = [
-  path('', launcher),
+  path('', launcher, name='launcher'),
 ]

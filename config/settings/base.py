@@ -289,7 +289,7 @@ AUTHENTICATION_BACKENDS = [
 # Select the correct user model
 AUTH_USER_MODEL = 'falmer_auth.FalmerUser'
 LOGIN_REDIRECT_URL = 'users:redirect'
-LOGIN_URL = 'account_login'
+LOGIN_URL = 'launcher'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
