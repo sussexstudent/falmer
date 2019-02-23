@@ -21,13 +21,13 @@ djangorestframework-camel-case = "*"
 wagtail = "*"
 "beautifulsoup4" = "==4.6.0"
 requests = "*"
-fuzzywuzzy = {extras = ["speedup"], version = "*"}
+fuzzywuzzy = {extras = ["speedup"],version = "*"}
 "mailchimp3" = "*"
 arrow = "*"
 djangorestframework-jwt = "*"
 "boto3" = "*"
-django-filter = "<2.0"
-Django = "==2.0.8"
+django-filter = "*"
+Django = "*"
 Pillow = "*"
 "argon2_cffi" = "*"
 PyJWT = "*"
@@ -41,6 +41,7 @@ colorama = "*"
 django-treebeard = "*"
 wagtailmenus = "*"
 markdown = "*"
+djangorestframework-filters = "*"
 
 [dev-packages]
 "flake8"="*"
@@ -56,4 +57,7 @@ ipdb="*"
 coverage = "*"
 
 [requires]
-python_version = "3.6.6"
+python_version = "3.7.1"
+
+[pipenv]
+allow_prereleases = true
