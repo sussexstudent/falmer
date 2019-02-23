@@ -304,12 +304,6 @@ class Event(index.Indexed, PASet, models.Model):
         index.FilterField('start_time'),
         index.FilterField('last_sync'),
         index.FilterField('event_id'),
-        index.FilterField('mslevent__event_id'),
-
-        index.RelatedFields('mslevent', [
-            index.FilterField('event_id'),
-            index.FilterField('last_sync'),
-        ])
     ]
 
     custom_panels = [
