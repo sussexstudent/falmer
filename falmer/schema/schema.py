@@ -1,7 +1,6 @@
 import importlib
 from inspect import getmembers, isclass
 import os
-
 # from django.db.models import FileField
 import graphene
 from .converters import register_converters
@@ -29,21 +28,6 @@ class DjangoConnectionField(_DjangoConnectionField):
         return queryset
 
 
-def create_connection(_node):
-    class TotalCountConnection(graphene.Connection):
-        total_count = graphene.Int()
-
-        class Meta:
-            name = _node._meta.name + 'Connection'
-            node = _node
-
-        def resolve_total_count(self, info):
-            return self.length
-
-    return TotalCountConnection
-
-
-
 class File(graphene.ObjectType):
     resource = graphene.String()
 
@@ -55,6 +39,7 @@ class File(graphene.ObjectType):
 
 class QueriesAbstract(graphene.ObjectType):
     pass
+
 
 class MutationsAbstract(graphene.ObjectType):
     pass

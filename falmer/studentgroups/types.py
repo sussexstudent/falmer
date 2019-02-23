@@ -5,7 +5,7 @@ from django.db.models import Prefetch
 from graphene_django import DjangoObjectType
 
 from falmer.matte.types import Image
-from falmer.schema.schema import create_connection
+from falmer.schema.utils import create_connection
 from . import models
 
 

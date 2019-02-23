@@ -1,7 +1,8 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from falmer.schema.schema import DjangoConnectionField, create_connection
+from falmer.schema.schema import DjangoConnectionField
+from falmer.schema.utils import create_connection
 from . import models
 
 class ImageLabel(DjangoObjectType):

@@ -2,7 +2,8 @@ import graphene
 from graphene_django import DjangoObjectType
 from wagtail.core.rich_text import expand_db_html
 from falmer.matte.types import Image
-from falmer.schema.schema import create_connection, File
+from falmer.schema.schema import File
+from falmer.schema.utils import create_connection
 from falmer.studentgroups.types import StudentGroup
 from . import models
 
