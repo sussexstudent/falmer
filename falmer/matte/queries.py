@@ -4,6 +4,7 @@ from falmer.schema.schema import DjangoConnectionField
 from . import types
 from . import models
 
+
 class Query(graphene.ObjectType):
     all_images = DjangoConnectionField(types.Image)
     image = graphene.Field(types.Image, media_id=graphene.Int())
@@ -11,7 +12,7 @@ class Query(graphene.ObjectType):
     def resolve_all_images(self, info, **kwargs):
         if not info.context.user.has_perm('matte.can_list_all_matte_image'):
             raise PermissionError('not authorised to list images')
-        qs = models.MatteImage.objects.all()
+        qs = models.MatteImage.objects.order_by('created_at').all()
 
         return qs
 
