@@ -83,6 +83,7 @@ LOCAL_APPS = [
     'falmer.search.apps.SearchConfig',
     'falmer.commercial.apps.CommercialConfig',
     'falmer.frontend.apps.FrontendConfig',
+    'falmer.featured.apps.FeaturedConfig',
     'falmer.studentgroups.apps.StudentGroupsConfig',
     'falmer.links.apps.LinksConfig',
     'falmer.banners.apps.BannersConfig',
