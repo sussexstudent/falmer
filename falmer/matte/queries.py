@@ -12,7 +12,7 @@ class Query(graphene.ObjectType):
     def resolve_all_images(self, info, **kwargs):
         if not info.context.user.has_perm('matte.can_list_all_matte_image'):
             raise PermissionError('not authorised to list images')
-        qs = models.MatteImage.objects.order_by('created_at').all()
+        qs = models.MatteImage.objects.order_by('-created_at').all()
 
         return qs
 
