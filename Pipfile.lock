@@ -673,11 +673,10 @@
         },
         "wagtailmenus": {
             "hashes": [
-                "sha256:683ad2aecfa6516a410966b2a3dd41be02385481ea037da835f48aa60ed407e0",
-                "sha256:b66c81cd0eb329fbb956e4c1ce5a24a64d4aed09637b59c8c3a7fcac63de3619"
+                "sha256:64cdbfa6294df4a2629638561695cb0380c470070f7298ce3f770d443fbddcd9",
+                "sha256:f705e0a01b5af704ef9a1d82e15b47b6f884ad8698a63b72c80177781d9401f0"
             ],
-            "index": "pypi",
-            "version": "==2.12"
+            "version": "==2.13"
         },
         "webencodings": {
             "hashes": [
