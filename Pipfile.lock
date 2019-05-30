@@ -431,10 +431,10 @@
         },
         "kombu": {
             "hashes": [
-                "sha256:529df9e0ecc0bad9fc2b376c3ce4796c41b482cf697b78b71aea6ebe7ca353c8",
-                "sha256:7a2cbed551103db9a4e2efafe9b63222e012a61a18a881160ad797b9d4e1d0a1"
+                "sha256:14997e6d76d36f2b296f57e37fd1d388e4e0159edea8368a8c6f4620a355a722",
+                "sha256:27345bb569eb6bb583bca27dfc0ef181ca6c59c40c6e203cecaa0aeca84360be"
             ],
-            "version": "==4.3.0"
+            "version": "==4.6.0"
         },
         "mailchimp3": {
             "hashes": [
