@@ -9,6 +9,7 @@ from .generic import KBRootPage, KBCategoryPage, AnswerPage, ReferencePage, Deta
 from .basic import StubPage, BasicContentPage
 from .outlets import OutletIndexPage, OutletPage
 from .scheme import SchemeIndexPage, SchemePage
+from .preview_data import PreviewData
 
 
 all_pages = (

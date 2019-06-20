@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel
 from wagtail.core.models import Page as WagtailPage
 
-from falmer.content.utils import get_public_path_for_page
+from falmer.content.utils import get_public_path_for_page, sign_preview_token
 
 
 class Page(WagtailPage):
@@ -17,11 +17,15 @@ class Page(WagtailPage):
 
         return redirect(f'{settings.MSL_SITE_HOST}{self.public_path}')
 
+    def serve_preview_api(self, token, mode_name = None):
+        if not settings.MSL_SITE_HOST:
+            return HttpResponse('MSL_SITE_HOST not set in settings')
+
+        return redirect(f'{settings.MSL_SITE_HOST}{self.public_path}?preview={token}')
+
     def serve_preview(self, request, mode_name):
         return HttpResponse('Apologies, previewing articles that aren\'t published currently '
-                            'isn\'t supported')
-
-        #return HttpResponse(f'{self.title}, {self.draft_title}, {self.pk}')
+                    'isn\'t supported')
 
     def get_live_children(self):
         return self.get_children().live()

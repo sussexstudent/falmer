@@ -7,9 +7,8 @@ from django.contrib.auth.views import redirect_to_login
 from django.urls import path, re_path, reverse
 from django.views import defaults as default_views
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view, parser_classes, authentication_classes, \
+from rest_framework.decorators import api_view, authentication_classes, \
     permission_classes
-from rest_framework.parsers import BaseParser
 from rest_framework.permissions import AllowAny
 from rest_framework.settings import api_settings
 from wagtail.admin import urls as wagtailadmin_urls
@@ -18,6 +17,7 @@ from wagtail.core import urls as wagtail_urls
 from graphene_django.views import GraphQLView
 from wagtail.images.views.serve import ServeView
 
+from falmer.content.pages import PreviewOnEditRemix, view_draft
 from falmer.schema.api import api_router
 from falmer.auth import urls as auth_urls
 from falmer.slack import urls as slack_urls
@@ -55,6 +55,9 @@ urlpatterns = [
                       name='wagtailimages_serve'),
                   path('content-api/v2/', api_router.urls),
                   path('admin/', admin.site.urls),
+
+                  re_path(r'^cms/pages/(\d+)/view_draft/$', view_draft, name='view_draft'),
+                  re_path(r'^cms/pages/(\d+)/edit/preview/$', PreviewOnEditRemix.as_view(), name='preview_on_edit'),
                   re_path(r'^cms/', include(wagtailadmin_urls)),
                   path('documents/', include(wagtaildocs_urls)),
                   path('graphql/', csrf_exempt(DRFAuthenticatedGraphQLView.as_view(graphiql=True))),
@@ -67,6 +70,7 @@ urlpatterns = [
                   path('wagtail/', include(wagtail_urls)),
                   path('', include(launcher_urls)),
                   path('', include(frontend_urls)),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
