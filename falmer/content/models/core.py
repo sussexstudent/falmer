@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel
 from wagtail.core.models import Page as WagtailPage
 
-from falmer.content.utils import get_public_path_for_page, sign_preview_token
+from falmer.content.utils import get_public_path_for_page
 
 
 class Page(WagtailPage):
