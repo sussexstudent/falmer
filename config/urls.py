@@ -1,4 +1,3 @@
-import rest_framework
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
@@ -6,15 +5,9 @@ from django.contrib import admin
 from django.contrib.auth.views import redirect_to_login
 from django.urls import path, re_path, reverse
 from django.views import defaults as default_views
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view, authentication_classes, \
-    permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.settings import api_settings
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.core import urls as wagtail_urls
-from graphene_django.views import GraphQLView
 from wagtail.images.views.serve import ServeView
 
 from falmer.content.pages import PreviewOnEditRemix, view_draft
@@ -28,20 +21,6 @@ from falmer.newsletters import urls as newsletters_urls
 from falmer.frontend import urls as frontend_urls
 from falmer.links import urls as links_urls
 
-
-class DRFAuthenticatedGraphQLView(GraphQLView):
-    def parse_body(self, request):
-        if isinstance(request, rest_framework.request.Request):
-            return request.data
-        return super(GraphQLView, self).parse_body(request)
-
-    @classmethod
-    def as_view(cls, *args, **kwargs):
-        view = super(GraphQLView, cls).as_view(*args, **kwargs)
-        view = permission_classes((AllowAny,))(view)
-        view = authentication_classes(api_settings.DEFAULT_AUTHENTICATION_CLASSES)(view)
-        view = api_view(['GET', 'POST'])(view)
-        return view
 
 def redirect_to_my_auth(request):
     return redirect_to_login(reverse('wagtailadmin_home'), login_url='launcher')
@@ -60,7 +39,7 @@ urlpatterns = [
                   re_path(r'^cms/pages/(\d+)/edit/preview/$', PreviewOnEditRemix.as_view(), name='preview_on_edit'),
                   re_path(r'^cms/', include(wagtailadmin_urls)),
                   path('documents/', include(wagtaildocs_urls)),
-                  path('graphql/', csrf_exempt(DRFAuthenticatedGraphQLView.as_view(graphiql=True))),
+                  path('graphql/', include(schema_urls)),
                   path('auth/', include(auth_urls)),
                   path('slack/', include(slack_urls)),
                   path('images/', include(matte_urls)),

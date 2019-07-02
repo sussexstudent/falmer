@@ -1,6 +1,6 @@
 from django.db import models
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.admin.edit_handlers import FieldPanel, TabbedInterface, StreamFieldPanel, ObjectList
+from wagtail.admin.edit_handlers import FieldPanel, TabbedInterface, StreamFieldPanel, ObjectList, MultiFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 from falmer.content.blocks import PledgeBlock
@@ -20,10 +20,11 @@ class OfficerOverviewPage(Page):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
-    manifesto_tagline = models.CharField(max_length=255)
-    manifesto_overview = RichTextField()
+    youtube_splash = models.URLField(max_length=30, blank=True, default='')
 
-    twitter_username = models.CharField(max_length=30)
+    twitter_username = models.CharField(max_length=30, blank=True, default='')
+    facebook_url = models.URLField(max_length=30, blank=True, default='')
+    instagram_url = models.URLField(max_length=30, blank=True, default='')
 
     pledges = StreamField([
         ('pledge', PledgeBlock()),
@@ -34,13 +35,20 @@ class OfficerOverviewPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('role'),
         FieldPanel('role_description'),
+
         ImageChooserPanel('officer_image'),
         FieldPanel('first_name'),
         FieldPanel('last_name'),
-        FieldPanel('manifesto_tagline'),
-        FieldPanel('manifesto_overview'),
-        FieldPanel('twitter_username'),
+
+        FieldPanel('youtube_splash'),
+
         StreamFieldPanel('pledges'),
+
+        MultiFieldPanel([
+            FieldPanel('twitter_username'),
+            FieldPanel('facebook_url'),
+            FieldPanel('instagram_url'),
+        ], heading='Social'),
     ]
 
     edit_handler = TabbedInterface([
@@ -52,11 +60,16 @@ class OfficerOverviewPage(Page):
     api_fields = (
         'role',
         'role_description',
+
         'officer_image',
         'first_name',
         'last_name',
-        'manifesto_tagline',
-        'manifesto_overview',
+
         'twitter_username',
+        'facebook_url',
+        'instagram_url',
+
+        'youtube_splash',
+
         'pledges',
     )
