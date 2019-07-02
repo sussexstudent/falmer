@@ -42,7 +42,6 @@ django-treebeard = "*"
 wagtailmenus = "*"
 markdown = "*"
 djangorestframework-filters = "*"
-django-saml2-pro-auth = "*"
 
 [dev-packages]
 "flake8"="*"
