@@ -17,6 +17,7 @@ from falmer.slack import urls as slack_urls
 from falmer.launcher import urls as launcher_urls
 from falmer.matte import urls as matte_urls
 from falmer.search import urls as search_urls
+from falmer.schema import urls as schema_urls
 from falmer.newsletters import urls as newsletters_urls
 from falmer.frontend import urls as frontend_urls
 from falmer.links import urls as links_urls

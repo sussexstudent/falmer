@@ -7,6 +7,8 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
+import os
+
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # (falmer/config/settings/base.py - 3 = falmer/)
