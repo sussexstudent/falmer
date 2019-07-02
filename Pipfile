@@ -58,7 +58,7 @@ ipdb="*"
 coverage = "*"
 
 [requires]
-python_version = "3.7.1"
+python_version = "3.7.3"
 
 [pipenv]
 allow_prereleases = true
