@@ -41,7 +41,7 @@ colorama = "*"
 django-treebeard = "*"
 wagtailmenus = "*"
 markdown = "*"
-djangorestframework-filters = "*"
+djangorestframework-filters = "==1.0.0.dev0"
 
 [dev-packages]
 "flake8"="*"

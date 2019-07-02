@@ -9,7 +9,11 @@ from falmer.matte.models import MatteImage
 
 class SlateManager(models.Manager):
     def active(self):
-        return self.get(Q(display_from__lte=arrow.utcnow().datetime) | Q(display_from__isnull=True))
+        try:
+            return self.get(
+                Q(display_from__lte=arrow.utcnow().datetime) | Q(display_from__isnull=True))
+        except Slate.DoesNotExist:
+            return None
 
 
 class Slate(TimeStampedModel, models.Model):
@@ -21,14 +25,12 @@ class Slate(TimeStampedModel, models.Model):
 
     def enhanced_data(self):
         final = self.data
-
-        final_areas = []
         for area in self.data['areas']:
-            final_area = []
             for box in area:
                 for key in box['data'].keys():
                     if key.endswith('Image'):
                         img = MatteImage.objects.get(pk=box['data'][key])
-                        box['data'][key] = {'resource': img.file.name, 'width': img.width, 'height': img.height}
+                        box['data'][key] = {'resource': img.file.name, 'width': img.width,
+                                            'height': img.height}
 
         return final
