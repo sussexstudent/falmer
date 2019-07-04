@@ -20,11 +20,11 @@ class OfficerOverviewPage(Page):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
-    youtube_splash = models.URLField(max_length=30, blank=True, default='')
+    youtube_splash = models.URLField(blank=True, default='')
 
-    twitter_username = models.CharField(max_length=30, blank=True, default='')
-    facebook_url = models.URLField(max_length=30, blank=True, default='')
-    instagram_url = models.URLField(max_length=30, blank=True, default='')
+    twitter_username = models.CharField(max_length=60, blank=True, default='')
+    facebook_url = models.URLField(blank=True, default='')
+    instagram_url = models.URLField(blank=True, default='')
 
     pledges = StreamField([
         ('pledge', PledgeBlock()),
