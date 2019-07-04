@@ -28,7 +28,7 @@ class OfficerOverviewPage(Page):
 
     pledges = StreamField([
         ('pledge', PledgeBlock()),
-    ])
+    ], blank=True)
 
     parent_page_types = ('content.OfficersIndex', )
 
