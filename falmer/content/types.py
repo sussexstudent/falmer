@@ -14,7 +14,7 @@ class PageResult(graphene.ObjectType):
     seo_title = graphene.String()
     search_description = graphene.String()
 
-    last_published_at = graphene.String()
+    last_published_at = graphene.DateTime()
 
     url_path = graphene.String()
     path = graphene.String()
