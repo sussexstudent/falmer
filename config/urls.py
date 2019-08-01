@@ -10,11 +10,11 @@ from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.images.views.serve import ServeView
 
+# from config import saml_urls
 from falmer.content.pages import PreviewOnEditRemix, view_draft
 from falmer.schema.api import api_router
 from falmer.auth import urls as auth_urls
 from falmer.slack import urls as slack_urls
-from falmer.launcher import urls as launcher_urls
 from falmer.matte import urls as matte_urls
 from falmer.search import urls as search_urls
 from falmer.schema import urls as schema_urls
@@ -24,7 +24,7 @@ from falmer.links import urls as links_urls
 
 
 def redirect_to_my_auth(request):
-    return redirect_to_login(reverse('wagtailadmin_home'), login_url='launcher')
+    return redirect_to_login(reverse('wagtailadmin_home'), login_url='frontend')
 
 urlpatterns = [
                   url(r'^cms/login', redirect_to_my_auth, name='wagtailadmin_login'),
@@ -48,7 +48,7 @@ urlpatterns = [
                   path('newsletters/', include(newsletters_urls)),
                   path('o/', include(links_urls)),
                   path('wagtail/', include(wagtail_urls)),
-                  path('', include(launcher_urls)),
+
                   path('', include(frontend_urls)),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

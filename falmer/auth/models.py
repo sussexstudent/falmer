@@ -86,6 +86,21 @@ class FalmerUser(AbstractBaseUser, PermissionsMixin):
 
         return set([p.pk for p in permissions])
 
+    def ensure_ambient_permissions(self):
+        if self.identifier.endswith('@sussexstudent.com'):
+            try:
+                group = Group.objects.get(name='Staff')
+                self.groups.add(group)
+            except Group.DoesNotExist:
+                pass
+
+        if self.identifier.endswith('@societies.sussexstudent.com'):
+            try:
+                group = Group.objects.get(name='Societies')
+                self.groups.add(group)
+            except Group.DoesNotExist:
+                pass
+
 
 class MagicLinkToken(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

@@ -1,6 +1,8 @@
+import jwt
 from django import forms
 from django.conf import settings
 from django.contrib.auth import login, logout
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -24,6 +26,40 @@ def magic_link_login(request, token):
     login(request, magic.user)
 
     return redirect('/')
+
+
+def sso(request):
+
+    # get qs token=?
+
+    try:
+        token = request.GET.get('token')
+
+        claim = jwt.decode(token, settings.BOWTIE_SECRET, algorithms='HS256')
+
+        is_used = cache.get(f'sso:{claim["jwtid"]}', False)
+
+        if is_used:
+            raise PermissionError()
+
+        cache.set(f'sso:{claim["jwtid"]}', True, 60)
+
+        try:
+            user = FalmerUser.objects.get(identifier__iexact=claim['id'])
+        except FalmerUser.DoesNotExist:
+            user = FalmerUser.objects.create(
+                identifier=claim['id'],
+                authority='IS',
+            )
+
+        user.ensure_ambient_permissions()
+
+        login(request, user)
+
+        return redirect('/')
+
+    except KeyError:
+        raise PermissionError()
 
 
 class RequestLoginForm(forms.Form):

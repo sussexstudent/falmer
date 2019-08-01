@@ -74,7 +74,6 @@ LOCAL_APPS = [
     'falmer.auth.apps.AuthConfig',
     'falmer.content.apps.ContentConfig',
     'falmer.flags.apps.FlagsConfig',
-    'falmer.launcher.apps.LauncherConfig',
     'falmer.matte.apps.MatteConfig',
     'falmer.newsletters.apps.NewslettersConfig',
     'falmer.schema.apps.SchemaConfig',
@@ -292,7 +291,7 @@ AUTHENTICATION_BACKENDS = [
 # Select the correct user model
 AUTH_USER_MODEL = 'falmer_auth.FalmerUser'
 LOGIN_REDIRECT_URL = 'users:redirect'
-LOGIN_URL = 'launcher'
+LOGIN_URL = 'frontend'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
@@ -339,6 +338,8 @@ MAILCHIMP_API_USERNAME = env('MAILCHIMP_API_USERNAME', default=None)
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY', default=None)
 FRONTEND_DEPLOY_SECRET = env('FRONTEND_DEPLOY_SECRET', default=None)
 
+BOWTIE_SECRET = env('BOWTIE_SECRET', default=None)
+
 JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Falmer',
 }
@@ -364,3 +365,4 @@ WAGTAILSEARCH_BACKENDS = {
         'SEARCH_CONFIG': 'english',
     }
 }
+
