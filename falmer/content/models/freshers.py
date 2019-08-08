@@ -47,6 +47,7 @@ class ProfileSlice(blocks.StructBlock):
     ])
 
     image = components.image.block()
+    profile_link = blocks.URLBlock(required=False)
 
 
 profile_slice_component = Component('profile_slice_component', ProfileSlice)
