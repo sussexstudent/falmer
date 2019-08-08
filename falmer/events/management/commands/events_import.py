@@ -21,8 +21,8 @@ class Command(BaseCommand):
         events_list = data['events']
 
         freshers, created = BrandingPeriod.objects.get_or_create(
-            name='Freshers Week 2018',
-            slug='freshers-week-2018',
+            name='Freshers Week',
+            slug='freshers-week-2019',
         )
 
         print('{} events to be added.'.format(len(events_list)))
@@ -35,7 +35,12 @@ class Command(BaseCommand):
         for event in events_list:
             print(event['title'])
             if event['type'] != '':
-                t, c = Type.objects.get_or_create(name__iexact=event['type'])
+                event_type = event['type']
+                try:
+                    t = Type.objects.get(name__iexact=event_type)
+                except Type.DoesNotExist:
+                    print(f'creating type "{event_type}"')
+                    t = Type.objects.create(name=event_type)
             else:
                 t = None
             event_instance = Event(
@@ -56,7 +61,7 @@ class Command(BaseCommand):
                 has_level_access=event['has_level_access'],
                 type=t,
                 brand=freshers,
-                embargo_until=datetime.datetime(2018, 9, 20, 12, 0).replace(tzinfo=tz.gettz('Europe/London')),
+                embargo_until=datetime.datetime(2019, 9, 15, 0, 0).replace(tzinfo=tz.gettz('Europe/London')),
             )
 
             event_instance.save()
