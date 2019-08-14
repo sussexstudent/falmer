@@ -1,6 +1,6 @@
 import arrow
 import graphene
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.utils import timezone
 
 from falmer.events.filters import EventFilterSet
@@ -14,6 +14,7 @@ class Query(graphene.ObjectType):
     # all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
     all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet, brand=graphene.String(), skip_embargo=graphene.Boolean())
     all_venues = DjangoConnectionField(Venue)
+    all_branding_periods = graphene.Field(graphene.List(BrandingPeriod))
     event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int())
     branding_period = graphene.Field(BrandingPeriod, slug=graphene.String())
     bundle = graphene.Field(Bundle, slug=graphene.String())
@@ -62,6 +63,12 @@ class Query(graphene.ObjectType):
 
     def resolve_all_venues(self, info):
         return models.Venue.objects.all()
+
+    def resolve_all_branding_periods(self, info):
+        periods = models.BrandingPeriod.objects \
+            .annotate(events_count=Count('events')) \
+            .filter(display_from__lte=timezone.now())
+        return periods
 
     def resolve_event(self, info, **kwargs):
         event_id = kwargs.get('event_id')

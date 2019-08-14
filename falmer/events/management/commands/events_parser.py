@@ -43,8 +43,13 @@ def parse_time(text):
 
 
 def parse_bool(text):
-    if text.lower() == 'yes':
+    if text.lower() in ['y', 'yes']:
         return True
+
+    if text.lower() in ['n', 'no']:
+        return False
+
+    print(f'WARNING: "{text}" is not a boolean value')
 
     return False
 
@@ -87,8 +92,9 @@ available_columns = (
 START_ROW = 8
 METADATA_ROW = 7
 
+date_matcher = re.compile("[A-Za-z]+ ([0-9]+)/([0-9]+)")
 
-with open('f18.csv', 'r+', encoding='utf-8') as f:
+with open('2019.csv', 'r+', encoding='utf-8') as f:
     reader = csv.reader(f)
     parsed_events = []
 
@@ -113,7 +119,8 @@ with open('f18.csv', 'r+', encoding='utf-8') as f:
             title = get_row('title')
             try:
                 title = get_row('title')
-                start_day = int(get_row('day').split(' ')[1].replace('th', '').replace('rd', '').replace('st', ''))
+                start_day = int(date_matcher.match(get_row('day')).group(1))
+                print(start_day)
 
                 start_time_hour, start_time_min = parse_time(get_row('start_time'))
                 end_time_hour, end_time_min = parse_time(get_row('end_time'))
@@ -123,8 +130,8 @@ with open('f18.csv', 'r+', encoding='utf-8') as f:
                 over_18_only = parse_bool(get_row('is_over_18_only'))
                 parsed_events.append({
                     'title': title,
-                    'start_time': datetime.datetime(2018, 9, start_day, start_time_hour, start_time_min),
-                    'end_time': datetime.datetime(2018, 9, start_day if start_time_hour <= end_time_hour else start_day + 1, end_time_hour, end_time_min),
+                    'start_time': datetime.datetime(2019, 9, start_day, start_time_hour, start_time_min),
+                    'end_time': datetime.datetime(2019, 9, start_day if start_time_hour <= end_time_hour else start_day + 1, end_time_hour, end_time_min),
                     'short_description': get_row('short_description'),
                     'body': markdown.markdown(get_row('body')),
                     'location': get_row('location'),
@@ -142,7 +149,7 @@ with open('f18.csv', 'r+', encoding='utf-8') as f:
                     'has_level_access': parse_bool(get_row('has_level_access')),
 
                 })
-            except (IndexError, ValueError) as e:
+            except (IndexError, ValueError, AttributeError) as e:
                 print('failed to parse ', index, title, e)
 
     print(json.dumps({'events': parsed_events}, default=json_serial))

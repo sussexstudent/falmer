@@ -1,4 +1,6 @@
 from django_filters import FilterSet, CharFilter, IsoDateTimeFilter
+
+from falmer.events.models import BrandingPeriod
 from . import models
 
 
@@ -34,3 +36,8 @@ class EventFilterSet(FilterSet):
     to_time = IsoDateTimeFilter(field_name='start_time', lookup_expr='lte')
 
     from_time = IsoDateTimeFilter(field_name='end_time', lookup_expr='gte')
+
+#
+# class BrandingPeriodFilerSet(FilterSet):
+#     class Meta:
+#         model = BrandingPeriod

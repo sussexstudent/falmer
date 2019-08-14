@@ -21,15 +21,6 @@ from falmer.studentgroups.models import StudentGroup
 def random_number_as_string():
     return str(random.randint(1000, 99999))
 
-
-class Bundle(models.Model):
-    name = models.CharField(max_length=72)
-    slug = models.SlugField(unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 PA_NOT_SET = 0
 PA_FALSE = 1
 PA_TRUE = 2
@@ -86,6 +77,7 @@ class BrandingPeriod(models.Model):
     event_append = RichTextField(blank=True, default='')
     logo = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
     logo_vector = models.FileField(null=True, blank=True)
+    display_from = models.DateTimeField(blank=True, null=True)
 
     override_listings_root = models.CharField(max_length=255, default='', blank=True)
 
@@ -93,6 +85,7 @@ class BrandingPeriod(models.Model):
         MultiFieldPanel([
             FieldPanel('name', classname='title'),
             FieldPanel('website_link'),
+            FieldPanel('display_from'),
             FieldPanel('override_listings_root'),
             FieldPanel('slug'),
             FieldPanel('accent'),
@@ -279,10 +272,10 @@ class Event(index.Indexed, PASet, models.Model):
     student_group = models.ForeignKey(StudentGroup, null=True, blank=True, default=None, on_delete=models.SET_NULL)
 
     is_over_18_only = models.BooleanField(default=False)
-    ticket_level = models.CharField(max_length=2, choices=TICKET_LEVEL_CHOICES, default=NA)
     cost = models.CharField(max_length=10, choices=COST_CHOICES, default=NA)
     alcohol = models.CharField(max_length=2, choices=ALCOHOL_CHOICES, default=NOT_ALCOHOL_FOCUSED)
 
+    ticket_level = models.CharField(max_length=2, choices=TICKET_LEVEL_CHOICES, default=NA)
     ticket_type = models.CharField(max_length=3, choices=TICKET_TYPE_CHOICES, default=NA)
     ticket_data = models.TextField(default='', blank=True)
 
@@ -290,8 +283,8 @@ class Event(index.Indexed, PASet, models.Model):
     audience_just_for_pgs = models.BooleanField(default=False)
     audience_good_to_meet_people = models.BooleanField(default=False)
 
-    bundle = models.ForeignKey(Bundle, null=True, blank=True, on_delete=models.SET_NULL)
-    brand = models.ForeignKey(BrandingPeriod, null=True, blank=True, on_delete=models.SET_NULL)
+    bundle = models.ForeignKey('events.Bundle', null=True, blank=True, on_delete=models.SET_NULL)
+    brand = models.ForeignKey(BrandingPeriod, related_name='events', null=True, blank=True, on_delete=models.SET_NULL)
     category = models.ManyToManyField(CategoryNode)
     type = models.ForeignKey(Type, null=True, blank=True, on_delete=models.SET_NULL)
 
@@ -584,3 +577,18 @@ class EventLike(TimeStampedModel, models.Model):
 
     class Meta:
         unique_together = ('event', 'user')
+
+
+class Bundle(models.Model):
+    name = models.CharField(max_length=72)
+    slug = models.SlugField(unique=True)
+
+    ticket_level = models.CharField(max_length=2, choices=Event.TICKET_LEVEL_CHOICES, default=Event.NA)
+    ticket_type = models.CharField(max_length=3, choices=Event.TICKET_TYPE_CHOICES, default=Event.NA)
+    ticket_data = models.TextField(default='', blank=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    brand = models.ForeignKey(BrandingPeriod, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.name
+
