@@ -1,6 +1,6 @@
-from django_filters import FilterSet, CharFilter, IsoDateTimeFilter
+from django_filters import FilterSet, CharFilter, IsoDateTimeFilter, BooleanFilter, ModelChoiceFilter
 
-from falmer.events.models import BrandingPeriod
+from falmer.events.models import Curator
 from . import models
 
 
@@ -25,7 +25,8 @@ class EventFilterSet(FilterSet):
             'cost',
             'alcohol',
             'type',
-            'ticket_level'
+            'ticket_level',
+            'curated_by'
         )
 
     title = CharFilter(lookup_expr='icontains')
@@ -36,7 +37,8 @@ class EventFilterSet(FilterSet):
     to_time = IsoDateTimeFilter(field_name='start_time', lookup_expr='lte')
 
     from_time = IsoDateTimeFilter(field_name='end_time', lookup_expr='gte')
-
+    uncurated = BooleanFilter(field_name='curated_by', lookup_expr='isnull')
+    curated_by = ModelChoiceFilter(queryset=Curator.objects.all(), field_name='curated_by')
 #
 # class BrandingPeriodFilerSet(FilterSet):
 #     class Meta:

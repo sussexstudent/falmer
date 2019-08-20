@@ -110,6 +110,14 @@ class Category(models.Model):
         return self.name
 
 
+class Curator(models.Model):
+    name = models.CharField(max_length=72)
+    slug = AutoSlugField(populate_from='name')
+
+    def __str__(self):
+        return self.name
+
+
 class CategoryNode(MP_Node):
     name = models.CharField(max_length=72)
     slug = AutoSlugField(populate_from='name')
@@ -288,6 +296,8 @@ class Event(index.Indexed, PASet, models.Model):
     category = models.ManyToManyField(CategoryNode)
     type = models.ForeignKey(Type, null=True, blank=True, on_delete=models.SET_NULL)
 
+    curated_by = models.ManyToManyField(Curator, through='EventCuration')
+
     likes = models.ManyToManyField(FalmerUser, through='EventLike')
 
     search_fields = [
@@ -374,6 +384,7 @@ class Event(index.Indexed, PASet, models.Model):
             FieldPanel('bundle'),
             FieldPanel('brand'),
             FieldPanel('category'),
+            FieldPanel('curated_by'),
             FieldPanel('type'),
             FieldPanel('parent')
         ], heading='Organisation'),
@@ -579,7 +590,7 @@ SOURCE_LOCATION = (
 
 class EventLike(TimeStampedModel, models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(FalmerUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(FalmerUser, on_delete=models.CASCADE, related_name='event_likes')
 
     source = models.CharField(max_length=16, choices=LIKE_SOURCES)
     initial_source = models.CharField(max_length=16, choices=LIKE_SOURCES)
@@ -588,6 +599,14 @@ class EventLike(TimeStampedModel, models.Model):
 
     class Meta:
         unique_together = ('event', 'user')
+
+
+class EventCuration(TimeStampedModel, models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    curator = models.ForeignKey(Curator, on_delete=models.CASCADE, related_name='events')
+
+    class Meta:
+        unique_together = ('event', 'curator')
 
 
 class Bundle(models.Model):

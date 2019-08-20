@@ -7,7 +7,6 @@ from falmer.schema.utils import create_connection
 from falmer.studentgroups.types import StudentGroup
 from . import models
 
-
 class PAValues(graphene.Enum):
     NA = 0
     NEGATIVE = 1
@@ -82,6 +81,10 @@ class MSLEvent(DjangoObjectType):
         model = models.MSLEvent
         interfaces = (graphene.Node, )
 
+
+class Curator(DjangoObjectType):
+    class Meta:
+        model = models.Curator
 
 
 class EventLike(DjangoObjectType):

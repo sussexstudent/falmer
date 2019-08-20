@@ -5,6 +5,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 
 from falmer.content.blocks import PledgeBlock
 from falmer.content.models.core import Page
+from falmer.events.models import Curator
 from falmer.matte.models import MatteImage
 
 
@@ -72,4 +73,27 @@ class OfficerOverviewPage(Page):
         'youtube_splash',
 
         'pledges',
+    )
+
+
+class OfficerEventsPage(Page):
+    description = RichTextField()
+    curator = models.ForeignKey(Curator, null=True, on_delete=models.SET_NULL)
+
+    parent_page_types = ('content.OfficerOverviewPage', )
+
+    content_panels = Page.content_panels + [
+        FieldPanel('description'),
+        FieldPanel('curator'),
+    ]
+
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Content'),
+        ObjectList(Page.promote_panels, heading='Promote'),
+        ObjectList(Page.settings_panels, heading='Settings', classname="settings"),
+    ])
+
+    api_fields = (
+        'description',
+        'curator'
     )

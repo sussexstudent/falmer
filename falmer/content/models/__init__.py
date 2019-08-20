@@ -2,7 +2,7 @@ from falmer.content.models.core import ClickThrough
 from .staff import StaffPage, StaffMemberSnippet
 from .section_content import SectionContentPage
 from .selection_grid import SelectionGridPage
-from .officer_overview import OfficerOverviewPage, OfficersIndex
+from .officer_overview import OfficerOverviewPage, OfficersIndex, OfficerEventsPage
 from .homepage import HomePage
 from .freshers import FreshersHomepage
 from .generic import KBRootPage, KBCategoryPage, AnswerPage, ReferencePage, DetailedGuidePage, DetailedGuideSectionPage
@@ -22,6 +22,7 @@ all_pages = (
 
     OfficerOverviewPage,
     OfficersIndex,
+    OfficerEventsPage,
 
     HomePage,
 
