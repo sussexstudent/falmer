@@ -83,6 +83,12 @@ class MSLEvent(DjangoObjectType):
         interfaces = (graphene.Node, )
 
 
+
+class EventLike(DjangoObjectType):
+    class Meta:
+        model = models.EventLike
+
+
 class Event(DjangoObjectType):
     venue = graphene.Field(Venue)
     featured_image = graphene.Field(Image)
@@ -97,10 +103,14 @@ class Event(DjangoObjectType):
     parent = graphene.Field(lambda: Event)
     msl_event_id = graphene.Int()
     msl_event = graphene.Field(lambda: MSLEvent)
+    user_like = graphene.Field(EventLike)
 
     class Meta:
         model = models.Event
         interfaces = (graphene.Node, )
+
+    def resolve_user_like(self, info):
+        info.context.loaders.event_like.load(self.pk)
 
     def resolve_body_html(self, info):
         return expand_db_html(self.body)

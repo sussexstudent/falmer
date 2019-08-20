@@ -414,6 +414,17 @@ class Event(index.Indexed, PASet, models.Model):
     def has_child_events(self):
         return self.children.count() > 0
 
+    def like(self, user, like_type):
+        try:
+            event_like = user.event_likes.get(event=self)
+            event_like.source = like_type
+            event_like.source_location = 'LISTINGS'
+            event_like.save()
+        except EventLike.DoesNotExist:
+            event_like = EventLike(event=self, user=user, source=like_type, initial_source=like_type, source_location='LISTINGS')
+            event_like.save()
+            # user.event_likes.add(event_like)
+
     def __str__(self):
         return self.title
 

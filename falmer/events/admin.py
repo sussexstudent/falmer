@@ -4,7 +4,7 @@ from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 
 from falmer.events.models import Event, MSLEvent, Venue, AutoLocationDisplayToVenue, \
-    BrandingPeriod, Type, Bundle, CategoryNode
+    BrandingPeriod, Type, Bundle, CategoryNode, EventLike
 
 
 @register(Venue)
@@ -25,6 +25,17 @@ class EventModelAdmin(admin.ModelAdmin):
 @register(Bundle)
 class BundleModelAdmin(admin.ModelAdmin):
     list_display = ('name', )
+
+
+@register(EventLike)
+class EventLikeModelAdmin(admin.ModelAdmin):
+    list_display = ('get_event_title', 'get_user_id', 'source')
+
+    def get_event_title(self, obj):
+        return obj.event.title
+
+    def get_user_id(self, obj):
+        return obj.user.id
 
 
 @register(BrandingPeriod)
