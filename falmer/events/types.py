@@ -113,7 +113,7 @@ class Event(DjangoObjectType):
         interfaces = (graphene.Node, )
 
     def resolve_user_like(self, info):
-        info.context.loaders.event_like.load(self.pk)
+        return info.context.loaders.event_like.load(self.pk)
 
     def resolve_body_html(self, info):
         return expand_db_html(self.body)

@@ -28,6 +28,7 @@ class MoveEvent(graphene.Mutation):
         return MoveEvent(ok=success, event=event)
 
 
+
 class LikeEvent(graphene.Mutation):
     class Arguments:
         event_id = graphene.Int()
