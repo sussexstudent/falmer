@@ -24,8 +24,11 @@ class DRFAuthenticatedGraphQLView(GraphQLView):
     def get_context(self, request):
         class EventLikeLoader(DataLoader):
             def batch_load_fn(self, keys):
-                likes = {event_like.event.id: event_like for event_like in EventLike.objects.filter(user=request.user, event__id__in=keys)}
-                return Promise.resolve([likes.get(event_id) for event_id in keys])
+                if request.user.is_authenticated:
+                    likes = {event_like.event.id: event_like for event_like in EventLike.objects.filter(user=request.user, event__id__in=keys)}
+                    return Promise.resolve([likes.get(event_id) for event_id in keys])
+                else:
+                    return Promise.resolve([None for event_id in keys])
 
         setattr(request, 'loaders', Loaders(event_like=EventLikeLoader()))
         return request
