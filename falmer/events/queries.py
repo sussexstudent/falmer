@@ -12,7 +12,7 @@ from . import models
 
 class Query(graphene.ObjectType):
     # all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
-    all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet, brand=graphene.String(), skip_embargo=graphene.Boolean())
+    all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet, brand=graphene.String(), skip_embargo=graphene.Boolean(), viewer_liked=graphene.Boolean())
     all_venues = DjangoConnectionField(Venue)
     all_branding_periods = graphene.Field(graphene.List(BrandingPeriod))
     event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int())
@@ -25,18 +25,23 @@ class Query(graphene.ObjectType):
         qs = models.Event.objects.select_related('featured_image', 'venue', 'mslevent') \
             .prefetch_related('children').order_by('start_time', 'end_time')
 
+        if kwargs.get('skip_embargo', False):
+            pass
+        else:
+            qs = qs.filter(Q(embargo_until=None) | Q(embargo_until__lte=timezone.now()))
+
+        if kwargs.get('viewer_liked', False):
+            print('limiting')
+        qs = qs.filter(Q(eventlike__user=info.context.user) & Q(eventlike__source='USER'))
+
         if qfilter is None:
+            print('returning')
             return qs.filter(parent=None)
 
         if 'include_children' in qfilter:
             pass
         else:
             qs = qs.filter(parent=None)
-
-        if kwargs.get('skip_embargo', False):
-            pass
-        else:
-            qs = qs.filter(Q(embargo_until=None) | Q(embargo_until__lte=timezone.now()))
 
         if 'from_time' in qfilter:
             qs = qs.filter(end_time__gte=qfilter['from_time'])
