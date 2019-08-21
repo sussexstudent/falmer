@@ -293,12 +293,12 @@ class Event(index.Indexed, PASet, models.Model):
 
     bundle = models.ForeignKey('events.Bundle', null=True, blank=True, on_delete=models.SET_NULL)
     brand = models.ForeignKey(BrandingPeriod, related_name='events', null=True, blank=True, on_delete=models.SET_NULL)
-    category = models.ManyToManyField(CategoryNode)
+    category = models.ManyToManyField(CategoryNode, blank=True)
     type = models.ForeignKey(Type, null=True, blank=True, on_delete=models.SET_NULL)
 
-    curated_by = models.ManyToManyField(Curator, through='EventCuration')
+    curated_by = models.ManyToManyField(Curator, through='EventCuration', blank=True)
 
-    likes = models.ManyToManyField(FalmerUser, through='EventLike')
+    likes = models.ManyToManyField(FalmerUser, through='EventLike', blank=True)
 
     search_fields = [
         index.SearchField('title', partial_match=True, boost=10),
