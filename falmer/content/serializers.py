@@ -40,8 +40,13 @@ class SnippetSerializer(serializers.ModelSerializer):
 class DocumentLinkSerializer(serializers.Serializer):
     title = serializers.CharField()
     url = serializers.SerializerMethodField()
+    resource = serializers.SerializerMethodField()
 
     def get_url(self, o):
         if o is not None and ['link'] is not None:
+            print(o)
             return settings.PUBLIC_HOST + o['link'].url
         return ''
+
+    def get_resource(self, o):
+        return o['link'].file.name
