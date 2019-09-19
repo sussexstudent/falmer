@@ -145,11 +145,12 @@ VENUE_CHOICES = (
 
 class Venue(PASet, models.Model):
     name = models.CharField(max_length=255)
-    website_link = models.CharField(max_length=255, default='')
+    website_link = models.CharField(max_length=255, default='', blank=True)
     short_description = models.TextField(default='')
     featured_image = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
 
     venue_type = models.CharField(choices=VENUE_CHOICES, max_length=8)
+    slug = AutoSlugField(populate_from='name', unique=True)
 
     ephemeral = models.BooleanField(default=False)
 

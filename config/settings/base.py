@@ -88,6 +88,7 @@ LOCAL_APPS = [
     'falmer.studentgroups.apps.StudentGroupsConfig',
     'falmer.links.apps.LinksConfig',
     'falmer.banners.apps.BannersConfig',
+    'falmer.redirects.apps.RedirectsConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
