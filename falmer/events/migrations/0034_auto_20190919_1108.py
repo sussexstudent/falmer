@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='venue',
             name='slug',
-            field=django_extensions.db.fields.AutoSlugField(blank=True, editable=False, populate_from='name', unique=True),
+            field=django_extensions.db.fields.AutoSlugField(blank=True, editable=False, populate_from='name', unique=False),
         ),
         migrations.AlterField(
             model_name='event',
