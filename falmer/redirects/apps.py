@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class RedirectsConfig(AppConfig):
-    name = 'redirects'
+    name = 'falmer.redirects'
+    verbose_name = 'Redirects'
