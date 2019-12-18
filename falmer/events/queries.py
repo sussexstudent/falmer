@@ -12,7 +12,7 @@ from . import models
 
 class Query(graphene.ObjectType):
     # all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
-    all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet, brand=graphene.String(), skip_embargo=graphene.Boolean(), viewer_liked=graphene.Boolean(), required=True)
+    all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet, skip_embargo=graphene.Boolean(), viewer_liked=graphene.Boolean(), required=True)
     all_venues = NonNullDjangoConnectionField(Venue, required=True)
     all_branding_periods = graphene.Field(graphene.List(graphene.NonNull(BrandingPeriod)), required=True)
     event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int(), required=True)
