@@ -97,9 +97,9 @@ class Page(graphene.Interface):
 
     def resolve_path(self, info):
         if hasattr(self, 'public_path'):
-            return self.public_path
+            return self.public_path or '*'
         else:
-            return get_public_path_for_page(self)
+            return get_public_path_for_page(self) or '*'
 
     def resolve_parent_page(self, info):
         return self.get_parent().specific
