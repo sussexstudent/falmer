@@ -12,6 +12,13 @@ class ClientUser(DjangoObjectType):
 
     class Meta:
         model = models.FalmerUser
+        fields = (
+            'id',
+            'name',
+            'has_cms_access',
+            'user_id',
+            'permissions',
+        )
 
     def resolve_name(self, info):
         return self.get_full_name()
@@ -32,6 +39,9 @@ class Permission(DjangoObjectType):
 
     class Meta:
         model = DjangoPermission
+        fields = (
+            'content_type',
+        )
 
     def resolve_content_type(self, info):
         return self.content_type.app_label

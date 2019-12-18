@@ -1,5 +1,8 @@
-FROM python:3.6
+FROM python:3.7
 ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update
+RUN apt-get install -y build-essential libssl-dev libffi-dev python-dev libxml2-dev libxmlsec1 xmlsec1 libxmlsec1-openssl libxmlsec1-dev
 
 COPY ./Pipfile /Pipfile
 COPY ./Pipfile.lock /Pipfile.lock

@@ -7,25 +7,8 @@ from .converters import register_converters
 
 register_converters()
 
-from graphene_django import DjangoConnectionField as _DjangoConnectionField
-
-
 from falmer.content.types import GenericPage, page_types_map
 
-
-class DjangoConnectionField(_DjangoConnectionField):
-
-    """
-    Temporary fix for select_related issue
-    """
-
-    @classmethod
-    def merge_querysets(cls, default_queryset, queryset):
-        """
-        This discarded all select_related and prefetch_related:
-        # return default_queryset & queryset
-        """
-        return queryset
 
 
 class File(graphene.ObjectType):

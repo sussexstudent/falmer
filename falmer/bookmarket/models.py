@@ -7,10 +7,16 @@ from django_extensions.db.fields import AutoSlugField
 from falmer.core.models import TimeStampedModel
 from falmer.matte.models import MatteImage
 
-LISTING_STATUS = (
-    ('DRAFT', 'Draft'),
-    ('READY', 'Ready'),
-    ('EXPIRED', 'Expired'),
+
+LISTING_STATE_DRAFT = 'DRAFT'
+LISTING_STATE_READY = 'READY'
+LISTING_STATE_UNLISTED = 'UNLISTED'
+LISTING_STATE_EXPIRED = 'EXPIRED'
+LISTING_STATE = (
+    (LISTING_STATE_DRAFT, 'Draft'),
+    (LISTING_STATE_READY, 'Ready'),
+    (LISTING_STATE_UNLISTED, 'Unlisted'),
+    (LISTING_STATE_EXPIRED, 'Expired'),
 )
 
 
@@ -60,7 +66,7 @@ class Listing(TimeStampedModel, models.Model):
 
     buy_price = models.DecimalField(decimal_places=2, max_digits=4, null=False)
 
-    state = models.CharField(max_length=10, default='DRAFT')
+    state = models.CharField(max_length=10, default=LISTING_STATE_DRAFT, choices=LISTING_STATE)
 
     contact_details = models.TextField(null=False, default='')
 

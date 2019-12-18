@@ -12,6 +12,10 @@ from . import models
 class MSLStudentGroupCategory(DjangoObjectType):
     class Meta:
         model = models.MSLStudentGroupCategory
+        fields = (
+            'id',
+            'name',
+        )
 
 
 class MSLStudentGroup(DjangoObjectType):
@@ -20,6 +24,15 @@ class MSLStudentGroup(DjangoObjectType):
 
     class Meta:
         model = models.MSLStudentGroup
+        fields = (
+            'id',
+            'logo',
+            'group',
+            'category',
+            'description',
+            'msl_group_id',
+            'link',
+        )
 
     def resolve_category(self, info):
         return self.category
@@ -28,7 +41,11 @@ class MSLStudentGroup(DjangoObjectType):
 class AwardAuthority(DjangoObjectType):
     class Meta:
         model = models.AwardAuthority
-
+        fields = (
+            'id',
+            'name',
+            'slug',
+        )
 
 class Award(DjangoObjectType):
     class Meta:
@@ -41,7 +58,7 @@ class AwardAwarded(DjangoObjectType):
 
 
 class AwardPeriod(DjangoObjectType):
-    awarded = graphene.List(AwardAwarded)
+    awarded = graphene.List(graphene.NonNull(AwardAwarded), required=True)
 
     class Meta:
         model = models.AwardPeriod
@@ -52,12 +69,21 @@ class AwardPeriod(DjangoObjectType):
 
 class StudentGroup(DjangoObjectType):
     msl_group = graphene.Field(MSLStudentGroup)
-    group_id = graphene.Int()
-    awards = graphene.List(AwardPeriod)
+    group_id = graphene.Int(required=True)
+    awards = graphene.List(graphene.NonNull(AwardPeriod), required=True)
 
     class Meta:
         model = models.StudentGroup
         interfaces = (graphene.Node, )
+        fields = (
+            'id',
+            'name',
+            'is_prospective',
+            'description',
+            'logo',
+            'link',
+            'slug'
+        )
 
     def resolve_msl_group(self, info):
         try:

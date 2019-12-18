@@ -75,3 +75,10 @@ class FreshersHomepage(Page):
             FieldPanel('countdown_target'),
         ], heading='Countdown'),
     ]
+
+    type_fields = (
+        'countdown_caption',
+        'countdown_target',
+        'hero_text',
+        'content',
+    )

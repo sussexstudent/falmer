@@ -75,6 +75,23 @@ class OfficerOverviewPage(Page):
         'pledges',
     )
 
+    type_fields = (
+        'role',
+        'role_description',
+
+        'officer_image',
+        'first_name',
+        'last_name',
+
+        'twitter_username',
+        'facebook_url',
+        'instagram_url',
+
+        'youtube_splash',
+
+        'pledges',
+    )
+
 
 class OfficerEventsPage(Page):
     description = RichTextField()
@@ -94,6 +111,11 @@ class OfficerEventsPage(Page):
     ])
 
     api_fields = (
+        'description',
+        'curator'
+    )
+
+    type_fields = (
         'description',
         'curator'
     )

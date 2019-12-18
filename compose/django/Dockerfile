@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.7
 
 ENV PYTHONUNBUFFERED 1
 
@@ -6,9 +6,10 @@ RUN groupadd -r django \
     && useradd -r -g django django
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
-COPY ./requirements /requirements
-RUN pip install --no-cache-dir -r /requirements/production.txt \
-    && rm -rf /requirements
+COPY ./Pipfile /Pipfile
+COPY ./Pipfile.lock /Pipfile.lock
+RUN pip install pipenv
+RUN pipenv install --system --dev
 
 COPY ./compose/django/gunicorn.sh ./compose/django/entrypoint.sh /
 RUN sed -i 's/\r//' /entrypoint.sh \

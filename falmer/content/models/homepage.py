@@ -25,3 +25,8 @@ class HomePage(Page):
         'full_time_officers',
         'part_time_officers',
     )
+
+    type_fields = (
+        'full_time_officers',
+        'part_time_officers',
+    )

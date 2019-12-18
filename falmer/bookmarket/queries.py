@@ -2,7 +2,7 @@ import graphene
 import django_filters
 from django.contrib.postgres.search import SearchVector
 
-from falmer.schema.schema import DjangoConnectionField
+from falmer.schema.utils import NonNullDjangoConnectionField
 from . import models
 from . import types
 
@@ -24,15 +24,16 @@ class ListingsFilter(django_filters.FilterSet):
 
 
 class Query(graphene.ObjectType):
-    all_market_listings = DjangoConnectionField(
+    all_market_listings = NonNullDjangoConnectionField(
         types.MarketListing,
-        filters=graphene.Argument(MarketListingsFilter)
+        filters=graphene.Argument(MarketListingsFilter),
+        required=True
     )
 
-    all_market_sections = graphene.List(types.MarketListingSection)
+    all_market_sections = graphene.List(graphene.NonNull(types.MarketListingSection), required=True)
 
-    market_listing = graphene.Field(types.MarketListing, listing_id=graphene.Int())
-    market_section = graphene.Field(types.MarketListingSection, slug=graphene.String())
+    market_listing = graphene.Field(types.MarketListing, listing_id=graphene.Int(required=True))
+    market_section = graphene.Field(types.MarketListingSection, slug=graphene.String(required=True))
 
     def resolve_all_market_listings(self, info, **kwargs):
         qfilter = kwargs.get('filters')

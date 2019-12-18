@@ -14,7 +14,7 @@ class Slate(DjangoObjectType):
     class Meta:
         model = models.Slate
         interfaces = (graphene.Node, )
-        only_fields = (
+        fields = (
             'id',
             'data',
             'display_from',
@@ -31,4 +31,4 @@ class Slate(DjangoObjectType):
         return self.pk
 
 
-Slate.connection = create_connection(Slate)
+Slate.Connection = create_connection(Slate)

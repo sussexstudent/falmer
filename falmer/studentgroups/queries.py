@@ -1,14 +1,14 @@
 import graphene
 import arrow
 from django.db.models import Q
-from falmer.schema.schema import DjangoConnectionField
+from falmer.schema.utils import NonNullDjangoConnectionField
 from falmer.studentgroups.types import StudentGroup
 from . import types
 from . import models
 
 
 class Query(graphene.ObjectType):
-    all_groups = DjangoConnectionField(StudentGroup)
+    all_groups = NonNullDjangoConnectionField(StudentGroup, required=True)
     group = graphene.Field(types.StudentGroup, group_id=graphene.Int(), group_slug=graphene.String())
 
     def resolve_all_groups(self, info):

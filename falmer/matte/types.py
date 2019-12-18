@@ -1,8 +1,7 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-from falmer.schema.schema import DjangoConnectionField
-from falmer.schema.utils import create_connection
+from falmer.schema.utils import NonNullDjangoConnectionField, create_connection
 from . import models
 
 class ImageLabel(DjangoObjectType):
@@ -14,12 +13,16 @@ class ImageLabel(DjangoObjectType):
     class Meta:
         model = models.ImageLabelThrough
         interfaces = (graphene.Node, )
+        fields = (
+            'name',
+        )
 
+ImageLabel.Connection = create_connection(ImageLabel)
 
 class Image(DjangoObjectType):
-    resource = graphene.String()
-    media_id = graphene.Int()
-    labels = DjangoConnectionField(ImageLabel)
+    resource = graphene.String(required=True)
+    media_id = graphene.Int(required=True)
+    #labels = NonNullDjangoConnectionField(ImageLabel, required=True)
 
     def resolve_resource(self, info):
         return self.file.name
@@ -30,6 +33,12 @@ class Image(DjangoObjectType):
     class Meta:
         model = models.MatteImage
         interfaces = (graphene.Node, )
-
+        fields = (
+            'resource',
+            'media_id',
+            'labels',
+            'width',
+            'height',
+        )
 
 Image.Connection = create_connection(Image)

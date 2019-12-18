@@ -1,14 +1,14 @@
 import graphene
 
-from falmer.schema.schema import DjangoConnectionField
+from falmer.schema.utils import NonNullDjangoConnectionField
 from . import models
 from .types import Slate
 
 
 class Query(graphene.ObjectType):
-    active_slate = graphene.Field(Slate)
-    slate = graphene.Field(Slate, slate_id=graphene.Int())
-    all_slates = DjangoConnectionField(Slate)
+    active_slate = graphene.Field(Slate, required=True)
+    slate = graphene.Field(Slate, slate_id=graphene.Int(required=True), required=True)
+    all_slates = NonNullDjangoConnectionField(Slate, required=True)
 
     def resolve_active_slate(self, info):
         return models.Slate.objects.active()

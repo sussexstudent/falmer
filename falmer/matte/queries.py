@@ -1,12 +1,12 @@
 import graphene
 
-from falmer.schema.schema import DjangoConnectionField
+from falmer.schema.utils import NonNullDjangoConnectionField
 from . import types
 from . import models
 
 
 class Query(graphene.ObjectType):
-    all_images = DjangoConnectionField(types.Image)
+    all_images = NonNullDjangoConnectionField(types.Image, required=True)
     image = graphene.Field(types.Image, media_id=graphene.Int())
 
     def resolve_all_images(self, info, **kwargs):

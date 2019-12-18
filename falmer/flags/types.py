@@ -5,3 +5,10 @@ from . import models
 class Flag(DjangoObjectType):
     class Meta:
         model = models.Flag
+        fields = (
+            'id',
+            'name',
+            'state',
+            'mode',
+            'expired',
+        )

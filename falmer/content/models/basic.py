@@ -27,3 +27,6 @@ class BasicContentPage(Page):
         StreamFieldPanel('content'),
     ]
 
+    type_fields = ('content', )
+
+

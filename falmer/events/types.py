@@ -7,11 +7,37 @@ from falmer.schema.utils import create_connection
 from falmer.studentgroups.types import StudentGroup
 from . import models
 
+class EventTicketType(graphene.Enum):
+    NA = models.Event.NA
+    NATIVE = models.Event.NATIVE
+    EVENTBRITE = models.Event.EVENTBRITE
+    ACCA = models.Event.ACCA
+    GENERIC = models.Event.GENERIC
+    MSL = models.Event.MSL
+
+
+class EventTicketLevel(graphene.Enum):
+    NA = models.Event.NA
+    LIMITED_AVAILABILITY = models.Event.LIMITED_AVAILABILITY
+    SOLD_OUT = models.Event.SOLD_OUT
+
+
+class EventCost(graphene.Enum):
+    FREE = models.Event.FREE
+    PAID = models.Event.PAID
+    NA = models.Event.NA
+
+
+class EventAlcohol(graphene.Enum):
+    SOFT_DRINKS_ALCOHOL = models.Event.SOFT_DRINKS_ALCOHOL
+    NO_ALCOHOL = models.Event.NO_ALCOHOL
+    NOT_ALCOHOL_FOCUSED = models.Event.NOT_ALCOHOL_FOCUSED
+
+
 class PAValues(graphene.Enum):
     NA = 0
     NEGATIVE = 1
     POSITIVE = 2
-
 
 class BrandingPeriodFilter(graphene.InputObjectType):
     from_time = graphene.String()
@@ -26,7 +52,7 @@ class EventFilter(graphene.InputObjectType):
 
 
 class Venue(DjangoObjectType):
-    venue_id = graphene.Int()
+    venue_id = graphene.Int(required=True)
 
     class Meta:
         model = models.Venue
@@ -34,6 +60,8 @@ class Venue(DjangoObjectType):
 
     def resolve_venue_id(self, info):
         return self.pk
+
+Venue.Connection = create_connection(Venue)
 
 
 class Category(DjangoObjectType):
@@ -95,18 +123,32 @@ class EventLike(DjangoObjectType):
 class Event(DjangoObjectType):
     venue = graphene.Field(Venue)
     featured_image = graphene.Field(Image)
-    categories = graphene.List(CategoryNode)
+    categories = graphene.List(graphene.NonNull(CategoryNode), required=True)
     type = graphene.Field(Type)
+    ticket_type = graphene.Field(EventTicketType, required=True)
+    ticket_level = graphene.Field(EventTicketLevel, required=True)
+    alcohol = graphene.Field(EventAlcohol, required=True)
+    cost = graphene.Field(EventCost, required=True)
     brand = graphene.Field(BrandingPeriod)
     bundle = graphene.Field(Bundle)
     student_group = graphene.Field(lambda: StudentGroup)
-    body_html = graphene.String()
-    event_id = graphene.Int()
-    children = graphene.List(lambda: Event)
+    body_html = graphene.String(required=True)
+    event_id = graphene.Int(required=True)
+    children = graphene.List(lambda: graphene.NonNull(Event), required=True)
     parent = graphene.Field(lambda: Event)
     msl_event_id = graphene.Int()
     msl_event = graphene.Field(lambda: MSLEvent)
     user_like = graphene.Field(EventLike)
+
+
+    contains_low_light = graphene.Field(PAValues, required=True)
+    contains_flashing_lights = graphene.Field(PAValues, required=True)
+    contains_loud_music = graphene.Field(PAValues, required=True)
+    has_gender_neutral_toilets = graphene.Field(PAValues, required=True)
+    has_accessible_toilets = graphene.Field(PAValues, required=True)
+    has_changing_facilities = graphene.Field(PAValues, required=True)
+    contains_uneven_ground = graphene.Field(PAValues, required=True)
+    has_level_access = graphene.Field(PAValues, required=True)
 
     class Meta:
         model = models.Event

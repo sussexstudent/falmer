@@ -51,6 +51,8 @@ class StaffMemberSnippet(index.Indexed, models.Model):
         index.SearchField('name', partial_match=True),
     ]
 
+    type_fields = ('photo', 'name', 'job_title', 'email', 'office_phone_number', 'mobile_phone_number', 'job_description', 'office_location')
+
     def __str__(self):
         return f'{self.job_title} ({self.name})'
 
@@ -83,4 +85,6 @@ class StaffPage(Page):
     api_fields = (
         'body',
     )
+
+    type_fields = ('body', )
 

@@ -3,7 +3,7 @@ from graphene.types.generic import GenericScalar
 from graphene_django import DjangoObjectType
 from falmer.content.models import name_to_class_map, all_pages
 from falmer.content.utils import get_public_path_for_page
-
+from .models import core
 
 class PageResult(graphene.ObjectType):
     content_type = graphene.String()
@@ -52,24 +52,27 @@ class PageResult(graphene.ObjectType):
 
 
 class Page(graphene.Interface):
-    content_type = graphene.String()
+    content_type = graphene.String(required=True)
 
-    title = graphene.String()
-    slug = graphene.String()
+    title = graphene.String(required=True)
+    slug = graphene.String(required=True)
 
-    seo_title = graphene.String()
-    search_description = graphene.String()
+    seo_title = graphene.String(required=True)
+    search_description = graphene.String(required=True)
 
-    last_published_at = graphene.DateTime()
+    last_published_at = graphene.DateTime(required=True)
 
-    url_path = graphene.String()
-    path = graphene.String()
+    url_path = graphene.String(required=True)
+    path = graphene.String(required=True)
 
-    sub_pages = graphene.List(lambda: Page, in_menu=graphene.Boolean())
-    sibling_pages = graphene.List(lambda: Page, in_menu=graphene.Boolean())
-    parent_page = graphene.Field(lambda: Page)
-    ancestor_pages = graphene.List(lambda: Page, in_menu=graphene.Boolean())
-    closest_ancestor_of_type = graphene.Field(lambda: Page, content_type=graphene.String(), inclusive=graphene.Boolean())
+    sub_pages = graphene.List(lambda: graphene.NonNull(AllPages), in_menu=graphene.Boolean(), required=True)
+    sub_pages_generic = graphene.List(lambda: graphene.NonNull(GenericPage), in_menu=graphene.Boolean(), required=True)
+    sibling_pages = graphene.List(lambda: graphene.NonNull(AllPages), in_menu=graphene.Boolean(), required=True)
+    parent_page = graphene.Field(lambda: graphene.NonNull(AllPages))
+    ancestor_pages = graphene.List(lambda: graphene.NonNull(AllPages), in_menu=graphene.Boolean(), required=True)
+    ancestor_pages_generic = graphene.List(lambda: graphene.NonNull(GenericPage), in_menu=graphene.Boolean(), required=True)
+    closest_ancestor_of_type = graphene.Field(lambda: AllPages, content_type=graphene.String(), inclusive=graphene.Boolean())
+    closest_ancestor_of_type_generic = graphene.Field(lambda: GenericPage, content_type=graphene.String(), inclusive=graphene.Boolean())
 
     def resolve_content_type(self, info):
         return self.__class__.__name__
@@ -108,6 +111,13 @@ class Page(graphene.Interface):
 
         return q
 
+    def resolve_sub_pages_generic(self, info, in_menu=None):
+        q = self.get_children().live()
+        if in_menu is True:
+            q = q.in_menu()
+
+        return q
+
     def resolve_sibling_pages(self, info, in_menu=None):
         q = self.get_siblings().specific().live()
 
@@ -124,7 +134,21 @@ class Page(graphene.Interface):
 
         return q
 
+    def resolve_ancestor_pages_generic(self, info, in_menu=None):
+        q = self.get_ancestors().live()
+
+        if in_menu is True:
+            q = q.in_menu()
+
+        return q
+
     def resolve_closest_ancestor_of_type(self, info, content_type=None, inclusive=False):
+        try:
+            return self.get_ancestors(inclusive).type(name_to_class_map[content_type]).last()
+        except IndexError:
+            return None
+
+    def resolve_closest_ancestor_of_type_generic(self, info, content_type=None, inclusive=False):
         try:
             return self.get_ancestors(inclusive).type(name_to_class_map[content_type]).last()
         except IndexError:
@@ -146,6 +170,7 @@ def generate_interfaces_for_type(page_models):
         meta = type('Meta', (), {
             'interfaces': (Page, ),
             'model': page,
+            'fields': page.type_fields if hasattr(page, 'type_fields') else ('id', )
         })
         types[page.__name__] = type(page.__name__, (DjangoObjectType, ), {
             'Meta': meta
@@ -156,6 +181,9 @@ def generate_interfaces_for_type(page_models):
 
 page_types_map = generate_interfaces_for_type(all_pages)
 
+class AllPages(graphene.Union):
+    class Meta:
+        types = list(page_types_map.values())
 
 class GenericPage(graphene.ObjectType):
     class Meta:

@@ -3,8 +3,8 @@ from functools import partial
 import six
 from graphene import InputObjectType,Argument
 from graphene.types.argument import to_arguments
-from graphene_django.fields import DjangoConnectionField
 from graphene_django.filter.utils import get_filtering_args_from_filterset, get_filterset_class
+from .utils import NonNullDjangoConnectionField
 
 def get_filtering_input_from_filterset(filterset_class, node_type):
     """ Inspect a FilterSet and produce the arguments to pass to
@@ -22,7 +22,7 @@ def get_filtering_input_from_filterset(filterset_class, node_type):
     return {'filter': Argument(type(f'{node_type}FilterInput', (InputObjectType, ), args)) }
 
 
-class FalmerDjangoFilterConnectionField(DjangoConnectionField):
+class FalmerDjangoFilterConnectionField(NonNullDjangoConnectionField):
 
     def __init__(self, type, fields=None, order_by=None,
                  extra_filter_meta=None, filterset_class=None,

@@ -6,7 +6,7 @@ from . import models
 class Banner(DjangoObjectType):
     class Meta:
         model = models.Banner
-        only_fields = (
+        fields = (
             'id',
             'outlet',
             'display_from',

@@ -56,6 +56,17 @@ class OutletPage(Page):
         'hero_image',
     ]
 
+    type_fields = (
+        'main',
+        'hero_image',
+        'opening_times',
+        'menu',
+        'deals',
+        'linked_venue',
+        'contact_details',
+        'google_maps_place_id',
+    )
+
 
 class OutletIndexPage(Page):
     subpage_types = (OutletPage, )
@@ -71,3 +82,7 @@ class OutletIndexPage(Page):
     api_fields = [
         'preamble',
     ]
+
+    type_fields = (
+        'preamble',
+    )

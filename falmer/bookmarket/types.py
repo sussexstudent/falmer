@@ -6,27 +6,50 @@ from falmer.matte.types import Image
 from falmer.schema.utils import create_connection
 from . import models
 
+MarketListingState = graphene.Enum('MarketListingState', [
+    (models.LISTING_STATE_DRAFT, models.LISTING_STATE_DRAFT),
+    (models.LISTING_STATE_READY, models.LISTING_STATE_READY),
+    (models.LISTING_STATE_UNLISTED, models.LISTING_STATE_UNLISTED),
+    (models.LISTING_STATE_EXPIRED, models.LISTING_STATE_EXPIRED),
+])
+
 
 class PublicUser(DjangoObjectType):
-    user_id = graphene.Int()
+    user_id = graphene.Int(required=True)
 
     class Meta:
         model = FalmerUser
-        only_fields = ('id', 'name')
+        fields = ('id', 'name')
 
     def resolve_user_id(self, info):
         return self.pk
 
 
 class MarketListing(DjangoObjectType):
-    pk = graphene.Int()
+    pk = graphene.Int(required=True)
     image = graphene.Field(Image)
-    listing_user = graphene.Field(PublicUser)
+    listing_user = graphene.Field(PublicUser, required=True)
     contact_details = graphene.String()
+    state = graphene.Field(MarketListingState, required=True)
 
     class Meta:
         model = models.Listing
         interfaces = (graphene.Node, )
+        fields = (
+            'id',
+            'pk',
+            'image',
+            'listing_user',
+            'contact_details',
+            'book_title',
+            'book_author',
+            'description',
+            'section',
+            'buy_price',
+            'state',
+            'listed_at',
+            'images',
+        )
         filter_fields = ['section', 'book_title', 'book_author']
 
     def resolve_pk(self, info):
@@ -44,14 +67,20 @@ class MarketListing(DjangoObjectType):
         else:
             return self.contact_details
 
-MarketListing.connection = create_connection(MarketListing)
+MarketListing.Connection = create_connection(MarketListing)
 
 
 class MarketListingSection(DjangoObjectType):
     class Meta:
         model = models.ListingSection
+        fields = (
+            'id',
+            'pk',
+            'title',
+            'slug'
+        )
 
-    pk = graphene.Int()
+    pk = graphene.Int(required=True)
 
     def resolve_pk(self, info):
         return self.pk

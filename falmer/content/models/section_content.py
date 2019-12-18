@@ -50,3 +50,11 @@ class SectionContentPage(Page):
         'heading_image_as_hero',
         'heading_image',
     )
+
+    type_fields = (
+        'body',
+        'sidebar_body',
+        'contents_in_sidebar',
+        'heading_image_as_hero',
+        'heading_image',
+    )

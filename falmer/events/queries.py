@@ -6,18 +6,18 @@ from django.utils import timezone
 from falmer.events.filters import EventFilterSet
 from falmer.events.types import Venue, BrandingPeriod, Event, Bundle
 from falmer.schema.fields import FalmerDjangoFilterConnectionField
-from falmer.schema.schema import DjangoConnectionField
+from falmer.schema.utils import NonNullDjangoConnectionField
 from . import models
 
 
 class Query(graphene.ObjectType):
     # all_events = DjangoConnectionField(Event, filter=graphene.Argument(EventFilter))
-    all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet, brand=graphene.String(), skip_embargo=graphene.Boolean(), viewer_liked=graphene.Boolean())
-    all_venues = DjangoConnectionField(Venue)
-    all_branding_periods = graphene.Field(graphene.List(BrandingPeriod))
-    event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int())
-    branding_period = graphene.Field(BrandingPeriod, slug=graphene.String())
-    bundle = graphene.Field(Bundle, slug=graphene.String())
+    all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet, brand=graphene.String(), skip_embargo=graphene.Boolean(), viewer_liked=graphene.Boolean(), required=True)
+    all_venues = NonNullDjangoConnectionField(Venue, required=True)
+    all_branding_periods = graphene.Field(graphene.List(graphene.NonNull(BrandingPeriod)), required=True)
+    event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int(), required=True)
+    branding_period = graphene.Field(BrandingPeriod, slug=graphene.String(required=True), required=True)
+    bundle = graphene.Field(Bundle, slug=graphene.String(required=True), required=True)
 
     def resolve_all_events(self, info, **kwargs):
         qfilter = kwargs.get('filter')

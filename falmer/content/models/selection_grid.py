@@ -32,3 +32,7 @@ class SelectionGridPage(Page):
         ObjectList(Page.promote_panels, heading='Promote'),
         ObjectList(Page.settings_panels, heading='Settings', classname="settings"),
     ])
+
+    type_fields = (
+        'body',
+    )

@@ -27,6 +27,11 @@ class GenericContentPageMixin(models.Model):
         StreamFieldPanel('staff_owners'),
     ]
 
+    type_fields = (
+        'related_links',
+        'staff_owners',
+    )
+
 
 class KBRootPage(Page):
     class Meta:
@@ -39,6 +44,10 @@ class KBRootPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('introduction'),
     ]
+
+    type_fields = (
+        'introduction',
+    )
 
 
 class KBCategoryPage(Page):
@@ -58,6 +67,10 @@ class KBCategoryPage(Page):
     @property
     def page_icon_url(self):
         return None if self.page_icon is None else self.page_icon.url
+
+    type_fields = (
+        'page_icon',
+    )
 
 
 class ReferencePage(GenericContentPageMixin, Page):
@@ -84,6 +97,10 @@ class ReferencePage(GenericContentPageMixin, Page):
 
     promote_panels = Page.promote_panels + GenericContentPageMixin.promote_panels
 
+    type_fields = GenericContentPageMixin.type_fields + (
+        'content',
+    )
+
 
 class AnswerPage(GenericContentPageMixin, Page):
     class Meta:
@@ -109,6 +126,10 @@ class AnswerPage(GenericContentPageMixin, Page):
     ]
 
     promote_panels = Page.promote_panels + GenericContentPageMixin.promote_panels
+
+    type_fields = GenericContentPageMixin.type_fields + (
+        'content',
+    )
 
 
 class DetailedGuidePage(GenericContentPageMixin, Page):
@@ -143,3 +164,7 @@ class DetailedGuideSectionPage(Page):
     ]
 
     promote_panels = Page.promote_panels
+
+    type_fields = GenericContentPageMixin.type_fields + (
+        'content',
+    )
