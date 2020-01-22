@@ -165,6 +165,6 @@ class DetailedGuideSectionPage(Page):
 
     promote_panels = Page.promote_panels
 
-    type_fields = GenericContentPageMixin.type_fields + (
+    type_fields = (
         'content',
     )

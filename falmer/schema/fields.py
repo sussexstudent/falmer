@@ -66,7 +66,7 @@ class FalmerDjangoFilterConnectionField(NonNullDjangoConnectionField):
 
     @property
     def filtering_args(self):
-        return get_filtering_args_from_filterset(self.filterset_class, self.node_type)
+        return get_filtering_input_from_filterset(self.filterset_class, self.node_type)
 
     @classmethod
     def resolve_queryset(

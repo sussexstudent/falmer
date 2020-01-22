@@ -4,6 +4,7 @@ from graphene_django import DjangoObjectType
 from falmer.schema.utils import NonNullDjangoConnectionField, create_connection
 from . import models
 
+
 class ImageLabel(DjangoObjectType):
     name = graphene.String()
 
@@ -13,11 +14,11 @@ class ImageLabel(DjangoObjectType):
     class Meta:
         model = models.ImageLabelThrough
         interfaces = (graphene.Node, )
-        fields = (
-            'name',
-        )
+        fields = ()
+
 
 ImageLabel.Connection = create_connection(ImageLabel)
+
 
 class Image(DjangoObjectType):
     resource = graphene.String(required=True)
@@ -34,11 +35,10 @@ class Image(DjangoObjectType):
         model = models.MatteImage
         interfaces = (graphene.Node, )
         fields = (
-            'resource',
-            'media_id',
             'labels',
             'width',
             'height',
         )
+
 
 Image.Connection = create_connection(Image)

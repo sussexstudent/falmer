@@ -37,8 +37,6 @@ class MarketListing(DjangoObjectType):
         interfaces = (graphene.Node, )
         fields = (
             'id',
-            'pk',
-            'image',
             'listing_user',
             'contact_details',
             'book_title',
@@ -75,7 +73,6 @@ class MarketListingSection(DjangoObjectType):
         model = models.ListingSection
         fields = (
             'id',
-            'pk',
             'title',
             'slug'
         )

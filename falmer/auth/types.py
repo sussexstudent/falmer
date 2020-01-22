@@ -15,9 +15,6 @@ class ClientUser(DjangoObjectType):
         fields = (
             'id',
             'name',
-            'has_cms_access',
-            'user_id',
-            'permissions',
         )
 
     def resolve_name(self, info):
