@@ -21,9 +21,8 @@ class Query(graphene.ObjectType):
 
     def resolve_all_events(self, info, **kwargs):
         qfilter = kwargs.get('filter')
-
-        qs = models.Event.objects.select_related('featured_image', 'venue', 'mslevent') \
-            .prefetch_related('children').order_by('start_time', 'end_time')
+        qs = EventFilterSet(qfilter, models.Event.objects.select_related('featured_image', 'venue', 'mslevent') \
+                              .prefetch_related('children').order_by('start_time', 'end_time')).qs
 
         if kwargs.get('skip_embargo', False):
             pass
@@ -42,11 +41,11 @@ class Query(graphene.ObjectType):
         else:
             qs = qs.filter(parent=None)
 
-        if 'from_time' in qfilter:
-            qs = qs.filter(end_time__gte=qfilter['from_time'])
-
-        if 'to_time' in qfilter:
-            qs = qs.filter(start_time__lte=qfilter['to_time'])
+        # if 'from_time' in qfilter:
+        #     qs = qs.filter(end_time__gte=qfilter['from_time'])
+        #
+        # if 'to_time' in qfilter:
+        #     qs = qs.filter(start_time__lte=qfilter['to_time'])
 
         if 'brand' in qfilter:
             pass
