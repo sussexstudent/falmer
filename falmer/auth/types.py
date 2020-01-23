@@ -37,6 +37,9 @@ class Permission(DjangoObjectType):
     class Meta:
         model = DjangoPermission
         fields = (
+            'id',
+            'name',
+            'codename',
             'content_type',
         )
 
