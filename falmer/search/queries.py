@@ -41,9 +41,11 @@ class Query(graphene.ObjectType):
         for item in all_unsorted:
             title_map[get_item_title(item)] = get_item_id(item)
 
-        fuzz_sorted = process.extract(query, title_map.keys(), limit=15)
-
-        top = [title_map[fuzz_result[0]] for fuzz_result in fuzz_sorted]
+        try:
+            fuzz_sorted = process.extract(query, title_map.keys(), limit=15)
+            top = [title_map[fuzz_result[0]] for fuzz_result in fuzz_sorted]
+        except RuntimeError:
+            top = []
 
         results = SearchTermResponseData(
             content=falmer_results.content,
