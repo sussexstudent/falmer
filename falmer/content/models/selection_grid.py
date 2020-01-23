@@ -3,6 +3,7 @@ from wagtail.core.blocks import RichTextBlock
 from wagtail.core.fields import StreamField
 from wagtail.admin.edit_handlers import TabbedInterface, StreamFieldPanel, ObjectList
 
+from falmer.content import components
 from falmer.content.blocks import HeroImageBlock, FalmerImageChooserBlock
 from falmer.content.models.core import Page
 
@@ -20,6 +21,7 @@ class GridItem(blocks.StructBlock):
 class SelectionGridPage(Page):
     body = StreamField([
         ('heading_hero', HeroImageBlock()),
+        components.text.to_pair(),
         ('selection_grid', blocks.ListBlock(GridItem)),
     ])
 
