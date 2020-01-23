@@ -1,4 +1,5 @@
 from wagtail.core import blocks
+from wagtail.core.blocks import RichTextBlock
 from wagtail.core.fields import StreamField
 from wagtail.admin.edit_handlers import TabbedInterface, StreamFieldPanel, ObjectList
 
@@ -10,14 +11,13 @@ class GridItem(blocks.StructBlock):
     title = blocks.CharBlock(required=True)
     link = blocks.URLBlock()
     image = FalmerImageChooserBlock()
+    description = RichTextBlock(required=False)
 
     class Meta:
         icon = 'item'
 
 
 class SelectionGridPage(Page):
-    parent_page_types = []
-
     body = StreamField([
         ('heading_hero', HeroImageBlock()),
         ('selection_grid', blocks.ListBlock(GridItem)),
