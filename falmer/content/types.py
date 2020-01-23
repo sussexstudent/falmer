@@ -144,7 +144,7 @@ class Page(graphene.Interface):
 
     def resolve_closest_ancestor_of_type(self, info, content_type=None, inclusive=False):
         try:
-            return self.get_ancestors(inclusive).type(name_to_class_map[content_type]).last()
+            return self.get_ancestors(inclusive).specific().type(name_to_class_map[content_type]).last()
         except IndexError:
             return None
 
