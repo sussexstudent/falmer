@@ -15,6 +15,8 @@ class ClientUser(DjangoObjectType):
         fields = (
             'id',
             'name',
+            'is_staff',
+            'identifier',
         )
 
     def resolve_name(self, info):
