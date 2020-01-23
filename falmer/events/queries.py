@@ -29,8 +29,12 @@ class Query(graphene.ObjectType):
         else:
             qs = qs.filter(Q(embargo_until=None) | Q(embargo_until__lte=timezone.now()))
 
-        if kwargs.get('viewer_liked', False) and info.context.user.is_authenticated:
-            qs = qs.filter(Q(eventlike__user=info.context.user) & Q(eventlike__source='USER'))
+        if kwargs.get('viewer_liked', False):
+            if info.context.user.is_authenticated:
+                qs = qs.filter(Q(eventlike__user=info.context.user) & Q(eventlike__source='USER'))
+            else:
+                return models.Event.objects.none()
+
 
         if qfilter is None:
             print('returning')
