@@ -33,6 +33,7 @@ class EventFilterSet(FilterSet):
 
     brand = CharFilter(field_name='brand__slug')
     bundle = CharFilter(field_name='bundle__slug')
+    student_group = CharFilter(field_name='student_group__slug')
 
     to_time = IsoDateTimeFilter(field_name='start_time', lookup_expr='lte')
 
