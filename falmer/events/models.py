@@ -278,7 +278,7 @@ class Event(index.Indexed, PASet, models.Model):
     venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.SET_NULL)
     short_description = models.TextField(default='')
     body = RichTextField(default='', blank=True)
-    student_group = models.ForeignKey(StudentGroup, null=True, blank=True, default=None, on_delete=models.SET_NULL)
+    student_group = models.ForeignKey(StudentGroup, null=True, blank=True, default=None, on_delete=models.SET_NULL, related_name='events')
 
     is_over_18_only = models.BooleanField(default=False)
     cost = models.CharField(max_length=10, choices=COST_CHOICES, default=NA)
@@ -294,8 +294,8 @@ class Event(index.Indexed, PASet, models.Model):
 
     bundle = models.ForeignKey('events.Bundle', null=True, blank=True, on_delete=models.SET_NULL)
     brand = models.ForeignKey(BrandingPeriod, related_name='events', null=True, blank=True, on_delete=models.SET_NULL)
-    category = models.ManyToManyField(CategoryNode, blank=True)
-    type = models.ForeignKey(Type, null=True, blank=True, on_delete=models.SET_NULL)
+    category = models.ManyToManyField(CategoryNode, blank=True, related_name='events')
+    type = models.ForeignKey(Type, null=True, blank=True, on_delete=models.SET_NULL, related_name='events')
 
     curated_by = models.ManyToManyField(Curator, through='EventCuration', blank=True)
 

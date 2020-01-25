@@ -7,8 +7,8 @@ from falmer.events.filters import EventFilterSet
 from falmer.events.types import Venue, BrandingPeriod, Event, Bundle, Category, Type
 from falmer.schema.fields import FalmerDjangoFilterConnectionField
 from falmer.schema.utils import NonNullDjangoConnectionField
-from studentgroups.models import StudentGroup as StudentGroupModel
-from studentgroups.types import StudentGroup as StudentGroupType
+from falmer.studentgroups.models import StudentGroup as StudentGroupModel
+from falmer.studentgroups.types import StudentGroup as StudentGroupType
 from . import models
 
 
@@ -77,16 +77,18 @@ class Query(graphene.ObjectType):
         return models.Venue.objects.all()
 
     def resolve_all_event_categories(self, info):
-        return models.Category.objects\
-            .annotate(events_count=Count('events', filter=Q(start_time__gte=arrow.now()))) \
+        return models.CategoryNode.objects\
+            .annotate(events_count=Count('events', filter=Q(events__end_time__gte=arrow.now().datetime))) \
             .filter(events_count__gte=1)
 
     def resolve_all_event_types(self, info):
-        return models.Type.objects.annotate(events_count=Count('events', filter=Q(end_time__gte=arrow.now()))) \
+        return models.Type.objects\
+            .annotate(events_count=Count('events', filter=Q(events__end_time__gte=arrow.now().datetime))) \
             .filter(events_count__gte=1)
 
-    def all_groups_with_events(self, info):
-        return StudentGroupModel.objects.annotate(events_count=Count('events', filter=Q(end_time__gte=arrow.now()))) \
+    def resolve_all_groups_with_events(self, info):
+        return StudentGroupModel.objects\
+            .annotate(events_count=Count('events', filter=Q(events__end_time__gte=arrow.now().datetime))) \
             .filter(events_count__gte=1)
 
     def resolve_all_branding_periods(self, info):
