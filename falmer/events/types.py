@@ -51,6 +51,11 @@ class EventFilter(graphene.InputObjectType):
     to_time = graphene.String()
 
 
+class GroupWithEvent(graphene.ObjectType):
+    group = graphene.Field(StudentGroup)
+    total_events = graphene.Int()
+
+
 class Venue(DjangoObjectType):
     venue_id = graphene.Int(required=True)
 

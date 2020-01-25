@@ -4,9 +4,11 @@ from django.db.models import Q, Count
 from django.utils import timezone
 
 from falmer.events.filters import EventFilterSet
-from falmer.events.types import Venue, BrandingPeriod, Event, Bundle
+from falmer.events.types import Venue, BrandingPeriod, Event, Bundle, Category, Type
 from falmer.schema.fields import FalmerDjangoFilterConnectionField
 from falmer.schema.utils import NonNullDjangoConnectionField
+from studentgroups.models import StudentGroup as StudentGroupModel
+from studentgroups.types import StudentGroup as StudentGroupType
 from . import models
 
 
@@ -15,6 +17,9 @@ class Query(graphene.ObjectType):
     all_events = FalmerDjangoFilterConnectionField(Event, filterset_class=EventFilterSet, skip_embargo=graphene.Boolean(), viewer_liked=graphene.Boolean(), required=True)
     all_venues = NonNullDjangoConnectionField(Venue, required=True)
     all_branding_periods = graphene.Field(graphene.List(graphene.NonNull(BrandingPeriod)), required=True)
+    all_event_categories = graphene.Field(graphene.List(graphene.NonNull(Category)), required=True)
+    all_event_types = graphene.Field(graphene.List(graphene.NonNull(Type)), required=True)
+    all_groups_with_events = graphene.Field(graphene.List(graphene.NonNull(StudentGroupType)), required=True)
     event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int(), required=True)
     branding_period = graphene.Field(BrandingPeriod, slug=graphene.String(required=True), required=True)
     bundle = graphene.Field(Bundle, slug=graphene.String(required=True), required=True)
@@ -70,6 +75,19 @@ class Query(graphene.ObjectType):
 
     def resolve_all_venues(self, info):
         return models.Venue.objects.all()
+
+    def resolve_all_event_categories(self, info):
+        return models.Category.objects\
+            .annotate(events_count=Count('events', filter=Q(start_time__gte=arrow.now()))) \
+            .filter(events_count__gte=1)
+
+    def resolve_all_event_types(self, info):
+        return models.Type.objects.annotate(events_count=Count('events', filter=Q(end_time__gte=arrow.now()))) \
+            .filter(events_count__gte=1)
+
+    def all_groups_with_events(self, info):
+        return StudentGroupModel.objects.annotate(events_count=Count('events', filter=Q(end_time__gte=arrow.now()))) \
+            .filter(events_count__gte=1)
 
     def resolve_all_branding_periods(self, info):
         periods = models.BrandingPeriod.objects \
