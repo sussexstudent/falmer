@@ -1,6 +1,6 @@
 import arrow
 import graphene
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Max
 from django.utils import timezone
 
 from falmer.events.filters import EventFilterSet
@@ -93,8 +93,8 @@ class Query(graphene.ObjectType):
 
     def resolve_all_branding_periods(self, info):
         periods = models.BrandingPeriod.objects \
-            .annotate(events_count=Count('events')) \
-            .filter(display_from__lte=timezone.now())
+            .annotate(events_max=Max('events__end_time')) \
+            .filter(events_max__gte=timezone.now())
         return periods
 
     def resolve_event(self, info, **kwargs):
