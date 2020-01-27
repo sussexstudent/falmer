@@ -150,7 +150,7 @@ class Venue(PASet, models.Model):
     featured_image = models.ForeignKey(MatteImage, null=True, blank=True, on_delete=models.SET_NULL)
 
     venue_type = models.CharField(choices=VENUE_CHOICES, max_length=8)
-    slug = AutoSlugField(populate_from='name', unique=False)
+    slug = AutoSlugField(populate_from='name', unique=True)
 
     ephemeral = models.BooleanField(default=False)
 

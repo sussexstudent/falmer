@@ -23,6 +23,7 @@ class Query(graphene.ObjectType):
     event = graphene.Field(Event, event_id=graphene.Int(), msl_event_id=graphene.Int(), required=True)
     branding_period = graphene.Field(BrandingPeriod, slug=graphene.String(required=True), required=True)
     bundle = graphene.Field(Bundle, slug=graphene.String(required=True), required=True)
+    venue = graphene.Field(Venue, venue_id=graphene.Int(), venue_slug=graphene.String())
 
     def resolve_all_events(self, info, **kwargs):
         qfilter = kwargs.get('filter')
@@ -110,5 +111,18 @@ class Query(graphene.ObjectType):
 
         if msl_event_id is not None:
             return models.MSLEvent.objects.get(msl_event_id=msl_event_id).event
+
+        return None
+
+    def resolve_venue(self, info, **kwargs):
+        venue_slug = kwargs.get('venue_slug')
+        venue_id = kwargs.get('venue_id')
+
+        if venue_slug:
+            return models.Venue.objects \
+                .select_related('featured_image').get(slug=venue_slug)
+        if venue_id:
+            return models.Venue.objects \
+                .select_related('featured_image').get(pk=venue_id)
 
         return None
