@@ -33,6 +33,7 @@ class EventFilterSet(FilterSet):
 
     brand = CharFilter(field_name='brand__slug')
     bundle = CharFilter(field_name='bundle__slug')
+    venue = CharFilter(field_name='venue__slug')
     type = CharFilter(field_name='type__slug')
     student_group = CharFilter(field_name='student_group__slug')
 
