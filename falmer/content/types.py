@@ -52,6 +52,7 @@ class PageResult(graphene.ObjectType):
 
 
 class Page(graphene.Interface):
+    page_id = graphene.Int(required=True)
     content_type = graphene.String(required=True)
 
     title = graphene.String(required=True)
@@ -76,6 +77,9 @@ class Page(graphene.Interface):
 
     def resolve_content_type(self, info):
         return self.__class__.__name__
+
+    def resolve_page_id(self, info):
+        return self.id
 
     def resolve_title(self, info):
         return self.title
