@@ -26,6 +26,7 @@ class EventFilterSet(FilterSet):
             'alcohol',
             'type',
             'ticket_level',
+            'canceled_at',
             'curated_by'
         )
 
