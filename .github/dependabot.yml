@@ -1,0 +1,17 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: boto3
+    versions:
+    - 1.16.9
+  - dependency-name: django
+    versions:
+    - 2.2.13
+  - dependency-name: wagtailmenus
+    versions:
+    - 3.0.1
